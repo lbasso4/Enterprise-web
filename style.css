@@ -8,7 +8,10 @@ body {
   margin: 0;
   background-color: #f4f6f9;
 }
-
+.imgcontainer {
+  max-width: 90%;
+  max-height: 90%;
+}
 /* Modal background — hidden by default, shown via JS onclick */
 .modal {
   display: none;
