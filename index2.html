@@ -1,25 +1,74 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset = 'utf-8' />
-    <title>Engilab ETSEIB</title> <!-- This is what will appear at the top of the tab -->
-    <link rel="stylesheet" type="text/css" href="https://www.upc.edu/++plone++production/++unique++2026-01-26T16:39:10.719273/default.css" data-bundle="production">
-    <link rel="stylesheet" type="text/css" href="https://www.upc.edu/++theme++homeupc/assets/css/homeupc-compiled.css?version=2020-02-13%2000%3A00%3A00.000003" data-bundle="homeupc">
-    <link rel="stylesheet" type="text/css" href="https://www.upc.edu/++theme++homeupc/assets/css/upc.css?version=2026-01-26%2011%3A00%3A00" data-bundle="upc-styles">
+    <meta charset='utf-8' />
+    <title>Engilab ETSEIB</title>
+    <link rel="stylesheet" type="text/css" href="https://www.upc.edu/++plone++production/++unique++2026-01-26T16:39:10.719273/default.css">
+    <link rel="stylesheet" type="text/css" href="https://www.upc.edu/++theme++homeupc/assets/css/homeupc-compiled.css?version=2020-02-13%2000%3A00%3A00.000003">
+    <link rel="stylesheet" type="text/css" href="https://www.upc.edu/++theme++homeupc/assets/css/upc.css?version=2026-01-26%2011%3A00%3A00">
+
+    <style>
+      .notícies {
+        padding: 40px;
+        background-color: #f5f5f5;
+      }
+
+      .notícies h2 {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .notícia {
+        background-color: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-left: 5px solid blue;
+        box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+      }
+
+      .notícia h3 {
+        margin-top: 0;
+      }
+
+      .data {
+        font-size: 0.9em;
+        color: gray;
+      }
+    </style>
 
   </head>
 
   <body>
-    
-    <h1 style = 'text-align: center; background-color: blue; margin: 0; height: 80px'> Engilab </h1>
+
+    <h1 style='text-align: center; background-color: blue; margin: 0; height: 80px; color:white'>
+      Engilab
+    </h1>
+
     <div>
-      <img src="https://media.istockphoto.com/id/1907248074/es/foto/impresora-3d-con-un-objeto-impreso-sobre-la-mesa.jpg?s=612x612&w=0&k=20&c=ZYnKnyR75XR_8EaZoeEAE-aytb91FcS14iZOJ8MyUtc=" style = "width: 100%; height: 345px; display: block; margin: 0 auto;">
-    
+      <img src="https://media.istockphoto.com/id/1907248074/es/foto/impresora-3d-con-un-objeto-impreso-sobre-la-mesa.jpg?s=612x612&w=0&k=20&c=ZYnKnyR75XR_8EaZoeEAE-aytb91FcS14iZOJ8MyUtc="
+      style="width: 100%; height: 345px; display: block; margin: 0 auto;">
     </div>
-    
 
-    
+    <section class="noticies">
+      <h2>Últimes notícies</h2>
+
+      <article class="notícia">
+        <h3>Nova impressora 3D a Engilab</h3>
+        <p class="data">20 febrer 2026</p>
+        <p>
+          Hem incorporat una nova impressora 3D industrial per a projectes d'alta precisió.
+        </p>
+      </article>
+
+      <article class="notícia">
+        <h3>Taller de disseny CAD</h3>
+        <p class="data">10 febrer 2026</p>
+        <p>
+          S'ha realitzat un taller pràctic sobre modelatge CAD per a estudiants de l'ETSEIB.
+        </p>
+      </article>
+
+    </section>
+
   </body>
-
-  
 </html>
