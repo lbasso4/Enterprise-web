@@ -29,6 +29,8 @@ body {
   position: relative;
   animation: fadeZoom 0.3s ease;
   display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 /* Close button */
