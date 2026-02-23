@@ -31,7 +31,7 @@ body {
   border-radius: 12px;
   width: 400px;         /* fixed width lives here, on the box — not the overlay */
   max-width: 90%;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  
   position: relative;
   animation: fadeZoom 0.3s ease;
 }
