@@ -3,7 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <title>Calendari</title>
-  <link rel="stylesheet" href="calendar_style.css">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+      background-color: white;
+      color: #333;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+
+    button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #1a73e8;
+      color: white;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background-color: #1558b0;
+    }
+
+    #monthTitle {
+      font-weight: bold;
+      color: #333;
+    }
+
+    #calendar {
+      width: 320px;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+    }
+
+    .weekday {
+      text-align: center;
+      font-weight: bold;
+      padding: 5px;
+      color: #1a73e8;
+    }
+
+    .day {
+      padding: 12px;
+      text-align: center;
+      border-radius: 20px;
+      background-color: #1a73e8;
+      color: white;
+      font-weight: 500;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+      transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .day:hover {
+      transform: scale(1.1);
+      background-color: #1558b0;
+    }
+
+    .today {
+      background-color: #0f3f8a;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
@@ -18,6 +96,74 @@
 
   <div id="calendar"></div>
 
-  <script src="calendar_script.js"></script>
+  <script>
+    const calendar = document.getElementById("calendar");
+    const monthTitle = document.getElementById("monthTitle");
+
+    let today = new Date();
+    let currentMonth = today.getMonth();
+    let currentYear = today.getFullYear();
+
+    const months = [
+      "Gener","Febrer","Març","Abril","Maig","Juny",
+      "Juliol","Agost","Setembre","Octubre","Novembre","Desembre"
+    ];
+
+    const weekdays = ["Dl","Dt","Dc","Dj","Dv","Ds","Dg"];
+
+    function renderCalendar() {
+      calendar.innerHTML = "";
+      monthTitle.textContent = months[currentMonth] + " " + currentYear;
+
+      // Dies de la setmana
+      weekdays.forEach(day => {
+        calendar.innerHTML += `<div class="weekday">${day}</div>`;
+      });
+
+      let firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      firstDay = (firstDay === 0) ? 6 : firstDay - 1;
+
+      let daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+      // Espais abans del dia 1
+      for (let i = 0; i < firstDay; i++) {
+        calendar.innerHTML += "<div></div>";
+      }
+
+      // Dies del mes
+      for (let day = 1; day <= daysInMonth; day++) {
+        let className = "day";
+
+        if (
+          day === today.getDate() &&
+          currentMonth === today.getMonth() &&
+          currentYear === today.getFullYear()
+        ) {
+          className += " today";
+        }
+
+        calendar.innerHTML += `<div class="${className}">${day}</div>`;
+      }
+    }
+
+    function changeMonth(direction) {
+      currentMonth += direction;
+
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      }
+
+      renderCalendar();
+    }
+
+    renderCalendar();
+  </script>
+
 </body>
 </html>
