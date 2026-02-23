@@ -9,16 +9,17 @@ body {
   background-color: #f4f6f9;
 }
 
-/* Modal background */
+/* Modal background — hidden by default, shown via JS onclick */
 .modal {
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   position: fixed;
-  width: 100%;          /* was 400px — this was clipping the overlay */
-  height: 100%;         /* also need full height */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 1000;
-  inset: 0;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
 }
