@@ -7,13 +7,14 @@ body {
 
 /* Modal background */
 .modal {
-  display: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   z-index: 1000;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
-  justify-content: center;
   align-items: center;
 }
 
