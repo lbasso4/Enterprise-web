@@ -62,7 +62,12 @@ input:focus {
   border-color: #3a86ff;
   outline: none;
 }
-
+label {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+}
 /* Buttons */
 button {
   width: 100%;
