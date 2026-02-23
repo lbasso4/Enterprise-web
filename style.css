@@ -39,7 +39,13 @@ body {
   position: relative;
   animation: fadeZoom 0.3s ease;
 }
-
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto 12px;
+}
 /* Close button */
 .close {
   position: absolute;
