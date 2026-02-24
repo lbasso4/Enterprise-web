@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="style.css">
     <!-- for the title class-->
     <style> 
+      body {
+        font-family: 'Roboto';
+      }
       .title {
         display:flex;
         flex-direction: row;
@@ -28,10 +31,19 @@
       }
 
     </style>
+    
+    <!-- in this part I will put the image of the 3D printer -->
     <style>
-      body {
-        font-family: 'Roboto';
+      .backimg {
+        background-image: url('img/printer.jpg');
+        background-size: cover;
+        background-position: 50% 80%; /* this means it's centered and it takes the bottom part (thus the 80%) of the image */
+        height: 400px;
+        width: 100%;
+        border-radius: 20px;
       }
+
+    <style>
       .noticies {
         padding: 40px;
         background-color: #f5f5f5;
@@ -74,12 +86,14 @@
        </div>
       
       <h1 style = 'text-align: center; flex-grow: 1;'>Engilab ETSEIB</h1>
-        
-
+      
     </section>
-    <div>
-      <img src="https://media.istockphoto.com/id/1907248074/es/foto/impresora-3d-con-un-objeto-impreso-sobre-la-mesa.jpg?s=612x612&w=0&k=20&c=ZYnKnyR75XR_8EaZoeEAE-aytb91FcS14iZOJ8MyUtc=" style = "width: 100%; height: 345px; display: block; margin: 0 auto;">
+
+    <!-- here is where the image goes -->
+    <div class = 'backimg'>
     </div>
+
+    
     <section class="noticies">
       <h2>Últimes notícies</h2>
 
