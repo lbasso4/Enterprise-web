@@ -13,7 +13,7 @@ body {
   max-width: 90%;
   max-height: 90%;
 }
-
+/* Modal background — hidden by default, shown via JS onclick */
 .modal {
   display: flex;
   justify-content: center;
@@ -27,11 +27,13 @@ body {
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
 }
+
+/* Modal content */
 .modal-content {
   background: #ffffff;
   padding: 30px;
   border-radius: 12px;
-  width: 400px;         
+  width: 400px;         /* fixed width lives here, on the box — not the overlay */
   max-width: 90%;
   
   position: relative;
@@ -44,7 +46,7 @@ body {
   display: block;
   margin: 0 auto 12px;
 }
-
+/* Close button */
 .close {
   position: absolute;
   right: 20px;
@@ -78,7 +80,7 @@ input:focus {
 }
 
 .container {
-  width: 20%;
+  width: 100%;
   padding: 12px;
   border: none;
   border-radius: 8px;
@@ -86,7 +88,7 @@ input:focus {
 
 /* Buttons */
 button {
-  width: 20%;
+  width: 100%;
   padding: 12px;
   border: none;
   border-radius: 8px;
