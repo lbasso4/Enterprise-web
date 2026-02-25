@@ -9,9 +9,9 @@ body {
   background-color: #f4f6f9;
 }
 .imgcontainer {
-  width:30px;
-  max-width: 20%;
-  max-height: 20%;
+  width:300px;
+  max-width: 90%;
+  max-height: 90%;
 }
 
 .modal {
