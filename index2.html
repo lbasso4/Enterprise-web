@@ -3,6 +3,8 @@
   <head>
     
     <meta charset = 'utf-8' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style_search.css">
     <title>Engilab ETSEIB</title> <!-- This is what will appear at the top of the tab -->
     <link rel="stylesheet" href="style.css">
     <!-- for the title class-->
@@ -116,6 +118,15 @@
       <!-- We have defined the button and its main characteristics (that will be also applied after clicking it) -->
         
 
+    </section>
+    <section>
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Cerca...">
+        <button onclick="buscar()">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+      <script src="script_search.js">  </script>
     </section>
     <div class = 'backimg'>
 
