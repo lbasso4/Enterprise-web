@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" >
+    </head>
+    <body>
+        <header>
+            <a href="/Inici" class="active">Inici</a>
+            <a href="/Serveis">Serveis</a>
+            <a href="/Notícies">Notícies</a>
+            <a href="/Contacte">Contacte</a>
+            <button onclick="alert('Inicia sessió')">Usuari</button>
+        </header>
+        <section id="Contacte">
+            <h2>Contacta'ns!</h2>
+            <p>Si tens qualsevol dubte respecte el nostre espai i els seus serveis, escriu-lo a continuació.</p>
+            <form method="POST" action="/enviar">
+                <div class="form-group">
+                    <label for="name">Nom i cognoms</label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Nom Cognom1 Cognom2">
+                </div>
+                <div class="form-group">
+                    <label for="email">Adreça electrònica</label>
+                    <input type="email" class="form-control" name="email" id="email" placeholder="nom@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="missatge">Missatge</label>
+                    <textarea class="form-control" name="missatge" id="missatge" rows="5" placeholder="Escriu el teu missatge..."></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn-primary">Enviar missatge</button>
+                </div>
+            </form>
+        </section>
+    </body>
+</html>
+  
