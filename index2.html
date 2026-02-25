@@ -97,6 +97,8 @@
 
   <body>
 
+    
+
     <!-- this part is in the top -->
     <section class = 'title'>
       <!-- here we'll add a division to group up both images due to them being a different thing-->
@@ -106,7 +108,9 @@
 
        </div>
       
-      <h1 style = 'text-align: center; flex-grow: 1;'>Engilab ETSEIB</h1>
+      <h1 onmouseover="this.style.color='blue'; this.style.cursor= 'pointer'" onmouseout="this.style.color='rgb(0, 123, 193)'" style = 'text-align: center; flex-grow: 1;'>Engilab ETSEIB</h1>
+      <button id = "statusbutton" onclick= changestatus() style="padding: 15px 20px; border-radius: 5px; background-color: rgb(0, 123, 193); border-width: 0px; font-size: 14px; font-weight: bold; box-shadow: 0px 0px 2px black;">EngiLab OBERT</button>
+      <!-- We have defined the button and its main characteristics (that will be also applied after clicking it) -->
         
 
     </section>
@@ -170,7 +174,39 @@ class="close" title="Close Modal">&times;</span>
     </div>
   </form>
 </div>
-    
+
+
+
+    <!-- this part is in the script for the status button -->
+
+    <script>
+      const boton = document.getElementById('statusbutton'); /* what this does is get the element with id "statusbutton" and store it in the variable "boton" */
+
+      /* since we want the button to keep its value when the web is closed, we use an internal storage */
+      const savedstate = localStorage.getItem('status'); /* this initially creates the value 'status' in teh localStorage and once it's creates (only first time) it gets the value of "status" from the local storage and stores it in the variable "savedstate" */
+      if (savedstate === 'open') { /* if the value of "savedstate" is "open" then the button will be "EngiLab OBERT" */
+        boton.textContent = 'EngiLab OBERT';
+        boton.style.backgroundColor = 'rgb(0, 123, 193)'; /* and the background color will be the UPC one */
+      } else { /* if the value of "savedstate" is not "open" then the button will be "EngiLab TANCAT" */
+        boton.textContent = 'EngiLab TANCAT';
+        boton.style.backgroundColor = 'red'; /* and the background color will be red */
+      }
+
+      function changestatus() { /* this is the function that changes the status of the button */
+        if (boton.textContent === 'EngiLab OBERT') { /* if the button is "EngiLab OBERT" then it will change to "EngiLab TANCAT" */
+          boton.textContent = 'EngiLab TANCAT';
+          boton.style.backgroundColor = 'red';
+          localStorage.setItem('status', 'closed'); /* and it will save the value "closed" in the local storage with the key "status" */
+        } 
+        else { /* if the button is not "EngiLab OBERT" then it will change to "EngiLab OBERT" */
+          boton.textContent = 'EngiLab OBERT';
+          boton.style.backgroundColor = 'rgb(0, 123, 193)';
+          localStorage.setItem('status', 'open'); /* and it will save the value "open" in the local storage with the key "status" */ 
+        }
+      }
+
+
+    </script>
   </body>
 
   
