@@ -10,8 +10,8 @@ body {
 }
 .imgcontainer {
   width:30px;
-  max-width: 90%;
-  max-height: 90%;
+  max-width: 20%;
+  max-height: 20%;
 }
 
 .modal {
