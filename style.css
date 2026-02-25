@@ -15,7 +15,7 @@ body {
 }
 /* Modal background — hidden by default, shown via JS onclick */
 .modal {
-  display: none;
+  display: flex;
   justify-content: center;
   align-items: center;
   position: fixed;
