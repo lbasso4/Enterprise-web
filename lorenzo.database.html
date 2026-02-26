@@ -35,48 +35,36 @@
 
       /* ── NAVBAR ─────────────────────────────────────── */
       .title {
-        display: flex;
-        align-items: center;
-        background-color: var(--white);
-        padding: 0 24px;
-        height: 70px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        gap: 14px;
-        width: 100%;
+        display: flex; align-items: center; background-color: var(--white);
+        padding: 0 24px; height: 70px; box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+        position: sticky; top: 0; z-index: 100; gap: 14px; width: 100%;
       }
       .logos { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
       .logos img { height: 44px; width: auto; display: block; }
       .nav-divider { width: 1px; height: 32px; background: var(--gray-light); flex-shrink: 0; }
       .title h1 {
-        font-family: 'Barlow Condensed', sans-serif;
-        font-weight: 700; font-size: 1.5rem; letter-spacing: 0.5px;
-        color: var(--blue); flex-grow: 1; text-align: center;
-        cursor: pointer; transition: color 0.2s; white-space: nowrap;
+        font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+        font-size: 1.5rem; letter-spacing: 0.5px; color: var(--blue);
+        flex-grow: 1; text-align: center; cursor: pointer; transition: color 0.2s; white-space: nowrap;
       }
       .title h1:hover { color: var(--blue-dark); }
       .login-btn {
         padding: 8px 14px; border-radius: 8px; background: transparent;
         border: 2px solid var(--blue); color: var(--blue);
         font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 13px;
-        cursor: pointer; transition: background 0.2s, color 0.2s;
-        flex-shrink: 0; white-space: nowrap;
+        cursor: pointer; transition: background 0.2s, color 0.2s; flex-shrink: 0; white-space: nowrap;
       }
       .login-btn:hover { background: var(--blue); color: white; }
       #statusbutton {
         padding: 9px 16px; border-radius: 8px; background-color: var(--blue);
-        border: none; font-size: 12px; font-weight: 700;
-        font-family: 'Barlow', sans-serif; letter-spacing: 0.3px; color: white;
-        cursor: pointer; box-shadow: var(--shadow-sm); width: 160px;
-        flex-shrink: 0; transition: background-color 0.25s, transform 0.15s;
+        border: none; font-size: 12px; font-weight: 700; font-family: 'Barlow', sans-serif;
+        letter-spacing: 0.3px; color: white; cursor: pointer; box-shadow: var(--shadow-sm);
+        width: 160px; flex-shrink: 0; transition: background-color 0.25s, transform 0.15s;
         display: flex; align-items: center; justify-content: center; gap: 7px;
       }
       #statusbutton::before {
         content: ''; display: inline-block; width: 8px; height: 8px;
-        border-radius: 50%; background: rgba(255,255,255,0.9);
-        flex-shrink: 0; animation: pulse 2s infinite;
+        border-radius: 50%; background: rgba(255,255,255,0.9); flex-shrink: 0; animation: pulse 2s infinite;
       }
       @keyframes pulse {
         0%, 100% { opacity: 1; transform: scale(1); }
@@ -94,14 +82,12 @@
         border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-md);
       }
       .search-container input {
-        flex: 1; padding: 13px 18px; border: none;
-        font-family: 'Barlow', sans-serif; font-size: 15px;
-        color: var(--text-main); background: white; outline: none; min-width: 0;
+        flex: 1; padding: 13px 18px; border: none; font-family: 'Barlow', sans-serif;
+        font-size: 15px; color: var(--text-main); background: white; outline: none; min-width: 0;
       }
       .search-container button {
-        padding: 13px 20px; background: white; border: none;
-        color: var(--blue); font-size: 16px; cursor: pointer;
-        transition: background 0.2s, color 0.2s;
+        padding: 13px 20px; background: white; border: none; color: var(--blue);
+        font-size: 16px; cursor: pointer; transition: background 0.2s, color 0.2s;
         border-left: 1px solid var(--gray-light); flex-shrink: 0;
       }
       .search-container button:hover { background: var(--blue); color: white; }
@@ -116,39 +102,79 @@
         content: ''; position: absolute; inset: 0;
         background: linear-gradient(to bottom, rgba(0,80,140,0.15) 0%, rgba(0,0,0,0.50) 100%);
       }
-      .hero-overlay {
-        position: absolute; bottom: 36px; left: 48px; z-index: 2; color: white;
-      }
+      .hero-overlay { position: absolute; bottom: 36px; left: 48px; z-index: 2; color: white; }
       .hero-overlay h2 {
-        font-family: 'Barlow Condensed', sans-serif;
-        font-size: 2.8rem; font-weight: 700; line-height: 1.1;
-        text-shadow: 0 2px 16px rgba(0,0,0,0.5);
+        font-family: 'Barlow Condensed', sans-serif; font-size: 2.8rem;
+        font-weight: 700; line-height: 1.1; text-shadow: 0 2px 16px rgba(0,0,0,0.5);
       }
-      .hero-overlay p {
-        font-size: 1rem; opacity: 0.88; margin-top: 6px;
-        text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+      .hero-overlay p { font-size: 1rem; opacity: 0.88; margin-top: 6px; text-shadow: 0 1px 8px rgba(0,0,0,0.4); }
+
+      /* ── IMPRESSORES ─────────────────────────────────── */
+      .impressores-wrapper {
+        background: var(--white); width: 100%; padding: 44px 24px;
+        border-bottom: 1px solid var(--gray-light);
       }
+      .impressores-inner { max-width: 960px; margin: 0 auto; }
+      .impressores-header { text-align: center; margin-bottom: 28px; }
+      .impressores-header h2 {
+        display: inline-block; font-family: 'Barlow Condensed', sans-serif;
+        font-size: 1.6rem; font-weight: 700; color: var(--text-main);
+        letter-spacing: 0.5px; position: relative; padding-bottom: 10px;
+      }
+      .impressores-header h2::after {
+        content: ''; position: absolute; bottom: 0; left: 50%;
+        transform: translateX(-50%); width: 48px; height: 4px; border-radius: 2px; background: var(--blue);
+      }
+      .impressores-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 16px;
+      }
+      .impressora-card {
+        background: var(--gray-bg); border-radius: 14px; padding: 20px 16px 18px;
+        display: flex; flex-direction: column; align-items: center; gap: 10px;
+        border: 2px solid var(--gray-light);
+        transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+      }
+      .impressora-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+      .impressora-card.disponible { border-color: var(--blue); }
+      .impressora-card.ocupada    { border-color: var(--red); }
+      .impressora-icon { font-size: 2rem; line-height: 1; }
+      .impressora-nom {
+        font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem;
+        font-weight: 700; color: var(--text-main); text-align: center;
+      }
+      .btn-impressora {
+        padding: 8px 0; width: 100%; border-radius: 8px; border: none;
+        font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 700;
+        letter-spacing: 0.3px; cursor: pointer; color: white; box-shadow: var(--shadow-sm);
+        display: flex; align-items: center; justify-content: center; gap: 6px;
+        transition: background-color 0.25s, transform 0.15s, box-shadow 0.2s;
+      }
+      .btn-impressora::before {
+        content: ''; display: inline-block; width: 7px; height: 7px;
+        border-radius: 50%; background: rgba(255,255,255,0.9); flex-shrink: 0; animation: pulse 2s infinite;
+      }
+      .btn-impressora:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+      .btn-impressora.disponible { background-color: var(--blue); }
+      .btn-impressora.ocupada    { background-color: var(--red); }
 
       /* ── NOTÍCIES ────────────────────────────────────── */
       .noticies-wrapper { background: var(--gray-bg); width: 100%; padding: 52px 24px; }
       .noticies { max-width: 860px; margin: 0 auto; }
       .noticies-header { text-align: center; margin-bottom: 36px; }
       .noticies-header h2 {
-        display: inline-block;
-        font-family: 'Barlow Condensed', sans-serif;
+        display: inline-block; font-family: 'Barlow Condensed', sans-serif;
         font-size: 1.8rem; font-weight: 700; color: var(--text-main);
         letter-spacing: 0.5px; position: relative; padding-bottom: 12px;
       }
       .noticies-header h2::after {
         content: ''; position: absolute; bottom: 0; left: 50%;
-        transform: translateX(-50%); width: 56px; height: 4px;
-        border-radius: 2px; background: var(--blue);
+        transform: translateX(-50%); width: 56px; height: 4px; border-radius: 2px; background: var(--blue);
       }
-
       .noticia {
-        background-color: var(--white);
-        padding: 22px 26px; margin-bottom: 16px; border-radius: var(--radius);
-        border-left: 5px solid var(--blue); box-shadow: var(--shadow-sm);
+        background-color: var(--white); padding: 22px 26px; margin-bottom: 16px;
+        border-radius: var(--radius); border-left: 5px solid var(--blue); box-shadow: var(--shadow-sm);
         transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
         display: flex; flex-direction: column; gap: 6px; cursor: pointer; position: relative;
       }
@@ -206,6 +232,7 @@
 
   <body>
 
+    <!-- NAVBAR -->
     <section class="title">
       <div class="logos">
         <img src="img/upc-positiu-p3005.png" alt="UPC Logo">
@@ -219,6 +246,7 @@
       <button id="statusbutton" onclick="changestatus()">Sincronitzant...</button>
     </section>
 
+    <!-- SEARCH -->
     <section class="search-section">
       <div class="search-container">
         <input type="text" id="searchInput" placeholder="Cerca contingut...">
@@ -226,6 +254,7 @@
       </div>
     </section>
 
+    <!-- HERO IMAGE -->
     <div class="backimg">
       <div class="hero-overlay">
         <h2>Fabricació &amp; Innovació</h2>
@@ -233,19 +262,30 @@
       </div>
     </div>
 
+    <!-- IMPRESSORES 3D -->
+    <div class="impressores-wrapper">
+      <div class="impressores-inner">
+        <div class="impressores-header">
+          <h2><i class="fa fa-cube" style="margin-right:8px; color:var(--blue);"></i>Estat de les impressores 3D</h2>
+        </div>
+        <div class="impressores-grid" id="impressores-grid">
+          <!-- generat per JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTÍCIES -->
     <div class="noticies-wrapper">
       <section class="noticies">
         <div class="noticies-header">
           <h2>Últimes notícies</h2>
         </div>
-
         <article class="noticia" onclick="obrirNoticia(0)">
           <h3>Nova impressora 3D a Engilab</h3>
           <p class="data">20 febrer 2026</p>
           <p class="noticia-preview">Hem incorporat una nova impressora 3D industrial per a projectes d'alta precisió.</p>
           <span class="llegir-mes"><i class="fa fa-arrow-right"></i> Llegir més</span>
         </article>
-
         <article class="noticia" onclick="obrirNoticia(1)">
           <h3>Taller de disseny CAD</h3>
           <p class="data">10 febrer 2026</p>
@@ -255,10 +295,12 @@
       </section>
     </div>
 
+    <!-- FOOTER -->
     <footer>
       © 2026 <span>Engilab ETSEIB</span> · Universitat Politècnica de Catalunya
     </footer>
 
+    <!-- MODAL NOTÍCIA -->
     <div id="modal-noticia" class="modal-noticia" onclick="tancarNoticiaFons(event)">
       <div class="modal-noticia-content">
         <div class="modal-noticia-header">
@@ -267,17 +309,18 @@
           <button class="tancar-noticia" onclick="tancarNoticia()">&times;</button>
         </div>
         <div class="modal-noticia-body">
-          <span class="categoria-tag" id="modal-categoria">
-            <i class="fa fa-tag"></i> <span id="modal-categoria-text"></span>
-          </span>
+          <span class="categoria-tag"><i class="fa fa-tag"></i> <span id="modal-categoria-text"></span></span>
           <div id="modal-cos"></div>
         </div>
         <div class="modal-noticia-footer">
-          <button class="btn-tancar-footer" onclick="tancarNoticia()">Tornar</button>
+          <button class="btn-tancar-footer" onclick="tancarNoticia()">
+            <i class="fa fa-arrow-left" style="margin-right:6px;"></i>Tornar
+          </button>
         </div>
       </div>
     </div>
 
+    <!-- MODAL LOGIN -->
     <div id="id01" class="modal">
       <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Tancar">&times;</span>
       <form class="modal-content" action="php/action_page.php">
@@ -300,15 +343,107 @@
 
     <div id="intern"><p>BUG2</p></div>
 
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-database-compat.js"></script>
 
     <script>
-      /* ── DADES NOTÍCIES (TEXTOS COMPLETS) ── */
+
+      /* ════════════════════════════════════════════════
+         FIREBASE INIT
+      ════════════════════════════════════════════════ */
+      const firebaseConfig = {
+        apiKey:            "AIzaSyDNrrjgc0TyT4dAdZiYJlNZrbia1jr8X-Q",
+        authDomain:        "engilab2026.firebaseapp.com",
+        databaseURL:       "https://engilab2026-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId:         "engilab2026",
+        storageBucket:     "engilab2026.firebasestorage.app",
+        messagingSenderId: "960568396971",
+        appId:             "1:960568396971:web:41479521862bfceefbbbee"
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+
+      /* ════════════════════════════════════════════════
+         BOTÓ ENGILAB OBERT / TANCAT
+      ════════════════════════════════════════════════ */
+      const boton     = document.getElementById('statusbutton');
+      const statusRef = db.ref('statuslab');
+
+      statusRef.on('value', (snapshot) => {
+        const estat = snapshot.val();
+        if (estat === 'open') {
+          boton.textContent        = 'EngiLab OBERT';
+          boton.style.backgroundColor = 'rgb(0, 123, 193)';
+        } else {
+          boton.textContent        = 'EngiLab TANCAT';
+          boton.style.backgroundColor = '#e63946';
+        }
+      });
+
+      function changestatus() {
+        const nouEstat = boton.textContent.trim() === 'EngiLab OBERT' ? 'closed' : 'open';
+        statusRef.set(nouEstat);
+      }
+
+      /* ════════════════════════════════════════════════
+         IMPRESSORES 3D  —  sincronitzades via Firebase
+      ════════════════════════════════════════════════ */
+      const IMPRESSORES = [
+        { id: 'imp1', nom: 'Impressora 1' },
+        { id: 'imp2', nom: 'Impressora 2' },
+        { id: 'imp3', nom: 'Impressora 3' },
+        { id: 'imp4', nom: 'Impressora 4' },
+        { id: 'imp5', nom: 'Impressora 5' },
+      ];
+
+      /* Construeix les targetes dinàmicament */
+      const grid = document.getElementById('impressores-grid');
+      IMPRESSORES.forEach(imp => {
+        const card = document.createElement('div');
+        card.className = 'impressora-card';
+        card.id        = 'card-' + imp.id;
+        card.innerHTML = `
+          <div class="impressora-icon">🖨️</div>
+          <div class="impressora-nom">${imp.nom}</div>
+          <button class="btn-impressora disponible" id="btn-${imp.id}" onclick="canviarImpressora('${imp.id}')">
+            DISPONIBLE
+          </button>`;
+        grid.appendChild(card);
+      });
+
+      /* Escolta cada impressora en temps real (Firebase) */
+      IMPRESSORES.forEach(imp => {
+        db.ref('impressores/' + imp.id).on('value', (snapshot) => {
+          const estat = snapshot.val() || 'disponible';
+          const btn   = document.getElementById('btn-'  + imp.id);
+          const card  = document.getElementById('card-' + imp.id);
+          if (estat === 'ocupada') {
+            btn.textContent  = 'OCUPADA';
+            btn.className    = 'btn-impressora ocupada';
+            card.className   = 'impressora-card ocupada';
+          } else {
+            btn.textContent  = 'DISPONIBLE';
+            btn.className    = 'btn-impressora disponible';
+            card.className   = 'impressora-card disponible';
+          }
+        });
+      });
+
+      /* Canvia l'estat d'una impressora (escriu a Firebase) */
+      function canviarImpressora(id) {
+        const btn      = document.getElementById('btn-' + id);
+        const nouEstat = btn.textContent.trim() === 'DISPONIBLE' ? 'ocupada' : 'disponible';
+        db.ref('impressores/' + id).set(nouEstat);
+      }
+
+      /* ════════════════════════════════════════════════
+         NOTÍCIES
+      ════════════════════════════════════════════════ */
       const noticies = [
         {
-          titol: "Nova impressora 3D a Engilab",
-          data: "20 febrer 2026",
+          titol:     "Nova impressora 3D a Engilab",
+          data:      "20 febrer 2026",
           categoria: "Equipament",
           cos: `
             <p>Hem incorporat una nova impressora 3D industrial al laboratori Engilab de l'ETSEIB. Es tracta d'un model d'alta precisió capaç de treballar amb una àmplia gamma de materials tècnics, incloent-hi PLA, PETG, TPU i filaments de fibra de carboni.</p>
@@ -317,8 +452,8 @@
           `
         },
         {
-          titol: "Taller de disseny CAD",
-          data: "10 febrer 2026",
+          titol:     "Taller de disseny CAD",
+          data:      "10 febrer 2026",
           categoria: "Formació",
           cos: `
             <p>El passat 10 de febrer es va dur a terme un taller pràctic sobre modelatge CAD destinat als estudiants de l'ETSEIB. L'activitat va comptar amb la participació de més de 30 alumnes de diferents cursos i especialitats.</p>
@@ -330,10 +465,10 @@
 
       function obrirNoticia(index) {
         const n = noticies[index];
-        document.getElementById('modal-titol').textContent = n.titol;
-        document.getElementById('modal-data').textContent  = n.data;
+        document.getElementById('modal-titol').textContent          = n.titol;
+        document.getElementById('modal-data').textContent           = n.data;
         document.getElementById('modal-categoria-text').textContent = n.categoria;
-        document.getElementById('modal-cos').innerHTML = n.cos;
+        document.getElementById('modal-cos').innerHTML              = n.cos;
         document.getElementById('modal-noticia').classList.add('actiu');
         document.body.style.overflow = 'hidden';
       }
@@ -347,7 +482,9 @@
         if (e.target === document.getElementById('modal-noticia')) tancarNoticia();
       }
 
-      /* Tecla ESC */
+      /* ════════════════════════════════════════════════
+         ALTRES
+      ════════════════════════════════════════════════ */
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
           tancarNoticia();
@@ -355,53 +492,22 @@
         }
       });
 
-      /* ── CONFIGURACIÓ FIREBASE ── */
-      const firebaseConfig = {
-        apiKey: "AIzaSyDNrrjgc0TyT4dAdZiYJlNZrbia1jr8X-Q",
-        authDomain: "engilab2026.firebaseapp.com",
-        databaseURL: "https://engilab2026-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "engilab2026",
-        storageBucket: "engilab2026.firebasestorage.app",
-        messagingSenderId: "960568396971",
-        appId: "1:960568396971:web:41479521862bfceefbbbee"
-      };
-
-      firebase.initializeApp(firebaseConfig);
-      const db = firebase.database();
-      const boton = document.getElementById('statusbutton');
-      const statusRef = db.ref('statuslab');
-
-      /* ESCUCHADOR */
-      statusRef.on('value', (snapshot) => {
-        const estado = snapshot.val();
-        if (estado === 'open') {
-          boton.textContent = 'EngiLab OBERT';
-          boton.style.backgroundColor = 'var(--blue)';
-        } else {
-          boton.textContent = 'EngiLab TANCAT';
-          boton.style.backgroundColor = 'var(--red)';
-        }
-      });
-
-      /* FUNCIÓ CLICK */
-      function changestatus() {
-        if (boton.textContent === 'EngiLab OBERT') {
-          statusRef.set('closed');
-        } else {
-          statusRef.set('open');
-        }
-      }
-
-      /* ── ALTRES ── */
       window.onclick = function(e) {
         const modal = document.getElementById('id01');
         if (e.target === modal) modal.style.display = 'none';
-      }
+      };
 
       function buscar() {
         const q = document.getElementById('searchInput').value;
         if (q.trim()) console.log('Cercant:', q);
       }
+
     </script>
   </body>
 </html>
+
+
+
+
+
+
