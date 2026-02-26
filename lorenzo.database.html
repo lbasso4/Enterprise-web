@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ca">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+    <title>Engilab ETSEIB</title>
+
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { overflow-x: hidden; width: 100%; }
+
+      :root {
+        --blue:       rgb(0, 123, 193);
+        --blue-dark:  rgb(0, 95, 155);
+        --red:        #e63946;
+        --gray-bg:    #f2f4f7;
+        --gray-light: #e8eaed;
+        --text-main:  #1a1a2e;
+        --text-muted: #6b7280;
+        --white:      #ffffff;
+        --shadow-sm:  0 1px 4px rgba(0,0,0,0.08);
+        --shadow-md:  0 4px 16px rgba(0,0,0,0.12);
+        --shadow-lg:  0 8px 32px rgba(0,0,0,0.18);
+        --radius:     10px;
+      }
+
+      body {
+        font-family: 'Barlow', sans-serif;
+        background-color: var(--gray-bg);
+        color: var(--text-main);
+        min-height: 100vh;
+      }
+
+      /* ── NAVBAR ─────────────────────────────────────── */
+      .title {
+        display: flex;
+        align-items: center;
+        background-color: var(--white);
+        padding: 0 24px;
+        height: 70px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        gap: 14px;
+        width: 100%;
+      }
+      .logos { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+      .logos img { height: 44px; width: auto; display: block; }
+      .nav-divider { width: 1px; height: 32px; background: var(--gray-light); flex-shrink: 0; }
+      .title h1 {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 700; font-size: 1.5rem; letter-spacing: 0.5px;
+        color: var(--blue); flex-grow: 1; text-align: center;
+        cursor: pointer; transition: color 0.2s; white-space: nowrap;
+      }
+      .title h1:hover { color: var(--blue-dark); }
+      .login-btn {
+        padding: 8px 14px; border-radius: 8px; background: transparent;
+        border: 2px solid var(--blue); color: var(--blue);
+        font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 13px;
+        cursor: pointer; transition: background 0.2s, color 0.2s;
+        flex-shrink: 0; white-space: nowrap;
+      }
+      .login-btn:hover { background: var(--blue); color: white; }
+      #statusbutton {
+        padding: 9px 16px; border-radius: 8px; background-color: var(--blue);
+        border: none; font-size: 12px; font-weight: 700;
+        font-family: 'Barlow', sans-serif; letter-spacing: 0.3px; color: white;
+        cursor: pointer; box-shadow: var(--shadow-sm); width: 160px;
+        flex-shrink: 0; transition: background-color 0.25s, transform 0.15s;
+        display: flex; align-items: center; justify-content: center; gap: 7px;
+      }
+      #statusbutton::before {
+        content: ''; display: inline-block; width: 8px; height: 8px;
+        border-radius: 50%; background: rgba(255,255,255,0.9);
+        flex-shrink: 0; animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50%       { opacity: 0.5; transform: scale(1.3); }
+      }
+      #statusbutton:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+      /* ── SEARCH ─────────────────────────────────────── */
+      .search-section {
+        background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%);
+        padding: 18px 24px; display: flex; justify-content: center; width: 100%;
+      }
+      .search-container {
+        display: flex; width: 100%; max-width: 580px;
+        border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-md);
+      }
+      .search-container input {
+        flex: 1; padding: 13px 18px; border: none;
+        font-family: 'Barlow', sans-serif; font-size: 15px;
+        color: var(--text-main); background: white; outline: none; min-width: 0;
+      }
+      .search-container button {
+        padding: 13px 20px; background: white; border: none;
+        color: var(--blue); font-size: 16px; cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+        border-left: 1px solid var(--gray-light); flex-shrink: 0;
+      }
+      .search-container button:hover { background: var(--blue); color: white; }
+
+      /* ── HERO IMAGE ──────────────────────────────────── */
+      .backimg {
+        background-image: url('img/printer.jpg');
+        background-size: cover; background-position: center center;
+        height: 420px; width: 100%; position: relative; overflow: hidden;
+      }
+      .backimg::after {
+        content: ''; position: absolute; inset: 0;
+        background: linear-gradient(to bottom, rgba(0,80,140,0.15) 0%, rgba(0,0,0,0.50) 100%);
+      }
+      .hero-overlay {
+        position: absolute; bottom: 36px; left: 48px; z-index: 2; color: white;
+      }
+      .hero-overlay h2 {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 2.8rem; font-weight: 700; line-height: 1.1;
+        text-shadow: 0 2px 16px rgba(0,0,0,0.5);
+      }
+      .hero-overlay p {
+        font-size: 1rem; opacity: 0.88; margin-top: 6px;
+        text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+      }
+
+      /* ── NOTÍCIES ────────────────────────────────────── */
+      .noticies-wrapper { background: var(--gray-bg); width: 100%; padding: 52px 24px; }
+      .noticies { max-width: 860px; margin: 0 auto; }
+      .noticies-header { text-align: center; margin-bottom: 36px; }
+      .noticies-header h2 {
+        display: inline-block;
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 1.8rem; font-weight: 700; color: var(--text-main);
+        letter-spacing: 0.5px; position: relative; padding-bottom: 12px;
+      }
+      .noticies-header h2::after {
+        content: ''; position: absolute; bottom: 0; left: 50%;
+        transform: translateX(-50%); width: 56px; height: 4px;
+        border-radius: 2px; background: var(--blue);
+      }
+
+      /* Targeta notícia — clicable */
+      .noticia {
+        background-color: var(--white);
+        padding: 22px 26px;
+        margin-bottom: 16px;
+        border-radius: var(--radius);
+        border-left: 5px solid var(--blue);
+        box-shadow: var(--shadow-sm);
+        transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+        position: relative;
+      }
+      .noticia:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateX(5px);
+        border-color: var(--blue-dark);
+      }
+      .noticia h3 {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 1.2rem; font-weight: 700; color: var(--text-main);
+        transition: color 0.2s;
+      }
+      .noticia:hover h3 { color: var(--blue); }
+
+      .noticia-preview {
+        color: #374151; font-size: 0.96rem; line-height: 1.55;
+      }
+
+      /* Indicador "llegir més" */
+      .llegir-mes {
+        display: inline-flex; align-items: center; gap: 5px;
+        color: var(--blue); font-size: 0.85rem; font-weight: 600;
+        margin-top: 4px; transition: gap 0.2s;
+      }
+      .noticia:hover .llegir-mes { gap: 8px; }
+
+      .data {
+        font-size: 0.82em; color: var(--text-muted); font-weight: 500;
+        display: flex; align-items: center; gap: 5px;
+      }
+      .data::before {
+        content: '\f073'; font-family: 'Font Awesome 6 Free';
+        font-weight: 900; color: var(--blue); font-size: 0.85em;
+      }
+
+      /* ── MODAL NOTÍCIA ───────────────────────────────── */
+      .modal-noticia {
+        display: none;
+        position: fixed;
+        z-index: 998;
+        inset: 0;
+        background: rgba(0,0,0,0.55);
+        backdrop-filter: blur(4px);
+        padding: 24px;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-noticia.actiu { display: flex; }
+
+      .modal-noticia-content {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: var(--shadow-lg);
+        width: 100%;
+        max-width: 680px;
+        max-height: 88vh;
+        overflow-y: auto;
+        animation: slideUp 0.28s ease;
+        position: relative;
+      }
+
+      @keyframes slideUp {
+        from { transform: translateY(24px); opacity: 0; }
+        to   { transform: translateY(0);    opacity: 1; }
+      }
+
+      /* Capçalera del modal notícia */
+      .modal-noticia-header {
+        background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+        padding: 32px 36px 28px;
+        color: white;
+        position: relative;
+        border-radius: 16px 16px 0 0;
+      }
+
+      .modal-noticia-header .data-modal {
+        font-size: 0.82rem; opacity: 0.8; margin-bottom: 8px;
+        display: flex; align-items: center; gap: 6px;
+      }
+      .modal-noticia-header .data-modal i { font-size: 0.85em; }
+
+      .modal-noticia-header h2 {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 2rem; font-weight: 700; line-height: 1.15;
+        letter-spacing: 0.3px;
+      }
+
+      .tancar-noticia {
+        position: absolute; top: 16px; right: 20px;
+        background: rgba(255,255,255,0.15); border: none;
+        color: white; width: 34px; height: 34px; border-radius: 50%;
+        font-size: 18px; cursor: pointer; display: flex;
+        align-items: center; justify-content: center;
+        transition: background 0.2s;
+      }
+      .tancar-noticia:hover { background: rgba(255,255,255,0.3); }
+
+      /* Cos del modal notícia */
+      .modal-noticia-body {
+        padding: 32px 36px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .modal-noticia-body p {
+        color: #374151; font-size: 1rem; line-height: 1.75;
+      }
+
+      .modal-noticia-body p + p {
+        padding-top: 4px;
+      }
+
+      /* Etiqueta categoria */
+      .categoria-tag {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: rgba(0,123,193,0.1); color: var(--blue);
+        padding: 5px 12px; border-radius: 20px;
+        font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px;
+        text-transform: uppercase; align-self: flex-start;
+      }
+
+      /* Peu del modal */
+      .modal-noticia-footer {
+        padding: 18px 36px;
+        border-top: 1px solid var(--gray-light);
+        display: flex; justify-content: flex-end;
+      }
+
+      .btn-tancar-footer {
+        padding: 10px 24px; border-radius: 8px;
+        background: var(--gray-bg); border: 2px solid var(--gray-light);
+        color: var(--text-muted); font-family: 'Barlow', sans-serif;
+        font-weight: 600; font-size: 14px; cursor: pointer;
+        transition: background 0.2s, color 0.2s, border-color 0.2s;
+      }
+      .btn-tancar-footer:hover {
+        background: var(--blue); color: white; border-color: var(--blue);
+      }
+
+      /* ── MODAL LOGIN ─────────────────────────────────── */
+      .modal {
+        display: none; position: fixed; z-index: 999; inset: 0;
+        background: rgba(0,0,0,0.45); backdrop-filter: blur(3px);
+      }
+      .modal-content {
+        background: var(--white); border-radius: 14px;
+        box-shadow: var(--shadow-lg); width: 360px; max-width: 92vw;
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%, -50%); overflow: hidden;
+        animation: slideUpCenter 0.25s ease;
+      }
+      @keyframes slideUpCenter {
+        from { transform: translate(-50%, -46%); opacity: 0; }
+        to   { transform: translate(-50%, -50%); opacity: 1; }
+      }
+      .close {
+        position: absolute; top: 14px; right: 18px; font-size: 22px;
+        color: rgba(255,255,255,0.8); cursor: pointer; z-index: 10; transition: color 0.2s;
+      }
+      .close:hover { color: white; }
+      .imgcontainer {
+        background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+        padding: 32px 0 24px; text-align: center;
+      }
+      .avatar {
+        border-radius: 50%; border: 3px solid rgba(255,255,255,0.6);
+        width: 80px; height: 80px; object-fit: cover;
+      }
+      .modal-body {
+        padding: 26px 28px; display: flex; flex-direction: column; gap: 14px;
+      }
+      .modal-body label {
+        font-size: 11px; font-weight: 700; color: var(--text-muted);
+        letter-spacing: 0.8px; text-transform: uppercase;
+        margin-bottom: 4px; display: block;
+      }
+      .modal-body input[type="text"],
+      .modal-body input[type="password"] {
+        width: 100%; padding: 11px 14px; border: 2px solid var(--gray-light);
+        border-radius: 8px; font-family: 'Barlow', sans-serif; font-size: 14px;
+        outline: none; transition: border-color 0.2s; color: var(--text-main);
+      }
+      .modal-body input:focus { border-color: var(--blue); }
+      .field-group { display: flex; flex-direction: column; }
+      .submit-btn {
+        width: 100%; padding: 13px; background: var(--blue); color: white;
+        border: none; border-radius: 8px; font-family: 'Barlow', sans-serif;
+        font-weight: 700; font-size: 15px; cursor: pointer;
+        transition: background 0.2s, transform 0.15s; margin-top: 4px;
+      }
+      .submit-btn:hover { background: var(--blue-dark); transform: translateY(-1px); }
+      .modal-footer {
+        padding: 14px 28px; background: var(--gray-bg);
+        border-top: 1px solid var(--gray-light);
+        display: flex; justify-content: space-between; align-items: center;
+      }
+      .cancelbtn {
+        background: none; border: none; color: var(--text-muted);
+        font-family: 'Barlow', sans-serif; font-weight: 600;
+        font-size: 14px; cursor: pointer; transition: color 0.2s;
+      }
+      .cancelbtn:hover { color: var(--red); }
+      .psw a { color: var(--blue); text-decoration: none; font-size: 13px; font-weight: 500; }
+      .psw a:hover { text-decoration: underline; }
+      .remember-row {
+        display: flex; align-items: center; gap: 8px;
+        font-size: 13px; color: var(--text-muted); cursor: pointer;
+      }
+      .remember-row input { accent-color: var(--blue); }
+
+      /* ── FOOTER ──────────────────────────────────────── */
+      footer {
+        background: var(--text-main); color: rgba(255,255,255,0.5);
+        text-align: center; padding: 22px 24px; font-size: 13px; width: 100%;
+      }
+      footer span { color: var(--blue); font-weight: 600; }
+
+      #intern { display: none; }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- NAVBAR -->
+    <section class="title">
+      <div class="logos">
+        <img src="img/upc-positiu-p3005.png" alt="UPC Logo">
+        <img src="img/logo etseib (còpia).png" alt="ETSEIB Logo">
+      </div>
+      <div class="nav-divider"></div>
+      <h1>Engilab ETSEIB</h1>
+      <button class="login-btn" onclick="document.getElementById('id01').style.display='block'">
+        <i class="fa fa-user" style="margin-right:5px;"></i>Login
+      </button>
+      <button id="statusbutton" onclick="changestatus()">EngiLab OBERT</button>
+    </section>
+
+    <!-- SEARCH -->
+    <section class="search-section">
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Cerca contingut...">
+        <button onclick="buscar()"><i class="fa fa-search"></i></button>
+      </div>
+    </section>
+
+    <!-- HERO IMAGE -->
+    <div class="backimg">
+      <div class="hero-overlay">
+        <h2>Fabricació &amp; Innovació</h2>
+        <p>El laboratori d'enginyeria de l'ETSEIB</p>
+      </div>
+    </div>
+
+    <!-- NOTÍCIES -->
+    <div class="noticies-wrapper">
+      <section class="noticies">
+        <div class="noticies-header">
+          <h2>Últimes notícies</h2>
+        </div>
+
+        <article class="noticia" onclick="obrirNoticia(0)">
+          <h3>Nova impressora 3D a Engilab</h3>
+          <p class="data">20 febrer 2026</p>
+          <p class="noticia-preview">Hem incorporat una nova impressora 3D industrial per a projectes d'alta precisió.</p>
+          <span class="llegir-mes"><i class="fa fa-arrow-right"></i> Llegir més</span>
+        </article>
+
+        <article class="noticia" onclick="obrirNoticia(1)">
+          <h3>Taller de disseny CAD</h3>
+          <p class="data">10 febrer 2026</p>
+          <p class="noticia-preview">S'ha realitzat un taller pràctic sobre modelatge CAD per a estudiants de l'ETSEIB.</p>
+          <span class="llegir-mes"><i class="fa fa-arrow-right"></i> Llegir més</span>
+        </article>
+
+      </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      © 2026 <span>Engilab ETSEIB</span> · Universitat Politècnica de Catalunya
+    </footer>
+
+    <!-- MODAL NOTÍCIA -->
+    <div id="modal-noticia" class="modal-noticia" onclick="tancarNoticiaFons(event)">
+      <div class="modal-noticia-content">
+        <div class="modal-noticia-header">
+          <div class="data-modal"><i class="fa fa-calendar"></i> <span id="modal-data"></span></div>
+          <h2 id="modal-titol"></h2>
+          <button class="tancar-noticia" onclick="tancarNoticia()">&times;</button>
+        </div>
+        <div class="modal-noticia-body">
+          <span class="categoria-tag" id="modal-categoria">
+            <i class="fa fa-tag"></i> <span id="modal-categoria-text"></span>
+          </span>
+          <div id="modal-cos"></div>
+        </div>
+        <div class="modal-noticia-footer">
+          <button class="btn-tancar-footer" onclick="tancarNoticia()">
+            <i class="fa fa-arrow-left" style="margin-right:6px;"></i>Tornar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL LOGIN -->
+    <div id="id01" class="modal">
+      <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Tancar">&times;</span>
+      <form class="modal-content" action="php/action_page.php">
+        <div class="imgcontainer">
+          <img src="img_avatar2.png" alt="Avatar" class="avatar">
+        </div>
+        <div class="modal-body">
+          <div class="field-group">
+            <label for="uname">Usuari</label>
+            <input type="text" id="uname" placeholder="Introdueix el teu usuari" name="uname" required>
+          </div>
+          <div class="field-group">
+            <label for="psw-input">Contrasenya</label>
+            <input type="password" id="psw-input" placeholder="Introdueix la contrasenya" name="psw" required>
+          </div>
+          <label class="remember-row">
+            <input type="checkbox" checked name="remember"> Recorda'm
+          </label>
+          <button type="submit" class="submit-btn">Iniciar sessió</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel·lar</button>
+          <span class="psw"><a href="#intern">Has oblidat la contrasenya?</a></span>
+        </div>
+      </form>
+    </div>
+
+    <div id="intern"><p>BUG2</p></div>
+
+    <script>
+
+      /* ── DADES DE LES NOTÍCIES ───────────────────────── */
+      /* Afegeix aquí tantes notícies com vulguis!          */
+      const noticies = [
+        {
+          titol: "Nova impressora 3D a Engilab",
+          data: "20 febrer 2026",
+          categoria: "Equipament",
+          cos: `
+            <p>Hem incorporat una nova impressora 3D industrial al laboratori Engilab de l'ETSEIB. Es tracta d'un model d'alta precisió capaç de treballar amb una àmplia gamma de materials tècnics, incloent-hi PLA, PETG, TPU i filaments de fibra de carboni.</p>
+            <p>Aquesta incorporació permetrà als estudiants i investigadors realitzar prototips de major qualitat per als seus projectes de final de grau i de recerca. La impressora compta amb una àrea d'impressió de 300×300×400 mm i una resolució de capa de fins a 0,05 mm.</p>
+            <p>La màquina estarà disponible per a reserves a partir de la setmana vinent a través del portal de reserva d'equipament. Es requerirà una formació prèvia obligatòria d'una hora per poder utilitzar-la de manera autònoma.</p>
+          `
+        },
+        {
+          titol: "Taller de disseny CAD",
+          data: "10 febrer 2026",
+          categoria: "Formació",
+          cos: `
+            <p>El passat 10 de febrer es va dur a terme un taller pràctic sobre modelatge CAD destinat als estudiants de l'ETSEIB. L'activitat va comptar amb la participació de més de 30 alumnes de diferents cursos i especialitats.</p>
+            <p>Durant la sessió, els participants van aprendre a modelar peces mecàniques complexes utilitzant SolidWorks i Fusion 360, amb especial èmfasi en les funcionalitats de simulació d'esforços i anàlisi de tensions.</p>
+            <p>Donada l'excel·lent acollida, el proper taller está previst per al 15 de març i s'hi tractarà el disseny de mecanismes articulats i l'exportació de fitxers per a impressió 3D. Les places estan obertes a tots els estudiants de la universitat.</p>
+          `
+        }
+      ];
+
+      /* ── OBRIR NOTÍCIA ───────────────────────────────── */
+      function obrirNoticia(index) {
+        const n = noticies[index];
+        document.getElementById('modal-titol').textContent = n.titol;
+        document.getElementById('modal-data').textContent  = n.data;
+        document.getElementById('modal-categoria-text').textContent = n.categoria;
+        document.getElementById('modal-cos').innerHTML = n.cos;
+        document.getElementById('modal-noticia').classList.add('actiu');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function tancarNoticia() {
+        document.getElementById('modal-noticia').classList.remove('actiu');
+        document.body.style.overflow = '';
+      }
+
+      function tancarNoticiaFons(e) {
+        if (e.target === document.getElementById('modal-noticia')) tancarNoticia();
+      }
+
+      /* Tecla ESC per tancar */
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          tancarNoticia();
+          document.getElementById('id01').style.display = 'none';
+        }
+      });
+
+      /*read the database*/
+      <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app-compat.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-database-compat.js"></script>
+
+      <script>
+        
+      // CONFIGURATION (This is provided by the database)
+      const firebaseConfig = {
+        apiKey: "AIzaSyDNrrjgc0TyT4dAdZiYJlNZrbia1jr8X-Q",
+        authDomain: "engilab2026.firebaseapp.com",
+        databaseURL: "https://engilab2026-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "engilab2026",
+        storageBucket: "engilab2026.firebasestorage.app",
+        messagingSenderId: "960568396971",
+        appId: "1:960568396971:web:41479521862bfceefbbbee",
+        measurementId: "G-B7N02TM4P6"
+      };
+
+      /* initialize firebase */
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+      const boton = document.getElementById('statusbutton');
+      const statusRef = db.ref('statuslab'); /* this is the key to the value of the button in the database */
+
+      statusRef.on('value', (snapshot) => {
+        const estado = snapshot.val();
+          if (estado === 'open') {
+            boton.textContent = 'EngiLab OBERT';
+            boton.style.backgroundColor = 'rgb(0, 123, 193)';
+          } else {
+            boton.textContent = 'EngiLab TANCAT';
+            boton.style.backgroundColor = 'red';
+          }
+      });
+      /* this part only changes the value of the key "statuslab" in the database, and then the button is changed*/
+      function changestatus() {
+        if (boton.textContent === 'EngiLab OBERT') {
+          statusRef.set('closed');
+        } else {
+          statusRef.set('open');
+        }
+      }
+        
+      </script>
+    
+      <script>
+      /* ── LOGIN MODAL ─────────────────────────────────── */
+      window.onclick = function(e) {
+        const modal = document.getElementById('id01');
+        if (e.target === modal) modal.style.display = 'none';
+      }
+
+      function buscar() {
+        const q = document.getElementById('searchInput').value;
+        if (q.trim()) console.log('Cercant:', q);
+      }
+    </script>
+
+    <!-- <script src="script_search.js"></script> -->
+  </body>
+</html>
