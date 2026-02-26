@@ -129,6 +129,96 @@
         text-shadow: 0 1px 8px rgba(0,0,0,0.4);
       }
 
+      /* ── IMPRESSORES ─────────────────────────────────── */
+      .impressores-wrapper {
+        background: var(--white);
+        width: 100%;
+        padding: 44px 24px;
+        border-bottom: 1px solid var(--gray-light);
+      }
+
+      .impressores-inner {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      .impressores-header {
+        text-align: center;
+        margin-bottom: 28px;
+      }
+
+      .impressores-header h2 {
+        display: inline-block;
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 1.6rem; font-weight: 700;
+        color: var(--text-main); letter-spacing: 0.5px;
+        position: relative; padding-bottom: 10px;
+      }
+      .impressores-header h2::after {
+        content: ''; position: absolute; bottom: 0; left: 50%;
+        transform: translateX(-50%); width: 48px; height: 4px;
+        border-radius: 2px; background: var(--blue);
+      }
+
+      .impressores-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 16px;
+      }
+
+      .impressora-card {
+        background: var(--gray-bg);
+        border-radius: 14px;
+        padding: 20px 16px 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        border: 2px solid var(--gray-light);
+        transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+      }
+      .impressora-card:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+      }
+      .impressora-card.oberta  { border-color: var(--blue); }
+      .impressora-card.tancada { border-color: var(--red); }
+
+      .impressora-icon {
+        font-size: 2rem;
+        line-height: 1;
+      }
+
+      .impressora-nom {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 1.05rem; font-weight: 700;
+        color: var(--text-main); text-align: center;
+      }
+
+      .btn-impressora {
+        padding: 8px 0;
+        width: 100%;
+        border-radius: 8px;
+        border: none;
+        font-family: 'Barlow', sans-serif;
+        font-size: 12px; font-weight: 700;
+        letter-spacing: 0.3px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center; gap: 6px;
+        transition: background-color 0.25s, transform 0.15s, box-shadow 0.2s;
+        color: white;
+        box-shadow: var(--shadow-sm);
+      }
+      .btn-impressora::before {
+        content: '';
+        display: inline-block; width: 7px; height: 7px;
+        border-radius: 50%; background: rgba(255,255,255,0.9);
+        flex-shrink: 0; animation: pulse 2s infinite;
+      }
+      .btn-impressora:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+      .btn-impressora.oberta  { background-color: var(--blue); }
+      .btn-impressora.tancada { background-color: var(--red); }
+
       /* ── NOTÍCIES ────────────────────────────────────── */
       .noticies-wrapper { background: var(--gray-bg); width: 100%; padding: 52px 24px; }
       .noticies { max-width: 860px; margin: 0 auto; }
@@ -412,6 +502,18 @@
       </div>
     </div>
 
+    <!-- IMPRESSORES -->
+    <div class="impressores-wrapper">
+      <div class="impressores-inner">
+        <div class="impressores-header">
+          <h2><i class="fa fa-cube" style="margin-right:8px;color:var(--blue);"></i>Estat de les impressores 3D</h2>
+        </div>
+        <div class="impressores-grid" id="impressores-grid">
+          <!-- generat per JS -->
+        </div>
+      </div>
+    </div>
+
     <!-- NOTÍCIES -->
     <div class="noticies-wrapper">
       <section class="noticies">
@@ -548,27 +650,110 @@
         }
       });
 
-      /* ── BOTÓ ESTAT ──────────────────────────────────── */
-      const boton = document.getElementById('statusbutton');
-      const savedstate = localStorage.getItem('status');
-      if (savedstate === 'closed') {
-        boton.textContent = 'EngiLab TANCAT';
-        boton.style.backgroundColor = '#e63946';
-      } else {
-        boton.textContent = 'EngiLab OBERT';
-        boton.style.backgroundColor = 'rgb(0, 123, 193)';
+      /* ── CONFIGURACIÓ FIREBASE ───────────────────────── */
+      /*
+       * Substitueix FIREBASE_URL per la URL de la teva base de dades:
+       * https://EL-TEU-PROJECTE-default-rtdb.firebaseio.com
+       */
+      const FIREBASE_URL = 'https://EL-TEU-PROJECTE-default-rtdb.firebaseio.com';
+
+      /* ── IMPRESSORES ─────────────────────────────────── */
+      const IMPRESSORES = [
+        { id: 'imp1', nom: 'Impressora 1' },
+        { id: 'imp2', nom: 'Impressora 2' },
+        { id: 'imp3', nom: 'Impressora 3' },
+        { id: 'imp4', nom: 'Impressora 4' },
+        { id: 'imp5', nom: 'Impressora 5' },
+      ];
+
+      /* Construeix les targetes dinàmicament */
+      const grid = document.getElementById('impressores-grid');
+      IMPRESSORES.forEach(imp => {
+        grid.innerHTML += `
+          <div class="impressora-card" id="card-${imp.id}">
+            <div class="impressora-icon">🖨️</div>
+            <div class="impressora-nom">${imp.nom}</div>
+            <button class="btn-impressora oberta" id="btn-${imp.id}" onclick="canviarImpressora('${imp.id}')">
+              DISPONIBLE
+            </button>
+          </div>`;
+      });
+
+      function aplicarEstatImpressora(id, estat) {
+        const btn  = document.getElementById('btn-' + id);
+        const card = document.getElementById('card-' + id);
+        if (!btn || !card) return;
+        if (estat === 'ocupada') {
+          btn.textContent  = 'OCUPADA';
+          btn.className    = 'btn-impressora tancada';
+          card.className   = 'impressora-card tancada';
+          btn.style.backgroundColor = '#e63946';
+        } else {
+          btn.textContent  = 'DISPONIBLE';
+          btn.className    = 'btn-impressora oberta';
+          card.className   = 'impressora-card oberta';
+          btn.style.backgroundColor = 'rgb(0, 123, 193)';
+        }
       }
 
-      function changestatus() {
-        if (boton.textContent === 'EngiLab OBERT') {
+      async function canviarImpressora(id) {
+        const btn = document.getElementById('btn-' + id);
+        const nouEstat = btn.textContent.trim() === 'DISPONIBLE' ? 'ocupada' : 'disponible';
+        aplicarEstatImpressora(id, nouEstat);
+        try {
+          await fetch(`${FIREBASE_URL}/engilab/impressores/${id}.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nouEstat)
+          });
+        } catch (e) { console.error('Error Firebase impressora:', e); }
+      }
+
+      /* ── BOTÓ ESTAT ENGILAB ──────────────────────────── */
+      const boton = document.getElementById('statusbutton');
+
+      function aplicarEstat(estat) {
+        if (estat === 'closed') {
           boton.textContent = 'EngiLab TANCAT';
           boton.style.backgroundColor = '#e63946';
-          localStorage.setItem('status', 'closed');
         } else {
           boton.textContent = 'EngiLab OBERT';
           boton.style.backgroundColor = 'rgb(0, 123, 193)';
-          localStorage.setItem('status', 'open');
         }
+      }
+
+      /* ── POLLING GLOBAL (Engilab + Impressores) ──────── */
+      async function comprovarTot() {
+        try {
+          const res  = await fetch(`${FIREBASE_URL}/engilab.json`);
+          const data = await res.json();
+          if (!data) return;
+
+          /* Estat Engilab */
+          aplicarEstat(data.status ?? 'open');
+
+          /* Estat impressores */
+          if (data.impressores) {
+            IMPRESSORES.forEach(imp => {
+              aplicarEstatImpressora(imp.id, data.impressores[imp.id] ?? 'disponible');
+            });
+          }
+        } catch (e) { console.warn('Firebase no disponible:', e); }
+      }
+
+      comprovarTot();
+      setInterval(comprovarTot, 3000);
+
+      async function changestatus() {
+        const nouEstat = boton.textContent === 'EngiLab OBERT' ? 'closed' : 'open';
+        aplicarEstat(nouEstat);
+        try {
+          await fetch(`${FIREBASE_URL}/engilab/status.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nouEstat)
+          });
+        } catch (e) { console.error('Error Firebase engilab:', e); }
       }
 
       /* ── LOGIN MODAL ─────────────────────────────────── */
