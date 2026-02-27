@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    
+    <meta charset = 'utf-8' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style_search.css">
+    <title>Engilab ETSEIB</title> <!-- This is what will appear at the top of the tab -->
+    <link rel="stylesheet" href="style.css">
+    <!-- for the title class-->
+    <style> 
+      body {
+        font-family: 'Roboto';
+      }
+      form {
+        text-align: center;
+      }
+      .title {
+        display:flex;
+        flex-direction: row;
+        align-items: center;
+        background-color: white;
+        padding: 10px 20px;
+        height: 70px;
+        box-shadow: 0px 4px 6px black;
+      }
+
+      .title h1 {
+        color: rgb(0, 123, 193);
+        font-family: "Roboto";
+      } 
+      
+      .logos {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
+    </style>
+
+    <!-- in this part I will put the image of the 3D printer -->
+    <style>
+      .backimg {
+        background-image: url('img/printer.jpg');
+        background-size: cover;
+        background-position: 100% 80%;
+        height: 400px;
+        width: 100%;
+        box-shadow: 0px 4px 8px black;
+        margin-bottom: 0px;
+      }
+
+    </style>
+    
+    <!-- This part is where the news's style is stated -->
+    <style>
+      .noticies {
+        padding: 40px;
+        background-color: #f5f5f5;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .bloque {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        margin-top: 0px;
+        margin-bottom: 40px;
+      }
+
+      .noticies h2 {
+        text-align: center;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        border-bottom: 5px solid blue;
+        background-color: white;
+        padding: 10px;
+        box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+      }
+
+      .noticia {
+        background-color: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-left: 5px solid blue;
+        box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+      }
+
+      .noticia h3 {
+        margin-top: 0;
+      }
+
+      .data {
+        font-size: 0.9em;
+        color: gray;
+      }
+    </style>
+  
+  </head>
+
+  <body>
+
+    
+
+    <!-- this part is in the top -->
+    <section class = 'title'>
+      <!-- here we'll add a division to group up both images due to them being a different thing-->
+       <div class = 'logos'>
+        <img src='img/upc-positiu-p3005.png' style = 'margin-left: 10px; height: 70px;'>
+        <img src='img/logo etseib (còpia).png' style = 'margin-left: 10px; height: 60px;'>
+
+       </div>
+      
+      <h1 onmouseover="this.style.color='blue'; this.style.cursor= 'pointer'" onmouseout="this.style.color='rgb(0, 123, 193)'" style = 'text-align: center; flex-grow: 1; margin: 0;'>Engilab ETSEIB</h1>
+      <button id = "statusbutton" onclick= changestatus() style="padding: 15px 20px; border-radius: 5px; background-color: rgb(0, 123, 193); border-width: 0px; font-size: 14px; font-weight: bold; box-shadow: 0px 0px 2px black; width: 200px; ">EngiLab OBERT</button>
+      <!-- We have defined the button and its main characteristics (that will be also applied after clicking it) -->
+        
+
+    </section>
+    <section class="search-section">
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Cerca...">
+        <button onclick="buscar()">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+    </section>
+    <div class = 'backimg'>
+
+    </div>
+      
+
+    <section class="noticies">
+      <div class="bloque">
+        <h2>Últimes notícies</h2>
+      </div>
+
+      <article class="noticia">
+        <h3>Nova impressora 3D a Engilab</h3>
+        <p class="data">20 febrer 2026</p>
+        <p>
+          Hem incorporat una nova impressora 3D industrial per a projectes d'alta precisió.
+        </p>
+      </article>
+
+      <article class="noticia">
+        <h3>Taller de disseny CAD</h3>
+        <p class="data">10 febrer 2026</p>
+        <p>
+          S'ha realitzat un taller pràctic sobre modelatge CAD per a estudiants de l'ETSEIB.
+        </p>
+      </article>
+
+    </section>
+</div>
+
+<div id="intern">
+  <p>BUG2</p>
+</div>
+    <script src="script_search.js">  </script>
+  </body>
+
+  
+</html>
