@@ -1,39 +1,25 @@
-function buscar2() {
+function buscar() {
   // First, remove any previous highlights
   removeHighlights();
 
-  const input = document.getElementById("searchInput").value.trim();
+  let input = document.getElementById("searchInput").value.trim();
 
   if (input === "") {
     alert("Escriu alguna paraula per cercar.");
     return;
   }
-  
-  const searchableAreas = [
-    document.querySelector(".impressores-wrapper"),
-    document.querySelector(".noticies-wrapper"),
-    document.querySelector(".hero-overlay")
-  ];
 
-  let totalMatches = 0;
-
-  searchableAreas.forEach(area => {
-    if (area) totalMatches += highlightText(area, input);
-  });
-
-  if (totalMatches === 0) {
-    alert("No s'han trobat resultats per: " + input);
-  } else {
-    alert("S'han trobat " + totalMatches + " resultats per: " + input);
-  }
+  // We'll search inside the body, but skip the search bar itself
+  const body = document.body;
+  highlightText(body, input);
 }
 
-
 function highlightText(node, searchTerm) {
-  let count = 0;
+  // If it's a text node, look for the search term inside it
   if (node.nodeType === Node.TEXT_NODE) {
     const index = node.textContent.toLowerCase().indexOf(searchTerm.toLowerCase());
     if (index !== -1) {
+      // Split the text into 3 parts: before, match, after
       const before = node.textContent.slice(0, index);
       const match = node.textContent.slice(index, index + searchTerm.length);
       const after = node.textContent.slice(index + searchTerm.length);
@@ -42,36 +28,34 @@ function highlightText(node, searchTerm) {
       const mark = document.createElement("mark");
       mark.textContent = match;
 
+      // Replace the original text node with the 3 parts
       const fragment = document.createDocumentFragment();
       if (before) fragment.appendChild(document.createTextNode(before));
       fragment.appendChild(mark);
       if (after) fragment.appendChild(document.createTextNode(after));
 
       node.parentNode.replaceChild(fragment, node);
-      count++;
     }
   } 
   // If it's an element node (like <p>, <h3>, etc.), go through its children
   else if (
     node.nodeType === Node.ELEMENT_NODE &&
-    !["SCRIPT", "STYLE", "INPUT", "BUTTON", "TEXTAREA"].includes(node.nodeName)
+    node.nodeName !== "SCRIPT" &&
+    node.nodeName !== "STYLE" &&
+    node.nodeName !== "INPUT" &&
+    node.nodeName !== "BUTTON"
   ) {
     // We use Array.from because the childNodes list changes as we modify it
-    Array.from(node.childNodes).forEach(child => { count += highlightText(child, searchTerm);
-    });
+    Array.from(node.childNodes).forEach(child => highlightText(child, searchTerm));
   }
-return count;
 }
 
 function removeHighlights() {
+  // Find all <mark> elements and replace them with plain text
   document.querySelectorAll("mark").forEach(mark => {
-    mark.parentNode.replaceChild(document.createTextNode(mark.textContent), mark);
-    mark.parentNode.normalize();
+    const parent = mark.parentNode;
+    parent.replaceChild(document.createTextNode(mark.textContent), mark);
+    // Merge split text nodes back together
+    parent.normalize();
   });
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("searchInput").addEventListener("keydown", function (e) {
-    if (e.key === "Enter") buscar2();
-  });
-});
