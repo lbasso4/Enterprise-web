@@ -70,7 +70,7 @@ def generar_id(colourCodigo: str, number: int, arrival_date: datetime) -> str:
         raise ValueError(f"Invalid colour letter '{colourCodigo}'. Choose from: {list(codi_colors.keys())}")
     return f"{colourCodigo}{number:04d}{arrival_date.strftime('%d%m%Y')}"
 
-
+#Claude function, not used but other than testing purposes
 def parse_id(item_id: str) -> dict:
     """Parse an ID string back into its components."""
     pattern = r'^([A-Z])(\d{4})(\d{2})(\d{2})(\d{4})$'
@@ -273,4 +273,5 @@ def interactive_menu():
 
 if __name__ == "__main__":
     setup_database()
+
     interactive_menu()
