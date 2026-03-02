@@ -20,6 +20,7 @@ def llegir_arduino():
             print(f"Rebut: {linia}")
             
             # Format esperat: NFC:BOB001,PES:0.750
+            # Separem les dades
             if linia.startswith('NFC:'):
                 parts = linia.split(',')
                 codi_nfc = parts[0].replace('NFC:', '')
@@ -35,4 +36,5 @@ def llegir_arduino():
                 print(f"Resposta Flask: {resposta.json()}")
 
 if __name__ == '__main__':
+
     llegir_arduino()
