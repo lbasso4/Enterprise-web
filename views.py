@@ -10,7 +10,6 @@ import mysql.connector
 from datetime import datetime
 import serial
 import re
-import serial
 
 #meter datos
 dades_base_dades = {
