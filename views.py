@@ -1,5 +1,7 @@
-# primer lloc web
-# @app.route són les peticions que pot atendre el servidor
+"""
+Copyright  Grup Blanca, Clàudia, Hana i Alex V.
+Stock database
+"""
 
 from flask import render_template
 from app import app
@@ -197,9 +199,8 @@ def llegir_arduino():
                 print(f"Resposta Flask: {resposta.json()}")
 @app.route('/')
 @app.route('/index')
-def index():
-
-    return render_template('index.html')
+def index()
+    return render_template('EngiLab.html')
 
 @app.route('/calcula', methods=['POST'])
 def calcul():
