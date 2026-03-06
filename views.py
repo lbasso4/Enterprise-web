@@ -202,43 +202,95 @@ def llegir_arduino():
 def index()
     return render_template('EngiLab.html')
 
-@app.route('/calcula', methods=['POST'])
-def calcul():
-    ini = request.form['vini']
-    fi = request.form['vfin']
- 
-    # cridem a la funció que farà el càlcul de la suma entre ini i fi
-    s = sumainterval(int(ini),int(fi))
-    print(s)
- 
-    # en el return tornem les variables per separat, però es pot tornar un dict
-    # amb els valors a tornar {'id':'valor'}
-    return render_template('calcul.html',
-                           title = 'sumainterval',
-                           e1 = ini,
-                           e2 = fi,
-                           resultat = str(s))
-@app.route('/sumavalors')
-def suma():
-    return render_template('sumav.html')
+@app.route('/index2')
+def index2():
+    items = search_items()
+    # serialise dates for template
+    for item in items:
+        if hasattr(item.get('arrival_date'), 'strftime'):
+            item['arrival_date'] = item['arrival_date'].strftime('%d/%m/%Y')
+    return render_template_string(stock_web.html,
+                                  items=items,
+                                  colours=codi_colors,
+                                  msg=request.args.get('msg'),
+                                  err=request.args.get('err'))
 
-@app.route('/load')
-def llegir():
-    d = llegirfitxer('dades.csv')
-    print(d)    
-    return(d)
 
-@app.route('/llistat')
-def llistat():
-    d = mostrarllistat('dades.csv')
-    print(d)
-    return render_template('dadeslist.html', 
-                            lst = d)
-#example
-@app.route('/cotxe', methods=['POST'])
-def mostracotxe():
-    sel= request.form['cars']
-    print(sel)
-    return render_template('cotxe.html',
-                          selec = sel)
+@app.route('/read_weight', methods=['GET'])
+def api_read_weight():
+    """AJAX endpoint — reads live weight from Arduino."""
+    weight = read_weight_from_arduino()
+    if weight is None:
+        return jsonify({"ok": False, "error": "Could not read from Arduino. Check serial port."})
+    return jsonify({"ok": True, "weight": weight})
+
+
+@app.route('/add', methods=['POST'])
+def add():
+    try:
+        colour   = request.form['colour'].strip().upper()
+        number   = int(request.form['number'])
+        date_str = request.form['arrival_date'].strip()
+        arrival  = datetime.strptime(date_str, "%d/%m/%Y")
+        notes    = request.form.get('notes', '').strip()
+        in_stock = request.form.get('in_stock') == 'on'
+
+        # Weight: prefer Arduino reading if requested, else manual input
+        use_arduino = request.form.get('use_arduino') == 'on'
+        if use_arduino:
+            weight = read_weight_from_arduino()
+            if weight is None:
+                return redirect(url_for('index', err="Arduino not reachable — enter weight manually."))
+        else:
+            weight = float(request.form['weight_g'])
+
+        item_id, error = add_item(colour, number, arrival, weight, in_stock, notes)
+        if error:
+            return redirect(url_for('index', err=error))
+        return redirect(url_for('index', msg=f"Item {item_id} added successfully."))
+    except Exception as e:
+        return redirect(url_for('index', err=str(e)))
+
+
+@app.route('/update', methods=['POST'])
+def update():
+    item_id  = request.form['item_id'].strip()
+    stock_v  = request.form.get('is_in_stock', '')
+    in_stock = True if stock_v == 'y' else (False if stock_v == 'n' else None)
+    weight   = request.form.get('weight_g', '').strip()
+    notes    = request.form.get('notes', '').strip() or None
+    rows = update_item(item_id, is_in_stock=in_stock,
+                       weight_g=float(weight) if weight else None, notes=notes)
+    msg = f"Updated {rows} item(s)." if rows else f"Item '{item_id}' not found."
+    return redirect(url_for('index', msg=msg))
+
+
+@app.route('/delete/<item_id>', methods=['POST'])
+def delete(item_id):
+    rows = delete_item(item_id)
+    msg = f"Deleted '{item_id}'." if rows else f"Item '{item_id}' not found."
+    return redirect(url_for('index', msg=msg))
+
+
+@app.route('/search')
+def search():
+    item_id   = request.args.get('item_id') or None
+    colour    = request.args.get('colour') or None
+    stock_v   = request.args.get('in_stock', '')
+    in_stock  = True if stock_v == 'y' else (False if stock_v == 'n' else None)
+    min_w     = request.args.get('min_weight', '')
+    max_w     = request.args.get('max_weight', '')
+    items = search_items(
+        item_id=item_id, colour=colour, in_stock=in_stock,
+        min_weight=float(min_w) if min_w else None,
+        max_weight=float(max_w) if max_w else None
+    )
+    for item in items:
+        if hasattr(item.get('arrival_date'), 'strftime'):
+            item['arrival_date'] = item['arrival_date'].strftime('%d/%m/%Y')
+    return render_template_string(stock_web.html,
+                                  items=items,
+                                  colours=codi_colors,
+                                  msg=None, err=None,
+                                  search_active=True)
 
