@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_mail import Mail, Message
 import os
 
@@ -60,21 +60,22 @@ def enviar():
         Gràcies per contactar amb EngiLab!
         """
 
-    msg_client = Message(
-            subject='Hem rebut el teu missatge - EngiLab',
-            recipients=[email],
-            body=body_client
-        )
+            msg_client = Message(
+                    subject='Hem rebut el teu missatge - EngiLab',
+                    recipients=[email],
+                    body=body_client
+            )
 
     try:
         mail.send(msg)
         if email:
             mail.send(msg_client)
-        return redirect(url_for('index2'))  # Torna a la pàgina principal
+        return redirect(url_for('index'))  # Torna a la pàgina principal
     except Exception as e:
         app.logger.exception("Email send failed")
         return "No s'ha pogut enviar el correu ara mateix", 500
 
 
 if __name__ == '__main__':
+
     app.run(debug=True)
