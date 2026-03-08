@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Manager — EngiConsulting</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<title>Engilab Stock</title>
+</head>
+<body>
+
+<header>
+  <span style="font-size:1.4rem">🖨️</span>
+  <h1>Stock Manager</h1>
+  <span class="badge">EngiConsulting</span>
+</header>
+
+<div class="page">
+
+  <!-- ── SIDEBAR ── -->
+  <aside>
+
+    <!-- Arduino weight reader -->
+    <div>
+      <div class="panel-title">⚖️ Arduino Weight Reader</div>
+      <div class="weight-widget">
+        <div class="reading" id="weight-display">— g</div>
+        <small>Live reading from serial port</small>
+      </div>
+      <button class="btn btn-secondary" style="width:100%" onclick="readWeight()">Read Weight</button>
+      <div id="serial-error" style="color:var(--acc);font-size:0.7rem;margin-top:0.4rem"></div>
+    </div>
+
+    <!-- Add item form -->
+    <div>
+      <div class="panel-title">➕ Add New Item</div>
+      <form action="/add" method="POST" id="add-form">
+
+        <label>Colour</label>
+        <select name="colour" required>
+          {% for code, name in colours.items() %}
+          <option value="{{ code }}">{{ code }} — {{ name }}</option>
+          {% endfor %}
+        </select>
+
+        <label>Number (0–9999)</label>
+        <input type="number" name="number" min="0" max="9999" required>
+
+        <label>Arrival Date (DD/MM/YYYY)</label>
+        <input type="text" name="arrival_date" placeholder="21/01/2026" required>
+
+        <label>Weight (g)</label>
+        <div style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.3rem">
+          <input type="number" name="weight_g" id="weight_g_field" step="0.1" min="0" placeholder="0.0" style="margin-bottom:0">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="fillWeight()">↑ Use Arduino</button>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" name="in_stock" id="in_stock" checked>
+          <label for="in_stock" style="margin:0">In stock</label>
+        </div>
+
+        <label>Notes (optional)</label>
+        <textarea name="notes" rows="2" placeholder="Any additional info…"></textarea>
+
+        <button type="submit" class="btn btn-primary" style="width:100%">Add to Stock</button>
+      </form>
+    </div>
+
+    <!-- Search -->
+    <div>
+      <div class="panel-title">🔍 Filter Stock</div>
+      <form action="/search" method="GET">
+        <label>Item ID</label>
+        <input type="text" name="item_id" placeholder="e.g. R000421012026">
+
+        <label>Colour</label>
+        <select name="colour">
+          <option value="">All</option>
+          {% for code, name in colours.items() %}
+          <option value="{{ code }}">{{ name }}</option>
+          {% endfor %}
+        </select>
+
+        <label>In Stock</label>
+        <select name="in_stock">
+          <option value="">All</option>
+          <option value="y">Yes</option>
+          <option value="n">No</option>
+        </select>
+
+        <div style="display:flex;gap:0.4rem">
+          <div style="flex:1">
+            <label>Min weight (g)</label>
+            <input type="number" name="min_weight" step="0.1" min="0" placeholder="0">
+          </div>
+          <div style="flex:1">
+            <label>Max weight (g)</label>
+            <input type="number" name="max_weight" step="0.1" min="0" placeholder="∞">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-ghost" style="width:100%">Apply Filter</button>
+      </form>
+    </div>
+
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main>
+
+    {% if msg %}
+    <div class="flash ok">✓ {{ msg }}</div>
+    {% endif %}
+    {% if err %}
+    <div class="flash err">✗ {{ err }}</div>
+    {% endif %}
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+      <h2 style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem">
+        {% if search_active is defined and search_active %}Filtered Results{% else %}All Stock{% endif %}
+        <span style="font-weight:400;color:var(--muted);font-size:0.8rem">({{ items|length }} item{{ 's' if items|length != 1 }})</span>
+      </h2>
+      {% if search_active is defined and search_active %}
+      <a href="/" class="btn btn-ghost btn-sm">← Clear filter</a>
+      {% endif %}
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Item ID</th>
+            <th>Colour</th>
+            <th>In Stock</th>
+            <th>Weight (g)</th>
+            <th>Arrival</th>
+            <th>Notes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% if items %}
+          {% for item in items %}
+          <tr>
+            <td><code style="font-size:0.72rem">{{ item.item_id }}</code></td>
+            <td>
+              <span class="colour-dot" style="background:{{ item.colour.lower() }}"></span>
+              {{ item.colour }}
+            </td>
+            <td>
+              <span class="chip {{ 'chip-yes' if item.is_in_stock else 'chip-no' }}">
+                {{ 'Yes' if item.is_in_stock else 'No' }}
+              </span>
+            </td>
+            <td>{{ item.weight_g }}</td>
+            <td>{{ item.arrival_date }}</td>
+            <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ item.notes or '—' }}</td>
+            <td>
+              <button class="btn btn-ghost btn-sm" onclick="toggleUpdate('{{ item.item_id }}')">Edit</button>
+              <form action="/delete/{{ item.item_id }}" method="POST" style="display:inline"
+                    onsubmit="return confirm('Delete {{ item.item_id }}?')">
+                <button type="submit" class="btn btn-danger">Del</button>
+              </form>
+            </td>
+          </tr>
+          <!-- inline update row -->
+          <tr>
+            <td colspan="7" style="padding:0;border:none">
+              <div class="update-form" id="upd-{{ item.item_id }}">
+                <form action="/update" method="POST">
+                  <input type="hidden" name="item_id" value="{{ item.item_id }}">
+                  <div class="row">
+                    <div>
+                      <label>In Stock</label>
+                      <select name="is_in_stock">
+                        <option value="">— no change —</option>
+                        <option value="y">Yes</option>
+                        <option value="n">No</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label>Weight (g)</label>
+                      <input type="number" name="weight_g" step="0.1" placeholder="{{ item.weight_g }}">
+                    </div>
+                    <div style="flex:2">
+                      <label>Notes</label>
+                      <input type="text" name="notes" placeholder="{{ item.notes or '' }}">
+                    </div>
+                    <div style="display:flex;align-items:flex-end">
+                      <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr><td colspan="7" class="empty">No items found in stock.</td></tr>
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ── Arduino weight reader ──────────────────────────────────────────────────
+  let lastWeight = null;
+
+  async function readWeight() {
+    document.getElementById('weight-display').textContent = '…';
+    document.getElementById('serial-error').textContent = '';
+    try {
+      const res = await fetch('/api/read_weight');
+      const data = await res.json();
+      if (data.ok) {
+        lastWeight = data.weight;
+        document.getElementById('weight-display').textContent = data.weight + ' g';
+      } else {
+        document.getElementById('serial-error').textContent = data.error;
+        document.getElementById('weight-display').textContent = '— g';
+      }
+    } catch (e) {
+      document.getElementById('serial-error').textContent = 'Network error.';
+    }
+  }
+
+  function fillWeight() {
+    if (lastWeight !== null) {
+      document.getElementById('weight_g_field').value = lastWeight;
+    } else {
+      alert('Press "Read Weight" first to get a reading from the Arduino.');
+    }
+  }
+
+  // ── Inline edit toggle ─────────────────────────────────────────────────────
+  function toggleUpdate(id) {
+    const el = document.getElementById('upd-' + id);
+    el.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>

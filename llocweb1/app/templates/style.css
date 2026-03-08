@@ -1,0 +1,125 @@
+/* Page base styling */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background-color: #f4f6f9;
+}
+.imgcontainer {
+  width:300px;
+  max-width: 90%;
+  max-height: 90%;
+}
+/* Modal background — hidden by default, shown via JS onclick */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* Modal content */
+.modal-content {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 400px;         /* fixed width lives here, on the box — not the overlay */
+  max-width: 90%;
+  
+  position: relative;
+  animation: fadeZoom 0.3s ease;
+}
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto 12px;
+}
+/* Close button */
+.close {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close:hover {
+  color: #e63946;
+}
+
+/* Input styling */
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+input:focus {
+  border-color: #3a86ff;
+  outline: none;
+}
+
+.container {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+}
+
+/* Buttons */
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #3a86ff;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #265dbe;
+}
+
+.cancelbtn {
+  background-color: #adb5bd;
+  margin-top: 8px;
+}
+
+.cancelbtn:hover {
+  background-color: #6c757d;
+}
+
+/* Animation */
+@keyframes fadeZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
