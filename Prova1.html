@@ -213,8 +213,34 @@
     footer span { color: var(--blue); font-weight: 600; }
     #intern { display: none; }
 
+
+    /* ── TABS LOGIN / REGISTRE ── */
+    .login-tabs { display: flex; border-bottom: 2px solid var(--gray-light); }
+    .login-tab { flex: 1; padding: 14px; background: none; border: none; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 14px; color: var(--text-muted); cursor: pointer; transition: color .2s; position: relative; }
+    .login-tab.actiu { color: var(--blue); }
+    .login-tab.actiu::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: var(--blue); border-radius: 2px; }
+    .login-tab:hover { color: var(--blue); }
+    .login-panel { display: none; }
+    .login-panel.actiu { display: flex; flex-direction: column; gap: 14px; }
+    .register-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .register-grid .login-field { grid-column: auto; }
+    .register-grid .login-field.full { grid-column: 1 / -1; }
+    .login-success { display: none; background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.3); border-radius: 8px; padding: 10px 14px; color: var(--green); font-size: 13px; font-weight: 600; text-align: center; align-items: center; gap: 6px; justify-content: center; }
+    .login-success.visible { display: flex; }
     @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
     #toast-msg { transition: opacity .4s ease; }
+
+    /* ── PANELL USUARIS REGISTRATS (admin) ── */
+    .usuaris-panel-wrapper { display: none; background: #12121f; width: 100%; padding: 40px 24px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .usuaris-panel-wrapper.visible { display: block; }
+    .usuaris-panel-inner { max-width: 900px; margin: 0 auto; }
+    .usuaris-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 20px; }
+    .usuari-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px 18px; display: flex; align-items: center; gap: 12px; }
+    .usuari-avatar { width: 38px; height: 38px; border-radius: 50%; background: rgba(0,123,193,0.2); border: 2px solid rgba(0,123,193,0.4); display: flex; align-items: center; justify-content: center; color: rgba(0,180,255,0.8); font-size: 1rem; flex-shrink: 0; }
+    .usuari-info { min-width: 0; }
+    .usuari-nom { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .usuari-email { font-size: .78rem; color: rgba(255,255,255,0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .usuaris-buit { text-align: center; padding: 32px; color: rgba(255,255,255,0.25); font-size: .95rem; }
   </style>
 </head>
 <body>
@@ -264,6 +290,22 @@
       </div>
       <div id="llista-solicituds">
         <div class="admin-buit"><i class="fa fa-inbox"></i>Encara no hi ha sol·licituds.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANELL USUARIS REGISTRATS (admin) -->
+  <div class="usuaris-panel-wrapper" id="usuaris-panel">
+    <div class="usuaris-panel-inner">
+      <div class="admin-panel-header">
+        <h2>
+          <i class="fa fa-users"></i> Estudiants registrats
+          <span class="admin-badge">ADMIN</span>
+          <span class="admin-counter" id="usuaris-counter">0</span>
+        </h2>
+      </div>
+      <div class="usuaris-grid" id="llista-usuaris">
+        <div class="usuaris-buit">Encara no hi ha estudiants registrats.</div>
       </div>
     </div>
   </div>
@@ -408,26 +450,79 @@
       <div class="modal-login-header">
         <button class="close-login" onclick="tancarLogin()">&times;</button>
         <div class="avatar-circle"><i class="fa fa-user"></i></div>
-        <h3>Accés Engilab</h3>
+        <h3 id="login-header-title">Accés Engilab</h3>
       </div>
-      <div id="login-form-area">
-        <div class="modal-login-body">
-          <div class="login-field">
-            <label>Correu electrònic</label>
-            <input type="email" id="login-email" placeholder="exemple@gmail.com" autocomplete="email">
-          </div>
-          <div class="login-field">
-            <label>Contrasenya</label>
-            <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
-          </div>
-          <div class="login-error" id="login-error">
-            <i class="fa fa-circle-exclamation" style="margin-right:5px;"></i>Correu o contrasenya incorrectes.
-          </div>
-          <button class="btn-login-submit" onclick="intentarLogin()">
-            <i class="fa fa-right-to-bracket" style="margin-right:6px;"></i>Iniciar sessió
+
+      <!-- Tabs -->
+      <div id="login-tabs-area">
+        <div class="login-tabs">
+          <button class="login-tab actiu" id="tab-login" onclick="canviarTab('login')">
+            <i class="fa fa-right-to-bracket" style="margin-right:5px;"></i>Iniciar sessió
+          </button>
+          <button class="login-tab" id="tab-registre" onclick="canviarTab('registre')">
+            <i class="fa fa-user-plus" style="margin-right:5px;"></i>Registra't
           </button>
         </div>
+
+        <div class="modal-login-body">
+          <!-- Panel Login -->
+          <div class="login-panel actiu" id="panel-login">
+            <div class="login-field">
+              <label>Correu electrònic</label>
+              <input type="email" id="login-email" placeholder="exemple@gmail.com" autocomplete="email">
+            </div>
+            <div class="login-field">
+              <label>Contrasenya</label>
+              <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+            </div>
+            <div class="login-error" id="login-error">
+              <i class="fa fa-circle-exclamation" style="margin-right:5px;"></i>
+              <span id="login-error-text">Correu o contrasenya incorrectes.</span>
+            </div>
+            <button class="btn-login-submit" onclick="intentarLogin()">
+              <i class="fa fa-right-to-bracket" style="margin-right:6px;"></i>Iniciar sessió
+            </button>
+          </div>
+
+          <!-- Panel Registre -->
+          <div class="login-panel" id="panel-registre">
+            <div class="register-grid">
+              <div class="login-field">
+                <label>Nom</label>
+                <input type="text" id="reg-nom" placeholder="El teu nom">
+              </div>
+              <div class="login-field">
+                <label>Cognom</label>
+                <input type="text" id="reg-cognom" placeholder="El teu cognom">
+              </div>
+              <div class="login-field full">
+                <label>Correu electrònic</label>
+                <input type="email" id="reg-email" placeholder="exemple@gmail.com">
+              </div>
+              <div class="login-field full">
+                <label>Contrasenya</label>
+                <input type="password" id="reg-pass" placeholder="Mínim 6 caràcters">
+              </div>
+              <div class="login-field full">
+                <label>Repeteix la contrasenya</label>
+                <input type="password" id="reg-pass2" placeholder="••••••••">
+              </div>
+            </div>
+            <div class="login-error" id="reg-error">
+              <i class="fa fa-circle-exclamation" style="margin-right:5px;"></i>
+              <span id="reg-error-text">Error en el registre.</span>
+            </div>
+            <div class="login-success" id="reg-success">
+              <i class="fa fa-circle-check"></i> Compte creat! Ja pots iniciar sessió.
+            </div>
+            <button class="btn-login-submit" onclick="intentarRegistre()">
+              <i class="fa fa-user-plus" style="margin-right:6px;"></i>Crear compte
+            </button>
+          </div>
+        </div>
       </div>
+
+      <!-- Sessió activa -->
       <div class="sessio-panel" id="sessio-panel">
         <div class="check-icon"><i class="fa fa-check"></i></div>
         <div>
@@ -485,6 +580,10 @@
 
       // Panell admin (sol·licituds)
       document.getElementById('admin-panel').classList.toggle('visible', esAdmin);
+
+      // Panell usuaris registrats
+      document.getElementById('usuaris-panel').classList.toggle('visible', esAdmin);
+      if (esAdmin) renderUsuaris();
 
       // Botó nova notícia
       document.getElementById('btn-nova-noticia').classList.toggle('visible', esAdmin);
@@ -738,7 +837,46 @@
       db.ref('noticies/' + key).remove();
     }
 
+    /* ══ USUARIS REGISTRATS (vista admin) ═══════════ */
+    db.ref('usuaris').on('value', () => { if (rolActiu === 'admin') renderUsuaris(); });
+
+    function renderUsuaris() {
+      const grid = document.getElementById('llista-usuaris');
+      db.ref('usuaris').orderByChild('timestamp').once('value', snap => {
+        const dades = snap.val();
+        if (!dades) {
+          document.getElementById('usuaris-counter').textContent = '0';
+          grid.innerHTML = '<div class="usuaris-buit">Encara no hi ha estudiants registrats.</div>';
+          return;
+        }
+        const llista = Object.values(dades).sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+        document.getElementById('usuaris-counter').textContent = llista.length;
+        grid.innerHTML = llista.map(u => `
+          <div class="usuari-card">
+            <div class="usuari-avatar"><i class="fa fa-user-graduate"></i></div>
+            <div class="usuari-info">
+              <div class="usuari-nom">${esc(u.nom)} ${esc(u.cognom)}</div>
+              <div class="usuari-email">${esc(u.email)}</div>
+            </div>
+          </div>`).join('');
+      });
+    }
+
     /* ══ LOGIN ════════════════════════════════════════ */
+    let tabActiu = 'login';
+
+    function canviarTab(tab) {
+      tabActiu = tab;
+      document.getElementById('tab-login').classList.toggle('actiu', tab === 'login');
+      document.getElementById('tab-registre').classList.toggle('actiu', tab === 'registre');
+      document.getElementById('panel-login').classList.toggle('actiu', tab === 'login');
+      document.getElementById('panel-registre').classList.toggle('actiu', tab === 'registre');
+      // Netejar errors
+      document.getElementById('login-error').classList.remove('visible');
+      document.getElementById('reg-error').classList.remove('visible');
+      document.getElementById('reg-success').classList.remove('visible');
+    }
+
     function obrirLogin() {
       document.getElementById('modal-login').classList.add('actiu');
       document.body.style.overflow = 'hidden';
@@ -747,26 +885,31 @@
     function tancarLogin() {
       document.getElementById('modal-login').classList.remove('actiu');
       document.body.style.overflow = '';
-      document.getElementById('login-email').value = '';
-      document.getElementById('login-pass').value  = '';
+      document.getElementById('login-email').value  = '';
+      document.getElementById('login-pass').value   = '';
       document.getElementById('login-error').classList.remove('visible');
       ['login-email','login-pass'].forEach(id => document.getElementById(id).classList.remove('error'));
+      // Reset registre
+      ['reg-nom','reg-cognom','reg-email','reg-pass','reg-pass2'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('reg-error').classList.remove('visible');
+      document.getElementById('reg-success').classList.remove('visible');
+      canviarTab('login');
     }
     function tancarLoginFons(e) { if (e.target === document.getElementById('modal-login')) tancarLogin(); }
 
     function actualitzarModalLogin() {
-      const formArea    = document.getElementById('login-form-area');
+      const tabsArea    = document.getElementById('login-tabs-area');
       const sessioPanel = document.getElementById('sessio-panel');
       const loginBtn    = document.getElementById('loginBtn');
       if (sessioActiva) {
-        formArea.style.display = 'none';
+        tabsArea.style.display = 'none';
         sessioPanel.classList.add('visible');
         const etiqueta = rolActiu === 'admin'
           ? '<span style="background:var(--blue);color:white;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;margin-left:6px;">ADMIN</span>' : '';
         loginBtn.innerHTML = '<i class="fa fa-circle-check"></i> Sessió activa' + etiqueta;
         loginBtn.classList.add('sessio-activa');
       } else {
-        formArea.style.display = 'block';
+        tabsArea.style.display = 'block';
         sessioPanel.classList.remove('visible');
         loginBtn.innerHTML = '<i class="fa fa-user"></i> Login';
         loginBtn.classList.remove('sessio-activa');
@@ -775,24 +918,100 @@
     }
 
     function intentarLogin() {
-      const email = document.getElementById('login-email').value.trim().toLowerCase();
-      const pass  = document.getElementById('login-pass').value;
+      const email   = document.getElementById('login-email').value.trim().toLowerCase();
+      const pass    = document.getElementById('login-pass').value;
       const errorEl = document.getElementById('login-error');
-      const usuari  = USUARIS.find(u => u.email.toLowerCase() === email && u.password === pass);
-      if (usuari) {
-        sessioActiva = true; rolActiu = usuari.rol;
-        document.getElementById('nom-usuari').textContent = usuari.nom + ' (' + usuari.email + ')';
+      const errText = document.getElementById('login-error-text');
+
+      // 1. Comprova usuaris fixes (admin, professor)
+      const usuariFixed = USUARIS.find(u => u.email.toLowerCase() === email && u.password === pass);
+      if (usuariFixed) {
+        iniciarSessio(usuariFixed.nom, usuariFixed.rol, usuariFixed.email);
+        return;
+      }
+
+      // 2. Comprova estudiants registrats a Firebase
+      db.ref('usuaris').orderByChild('email').equalTo(email).once('value', snap => {
+        const dades = snap.val();
+        if (!dades) {
+          errText.textContent = 'Correu no registrat. Crea un compte primer.';
+          errorEl.classList.add('visible');
+          sacsejar();
+          return;
+        }
+        const key    = Object.keys(dades)[0];
+        const usuari = dades[key];
+        if (usuari.password !== pass) {
+          errText.textContent = 'Contrasenya incorrecta.';
+          errorEl.classList.add('visible');
+          ['login-email','login-pass'].forEach(id => document.getElementById(id).classList.add('error'));
+          sacsejar();
+          return;
+        }
+        // Login correcte — estudiant
         errorEl.classList.remove('visible');
         ['login-email','login-pass'].forEach(id => document.getElementById(id).classList.remove('error'));
-        actualitzarModalLogin();
-        tancarLogin();
-        if (rolActiu === 'admin') renderSolicituds();
-      } else {
-        errorEl.classList.add('visible');
-        ['login-email','login-pass'].forEach(id => document.getElementById(id).classList.add('error'));
-        const box = document.querySelector('.modal-login-box');
-        box.style.animation = 'none'; box.offsetHeight; box.style.animation = 'shake .35s ease';
+        iniciarSessio(usuari.nom + ' ' + usuari.cognom, 'usuari', usuari.email);
+      });
+    }
+
+    function iniciarSessio(nomComplet, rol, email) {
+      sessioActiva = true; rolActiu = rol;
+      document.getElementById('nom-usuari').textContent = nomComplet + ' (' + email + ')';
+      actualitzarModalLogin();
+      tancarLogin();
+      if (rol === 'admin') renderSolicituds();
+    }
+
+    function sacsejar() {
+      const box = document.querySelector('.modal-login-box');
+      box.style.animation = 'none'; box.offsetHeight; box.style.animation = 'shake .35s ease';
+    }
+
+    function intentarRegistre() {
+      const nom    = document.getElementById('reg-nom').value.trim();
+      const cognom = document.getElementById('reg-cognom').value.trim();
+      const email  = document.getElementById('reg-email').value.trim().toLowerCase();
+      const pass   = document.getElementById('reg-pass').value;
+      const pass2  = document.getElementById('reg-pass2').value;
+      const errEl  = document.getElementById('reg-error');
+      const errTxt = document.getElementById('reg-error-text');
+      const okEl   = document.getElementById('reg-success');
+
+      // Validacions
+      if (!nom || !cognom || !email || !pass || !pass2) {
+        errTxt.textContent = 'Omple tots els camps.'; errEl.classList.add('visible'); okEl.classList.remove('visible'); return;
       }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errTxt.textContent = 'El correu no és vàlid.'; errEl.classList.add('visible'); okEl.classList.remove('visible'); return;
+      }
+      if (pass.length < 6) {
+        errTxt.textContent = 'La contrasenya ha de tenir mínim 6 caràcters.'; errEl.classList.add('visible'); okEl.classList.remove('visible'); return;
+      }
+      if (pass !== pass2) {
+        errTxt.textContent = 'Les contrasenyes no coincideixen.'; errEl.classList.add('visible'); okEl.classList.remove('visible'); return;
+      }
+      // Comprova que no sigui un usuari fix
+      if (USUARIS.some(u => u.email.toLowerCase() === email)) {
+        errTxt.textContent = 'Aquest correu ja està en ús.'; errEl.classList.add('visible'); okEl.classList.remove('visible'); return;
+      }
+
+      // Comprova si ja existeix a Firebase
+      db.ref('usuaris').orderByChild('email').equalTo(email).once('value', snap => {
+        if (snap.val()) {
+          errTxt.textContent = 'Aquest correu ja està registrat.'; errEl.classList.add('visible'); okEl.classList.remove('visible'); return;
+        }
+        // Guarda a Firebase
+        db.ref('usuaris').push({ nom, cognom, email, password: pass, rol: 'usuari', timestamp: Date.now() })
+          .then(() => {
+            errEl.classList.remove('visible');
+            okEl.classList.add('visible');
+            ['reg-nom','reg-cognom','reg-email','reg-pass','reg-pass2'].forEach(id => document.getElementById(id).value = '');
+            // Canvia a la tab de login després de 2 seg
+            setTimeout(() => { okEl.classList.remove('visible'); canviarTab('login'); }, 2000);
+          })
+          .catch(() => { errTxt.textContent = 'Error en crear el compte. Torna-ho a intentar.'; errEl.classList.add('visible'); });
+      });
     }
 
     function tancarSessio() {
