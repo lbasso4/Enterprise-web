@@ -230,6 +230,20 @@
     @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
     #toast-msg { transition: opacity .4s ease; }
 
+    /* ── BANNER LOGIN REQUERIT ── */
+    .login-required-banner { display: none; background: rgba(0,123,193,0.06); border: 2px dashed rgba(0,123,193,0.3); border-radius: 12px; padding: 28px 24px; text-align: center; flex-direction: column; align-items: center; gap: 12px; }
+    .login-required-banner.visible { display: flex; }
+    .login-required-banner i { font-size: 2rem; color: var(--blue); opacity: .6; }
+    .login-required-banner p { color: var(--text-muted); font-size: .95rem; line-height: 1.5; }
+    .login-required-banner strong { color: var(--text-main); }
+    .btn-login-now { padding: 10px 24px; background: var(--blue); color: white; border: none; border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; transition: background .2s, transform .15s; display: inline-flex; align-items: center; gap: 7px; }
+    .btn-login-now:hover { background: var(--blue-dark); transform: translateY(-1px); }
+    .usuari-info-form { display: none; background: rgba(22,163,74,0.06); border: 1px solid rgba(22,163,74,0.2); border-radius: 10px; padding: 12px 16px; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .usuari-info-form.visible { display: flex; }
+    .usuari-info-form i { color: var(--green); font-size: 1.1rem; }
+    .usuari-info-form span { font-size: 13px; color: var(--text-muted); }
+    .usuari-info-form strong { color: var(--text-main); }
+
     /* ── SELECTOR MATERIAL I PES ── */
     .material-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
     @media (max-width: 540px) { .material-grid { grid-template-columns: 1fr; } }
@@ -458,6 +472,7 @@
         <button class="btn-reset-form" onclick="resetFormulari()"><i class="fa fa-rotate-left" style="margin-right:6px;"></i>Netejar</button>
         <button class="btn-enviar" onclick="enviarSolicitud()"><i class="fa fa-paper-plane"></i> Enviar sol·licitud</button>
       </div>
+      </div> <!-- /form-contingut -->
     </div>
   </div>
 
@@ -648,9 +663,10 @@
       { email: "estudiant@etseib.upc.edu",   password: "Est2026@",   nom: "Estudiant",     rol: "usuari" },
     ];
 
-    let sessioActiva = false;
-    let rolActiu     = null;
-    let emailActiu   = null;
+    let sessioActiva    = false;
+    let rolActiu       = null;
+    let emailActiu     = null;
+    let nomUsuariActiu = null;
 
     /* ══ FIREBASE ═════════════════════════════════════ */
     const firebaseConfig = {
@@ -673,6 +689,22 @@
       document.getElementById('search-section').style.display  = esAdmin ? 'none' : '';
       document.getElementById('hero-section').style.display    = esAdmin ? 'none' : '';
       document.getElementById('formulari-section').style.display = esAdmin ? 'none' : '';
+
+      // Formulari: banner login o formulari real segons sessió
+      const teSessioNoAdmin = sessioActiva && !esAdmin;
+      const banner   = document.getElementById('login-required-banner');
+      const formCont = document.getElementById('form-contingut');
+      if (banner && formCont) {
+        banner.classList.toggle('visible', !sessioActiva);
+        formCont.style.display = teSessioNoAdmin ? 'block' : 'none';
+        // Mostrar nom i email de l'usuari identificat
+        if (teSessioNoAdmin) {
+          const infoBox = document.getElementById('usuari-info-form');
+          document.getElementById('form-nom-usuari').textContent = nomUsuariActiu || '';
+          document.getElementById('form-email-usuari').textContent = emailActiu || '';
+          if (infoBox) infoBox.classList.add('visible');
+        }
+      }
 
       // Panell admin (sol·licituds)
       document.getElementById('admin-panel').classList.toggle('visible', esAdmin);
@@ -780,10 +812,14 @@
           const s = dades[key];
           const materialInfo = s.material ? `${s.material}${s.pes ? ' · ' + s.pes + ' g' : ''}` : '';
           const preuInfo = s.preuEstimat ? s.preuEstimat + ' €' : '';
+          const nomMostrar   = s.nomUsuari  || s.nom   || '—';
+          const emailMostrar = s.emailUsuari || s.email || '—';
           return `<div class="sol-card" id="sol-${key}">
             <div class="sol-card-top">
-              <div><div class="sol-nom"><i class="fa fa-user" style="margin-right:6px;opacity:.5;"></i>${esc(s.nom)}</div>
-              <div class="sol-email">${esc(s.email)}</div></div>
+              <div>
+                <div class="sol-nom"><i class="fa fa-user" style="margin-right:6px;opacity:.5;"></i>${esc(nomMostrar)}</div>
+                <div class="sol-email">${esc(emailMostrar)}</div>
+              </div>
               <span class="sol-data-badge"><i class="fa fa-calendar" style="margin-right:5px;"></i>${esc(s.data)}</span>
             </div>
             ${materialInfo ? `<div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
@@ -870,6 +906,7 @@
       reader.onload = e => {
         const sol = { nom, email, detalls, material: materialActiu, pes, preuEstimat,
           fitxer: arxiuSTL.name, stlData: e.target.result,
+          nomUsuari: nomUsuariActiu || nom, emailUsuari: emailActiu || email,
           data: new Date().toLocaleDateString('ca-ES', {day:'2-digit',month:'long',year:'numeric'}), timestamp: Date.now() };
         db.ref('solicituds').push(sol).then(() => {
           document.getElementById('form-success').classList.add('visible');
@@ -1092,7 +1129,7 @@
     }
 
     function iniciarSessio(nomComplet, rol, email) {
-      sessioActiva = true; rolActiu = rol; emailActiu = email;
+      sessioActiva = true; rolActiu = rol; emailActiu = email; nomUsuariActiu = nomComplet;
       document.getElementById('nom-usuari').textContent = nomComplet + ' (' + email + ')';
       actualitzarModalLogin();
       tancarLogin();
@@ -1151,7 +1188,7 @@
     }
 
     function tancarSessio() {
-      sessioActiva = false; rolActiu = null; emailActiu = null;
+      sessioActiva = false; rolActiu = null; emailActiu = null; nomUsuariActiu = null;
       tancarLogin();
       actualitzarModalLogin();
       // Amaga comandes
