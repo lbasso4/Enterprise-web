@@ -412,15 +412,6 @@
           <span>Sol·licitant: <strong id="form-nom-usuari"></strong> &nbsp;·&nbsp; <span id="form-email-usuari" style="color:var(--blue);font-weight:600;"></span></span>
         </div>
       <div class="form-grid">
-        <div class="form-field">
-          <label><i class="fa fa-user" style="margin-right:4px;"></i>Nom complet</label>
-          <input type="text" id="f-nom" placeholder="El teu nom i cognoms">
-        </div>
-        <div class="form-field">
-          <label><i class="fa fa-envelope" style="margin-right:4px;"></i>Correu electrònic</label>
-          <input type="email" id="f-email" placeholder="exemple@gmail.com">
-        </div>
-
         <div class="form-field full">
           <label><i class="fa fa-layer-group" style="margin-right:4px;"></i>Material d'impressió</label>
           <div class="material-options" id="material-options">
@@ -909,11 +900,11 @@
     }
 
     function enviarSolicitud() {
-      const nom     = document.getElementById('f-nom').value.trim();
-      const email   = document.getElementById('f-email').value.trim();
+      const nom     = nomUsuariActiu || '';
+      const email   = emailActiu || '';
       const detalls = document.getElementById('f-detalls').value.trim();
       const pes     = parseFloat(document.getElementById('f-pes').value);
-      if (!nom || !email || !detalls) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Omple tots els camps obligatoris.'); return; }
+      if (!detalls) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Omple tots els camps obligatoris.'); return; }
       if (!materialActiu) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Selecciona un material.'); return; }
       if (!pes || pes <= 0) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Introdueix el pes estimat.'); return; }
       if (!arxiuSTL) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Adjunta un fitxer .STL.'); return; }
@@ -934,7 +925,7 @@
     }
 
     function resetFormulari() {
-      ['f-nom','f-email','f-detalls','f-pes'].forEach(id => document.getElementById(id).value = '');
+      ['f-detalls','f-pes'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('f-stl').value = '';
       arxiuSTL = null; materialActiu = null; preuPerKg = 0;
       document.getElementById('stl-nom-display').classList.remove('visible');
