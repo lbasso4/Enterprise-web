@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Manager — EngiConsulting</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+  <div class="nav-divider" style="width:1px;height:32px;background:var(--gray-light);flex-shrink:0"></div>
+  <h1>Control de stock</h1>
+  <span class="badge">EngiConsulting</span>
+</header>
+
+<div class="page">
+
+  <!-- lateral -->
+  <aside>
+    <div>
+      <div class="panel-title">Lector de pes Arduino</div>
+      <div class="weight-widget">
+        <div class="reading" id="weight-display">Sense dades</div>
+        <small>Actualitzat en temps real</small>
+      </div>
+      <button class="btn btn-secondary" style="width:100%" onclick="readWeight()">Pesar</button>
+      <div id="serial-error" style="color:var(--acc);font-size:0.7rem;margin-top:0.4rem"></div>
+    </div>
+
+    <!-- Afegir element -->
+    <div>
+      <div class="panel-title">Afegir element</div>
+
+      <label>Color</label>
+      <select id="add-colour" required>
+        <option value="R">Vermell(R)</option>
+        <option value="G">Verd(G)</option>
+        <option value="B">Blau(B)</option>
+        <option value="Y">Groc(Y)</option>
+        <option value="K">Negre(K)</option>
+        <option value="W">Blanc(W)</option>
+        <option value="C">Cyan(C)</option>
+        <option value="M">Magenta(M)</option>
+      </select>
+
+      <label>Número (0–9999)</label>
+      <input type="number" id="add-number" min="0" max="9999" required>
+
+      <label>Fecha (DD/MM/YYYY)</label>
+      <input type="text" id="add-date" placeholder="09/02/2026" required>
+
+      <label>Pes (g)</label>
+      <div style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.7rem">
+        <input type="number" id="weight_g_field" step="0.1" min="0" placeholder="0.0" style="margin-bottom:0">
+        <button type="button" class="btn btn-ghost btn-sm" onclick="fillWeight()">Usar Arduino</button>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="add-instock" checked>
+        <label for="add-instock" style="margin:0">En stock</label>
+      </div>
+
+      <label>Notes (opcional)</label>
+      <textarea id="add-notes" rows="2" placeholder="Informació adicional…"></textarea>
+
+      <button class="btn btn-primary" style="width:100%" onclick="submitAdd()">Afegir al Stock</button>
+    </div>
+
+    <!-- Filtres -->
+    <div>
+      <div class="panel-title">Filtrar Stock</div>
+
+      <label>ID</label>
+      <input type="text" id="f-id" placeholder="R000421012026">
+
+      <label>Colour</label>
+      <select id="f-colour">
+        <option value="">Tot</option>
+        <option value="Vermell">Vermell</option>
+        <option value="Verd">Verd</option>
+        <option value="Blau">Blau</option>
+        <option value="Groc">Groc</option>
+        <option value="Negre">Negre</option>
+        <option value="Blanc">White</option>
+        <option value="Cyan">Cyan</option>
+        <option value="Magenta">Magenta</option>
+      </select>
+
+      <label>In Stock</label>
+      <select id="f-stock">
+        <option value="">Tot</option>
+        <option value="Sí">Sí</option>
+        <option value="No">No</option>
+      </select>
+
+      <div style="display:flex;gap:0.4rem">
+        <div style="flex:1">
+          <label>Pes mínim (g)</label>
+          <input type="number" id="f-minw" step="0.1" min="0" placeholder="0">
+        </div>
+        <div style="flex:1">
+          <label>Pes màxim (g)</label>
+          <input type="number" id="f-maxw" step="0.1" min="0" placeholder="∞">
+        </div>
+      </div>
+      <div style="display:flex;gap:0.5rem">
+        <button class="btn btn-ghost" style="flex:1" onclick="applyFilter()">Filtrar</button>
+        <button class="btn btn-ghost" style="flex:1" onclick="clearFilter()">Eliminar</button>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ── Principal/taula ── -->
+  <main>
+
+    <div id="flash-ok"  class="flash ok"></div>
+    <div id="flash-err" class="flash err"></div>
+
+    <div class="page-title-row">
+      <h2>Taula de Stock <span id="item-count" style="font-weight:500;color:var(--text-muted);font-size:0.9rem"></span></h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Color</th>
+            <th>En Stock</th>
+            <th>Pes (g)</th>
+            <th>Data d'Arribada</th>
+            <th>Notes</th>
+            <th>Accions</th>
+          </tr>
+        </thead>
+        <tbody id="stock-tbody">
+          <tr><td colspan="7" class="empty">Carregant…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ── Color del css / aqui s'acaba el html ───────────────────────────────────────────────
+  const DOT_CSS = {
+    'Vermell':'red','Verd':'green','Blau':'blue','Groc':'gold',
+    'Blau':'#111','Blanc':'#eee','Cyan':'cyan','Magenta':'magenta'
+  };
+
+  // ── Flash messages ─────────────────────────────────────────────────────────
+  function flash(msg, type='ok') {
+    const el    = document.getElementById(type === 'ok' ? 'flash-ok' : 'flash-err');
+    const other = document.getElementById(type === 'ok' ? 'flash-err' : 'flash-ok');
+    other.classList.remove('visible');
+    el.textContent = (type === 'ok' ? '+ ' : '! ') + msg;
+    el.classList.add('visible');
+    setTimeout(() => el.classList.remove('visible'), 4000);
+  }
+
+  // ── Render table ──────────────────────────────────────────────────────────
+  function renderTable(items) {
+    const tbody = document.getElementById('stock-tbody');
+    document.getElementById('item-count').textContent =
+      `(${items.length} item${items.length !== 1 ? 's' : ''})`;
+
+    if (!items.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty">No items found in stock.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = items.map(item => {
+      const stockChip = item.is_in_stock
+        ? '<span class="chip chip-yes">Sí</span>'
+        : '<span class="chip chip-no">No</span>';
+      const dot   = `<span class="colour-dot" style="background:${DOT_CSS[item.colour] || item.colour.toLowerCase()}"></span>`;
+      const notes = item.notes || '—';
+
+      return `
+        <tr>
+          <td><code style="font-size:0.72rem">${item.item_id}</code></td>
+          <td>${dot}${item.colour}</td>
+          <td>${stockChip}</td>
+          <td>${item.weight_g}</td>
+          <td>${item.arrival_date}</td>
+          <td style="max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${notes}</td>
+          <td>
+            <button class="btn btn-ghost btn-sm" onclick="toggleUpdate('${item.item_id}')">Editar</button>
+            <button class="btn btn-danger" onclick="deleteItem('${item.item_id}')">Eliminar</button>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="7" style="padding:0;border:none">
+            <div class="update-form" id="upd-${item.item_id}">
+              <div class="row">
+                <div>
+                  <label>En Stock</label>
+                  <select id="upd-stock-${item.item_id}">
+                    <option value="">— no canviar —</option>
+                    <option value="y">Sí</option>
+                    <option value="n">No</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Pes (g)</label>
+                  <input type="number" id="upd-weight-${item.item_id}" step="0.1" placeholder="${item.weight_g}">
+                </div>
+                <div style="flex:2">
+                  <label>Notes</label>
+                  <input type="text" id="upd-notes-${item.item_id}" placeholder="${item.notes || ''}">
+                </div>
+                <div style="display:flex;align-items:flex-end">
+                  <button class="btn btn-primary btn-sm" onclick="submitUpdate('${item.item_id}')">Desa</button>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  // ── Load stock — calls /search (returns JSON from views.py) ───────────────
+  async function loadStock(params = {}) {
+    try {
+      const qs  = new URLSearchParams(params).toString();
+      const res = await fetch(`/search${qs ? '?' + qs : ''}`);
+      const data = await res.json();
+      renderTable(data);
+    } catch (e) {
+      document.getElementById('stock-tbody').innerHTML =
+        '<tr><td colspan="7" class="empty">El servidor MySQL no esta disponible, contacta amb Claudia o Alex per mes informació.</td></tr>';
+    }
+  }
+
+  // ── Add item — POST to /add ────────────────────────────────────────────────
+  async function submitAdd() {
+    const body = new URLSearchParams({
+      colour:       document.getElementById('add-colour').value,
+      number:       document.getElementById('add-number').value,
+      arrival_date: document.getElementById('add-date').value,
+      weight_g:     document.getElementById('weight_g_field').value,
+      in_stock:     document.getElementById('add-instock').checked ? 'on' : '',
+      notes:        document.getElementById('add-notes').value,
+    });
+    try {
+      const res = await fetch('/add', { method: 'POST', body,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+      const data = await res.json();
+      if (data.ok) {
+        flash(`Item ${data.item_id} Afegit.`);
+        // clear form
+        document.getElementById('add-number').value = '';
+        document.getElementById('add-date').value   = '';
+        document.getElementById('weight_g_field').value = '';
+        document.getElementById('add-notes').value  = '';
+        loadStock();
+      } else {
+        flash(data.error, 'error');
+      }
+    } catch (e) { flash('Error de red.', 'err'); }
+  }
+
+  // ── Update item — POST to /update ─────────────────────────────────────────
+  async function submitUpdate(id) {
+    const body = new URLSearchParams({
+      item_id:     id,
+      is_in_stock: document.getElementById(`upd-stock-${id}`).value,
+      weight_g:    document.getElementById(`upd-weight-${id}`).value,
+      notes:       document.getElementById(`upd-notes-${id}`).value,
+    });
+    try {
+      const res  = await fetch('/update', { method: 'POST', body,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+      const data = await res.json();
+      if (data.ok) { flash(data.message); loadStock(); }
+      else flash(data.error, 'err');
+    } catch (e) { flash('Network error.', 'err'); }
+  }
+
+  // ── Delete item — POST to /delete/<id> ────────────────────────────────────
+  async function deleteItem(id) {
+    if (!confirm(`Delete '${id}'?`)) return;
+    try {
+      const res  = await fetch(`/delete/${id}`, { method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+      const data = await res.json();
+      if (data.ok) { flash(data.message); loadStock(); }
+      else flash(data.error, 'err');
+    } catch (e) { flash('Network error.', 'err'); }
+  }
+
+  // ── Arduino weight reader — GET /read_weight ──────────────────────────────
+  let lastWeight = null;
+
+  async function readWeight() {
+    document.getElementById('weight-display').textContent = '...';
+    document.getElementById('serial-error').textContent   = '';
+    try {
+      const res  = await fetch('/read_weight');
+      const data = await res.json();
+      if (data.ok) {
+        lastWeight = data.weight;
+        document.getElementById('weight-display').textContent = data.weight + ' g';
+      } else {
+        document.getElementById('serial-error').textContent = data.error;
+        document.getElementById('weight-display').textContent = 'Sense dades';
+      }
+    } catch (e) {
+      document.getElementById('serial-error').textContent = 'Network error.';
+    }
+  }
+
+  function fillWeight() {
+    if (lastWeight !== null) {
+      document.getElementById('weight_g_field').value = lastWeight;
+    } else {
+      alert('Pulsa llegir pes per fer servir aquesta funció.');
+    }
+  }
+
+  // ── Inline edit toggle ────────────────────────────────────────────────────
+  function toggleUpdate(id) {
+    document.getElementById('upd-' + id).classList.toggle('open');
+  }
+
+  // ── Filter ────────────────────────────────────────────────────────────────
+  function applyFilter() {
+    const params = {};
+    const id   = document.getElementById('f-id').value.trim();
+    const col  = document.getElementById('f-colour').value;
+    const stk  = document.getElementById('f-stock').value;
+    const minw = document.getElementById('f-minw').value;
+    const maxw = document.getElementById('f-maxw').value;
+    if (id)   params.item_id    = id;
+    if (col)  params.colour     = col;
+    if (stk)  params.in_stock   = stk;
+    if (minw) params.min_weight = minw;
+    if (maxw) params.max_weight = maxw;
+    loadStock(params);
+  }
+
+  function clearFilter() {
+    ['f-id','f-colour','f-stock','f-minw','f-maxw']
+      .forEach(id => document.getElementById(id).value = '');
+    loadStock();
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  loadStock();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+/* Page base styling */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background-color: #f4f6f9;
+}
+
+/* ── Header / Navegació ── */
+header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+header a {
+  text-decoration: none;
+  color: #444;
+  font-size: 15px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+header a:hover {
+  background-color: #f0f4ff;
+  color: #3a86ff;
+}
+
+header a.active {
+  color: #3a86ff;
+  font-weight: bold;
+}
+
+header button {
+  margin-left: auto;       /* empeny el botó cap a la dreta */
+  width: auto;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #3a86ff;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+header button:hover {
+  background-color: #265dbe;
+}
+
+/* ── Secció de contacte ── */
+#Contacte {
+  max-width: 560px;
+  margin: 48px auto;
+  background: #ffffff;
+  padding: 36px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  animation: fadeZoom 0.3s ease;
+}
+
+#Contacte h2 {
+  font-size: 22px;
+  color: #1d2b3a;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+#Contacte p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+/* ── Grups de formulari ── */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+/* ── Inputs i textarea ── */
+input[type="text"],
+input[type="email"],
+textarea.form-control {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fafafa;
+  transition: border-color 0.2s;
+  resize: vertical;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea.form-control:focus {
+  border-color: #3a86ff;
+  outline: none;
+  background-color: #fff;
+}
+
+/* ── Botó principal ── */
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #3a86ff;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #265dbe;
+}
+
+/* ── Animació d'entrada ── */
+@keyframes fadeZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

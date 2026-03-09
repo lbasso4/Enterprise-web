@@ -1,0 +1,36 @@
+.search-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px 30px;
+  background-color: #ffffff;
+}
+
+.search-container {
+  display: flex;
+}
+.search-container input {
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  outline: none;
+  border-radius: 4px 0 0 4px;
+}
+
+.search-container button {
+  max-height: 50%;
+  max-width: 100px;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-left: none;
+  background-color: rgb(0, 123, 193);
+  color: white;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+}
+
+.search-container button:hover {
+  background-color: rgb(0, 90, 150);
+}
+mark {
+  background-color: yellow;
+}
