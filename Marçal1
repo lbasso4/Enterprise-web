@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ca">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+    <title>Engilab ETSEIB</title>
+
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { overflow-x: hidden; width: 100%; }
+
+      :root {
+        --blue:       rgb(0, 123, 193);
+        --blue-dark:  rgb(0, 95, 155);
+        --green:      #16a34a;
+        --red:        #e63946;
+        --gray-bg:    #f2f4f7;
+        --gray-light: #e8eaed;
+        --text-main:  #1a1a2e;
+        --text-muted: #6b7280;
+        --white:      #ffffff;
+        --shadow-sm:  0 1px 4px rgba(0,0,0,0.08);
+        --shadow-md:  0 4px 16px rgba(0,0,0,0.12);
+        --shadow-lg:  0 8px 32px rgba(0,0,0,0.18);
+        --radius:     10px;
+      }
+
+      body {
+        font-family: 'Barlow', sans-serif;
+        background-color: var(--gray-bg);
+        color: var(--text-main);
+        min-height: 100vh;
+      }
+
+      /* ── NAVBAR ─────────────────────────────────────── */
+      .title {
+        display: flex; align-items: center; background-color: var(--white);
+        padding: 0 24px; height: 70px; box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+        position: sticky; top: 0; z-index: 100; gap: 14px; width: 100%;
+      }
+      .logos { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+      .logos img { height: 44px; width: auto; display: block; }
+      .nav-divider { width: 1px; height: 32px; background: var(--gray-light); flex-shrink: 0; }
+      .title h1 {
+        font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+        font-size: 1.5rem; letter-spacing: 0.5px; color: var(--blue);
+        flex-grow: 1; text-align: center; cursor: pointer; transition: color 0.2s; white-space: nowrap;
+      }
+      .title h1:hover { color: var(--blue-dark); }
+
+      /* Botó login / sessió iniciada */
+      .login-btn {
+        padding: 8px 14px; border-radius: 8px; background: transparent;
+        border: 2px solid var(--blue); color: var(--blue);
+        font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 13px;
+        cursor: pointer; transition: background 0.2s, color 0.2s, border-color 0.2s;
+        flex-shrink: 0; white-space: nowrap; display: flex; align-items: center; gap: 6px;
+      }
+      .login-btn:hover { background: var(--blue); color: white; }
+      .login-btn.sessio-activa {
+        border-color: var(--green); color: var(--green);
+      }
+      .login-btn.sessio-activa:hover { background: var(--green); color: white; }
+
+      #statusbutton {
+        padding: 9px 16px; border-radius: 8px; background-color: var(--blue);
+        border: none; font-size: 12px; font-weight: 700; font-family: 'Barlow', sans-serif;
+        letter-spacing: 0.3px; color: white; cursor: pointer; box-shadow: var(--shadow-sm);
+        width: 160px; flex-shrink: 0; transition: background-color 0.25s, transform 0.15s;
+        display: flex; align-items: center; justify-content: center; gap: 7px;
+      }
+      #statusbutton::before {
+        content: ''; display: inline-block; width: 8px; height: 8px;
+        border-radius: 50%; background: rgba(255,255,255,0.9); flex-shrink: 0; animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50%       { opacity: 0.5; transform: scale(1.3); }
+      }
+      #statusbutton:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+      /* ── SEARCH ─────────────────────────────────────── */
+      .search-section {
+        background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%);
+        padding: 18px 24px; display: flex; justify-content: center; width: 100%;
+      }
+      .search-container {
+        display: flex; width: 100%; max-width: 580px;
+        border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-md);
+      }
+      .search-container input {
+        flex: 1; padding: 13px 18px; border: none; font-family: 'Barlow', sans-serif;
+        font-size: 15px; color: var(--text-main); background: white; outline: none; min-width: 0;
+      }
+      .search-container button {
+        padding: 13px 20px; background: white; border: none; color: var(--blue);
+        font-size: 16px; cursor: pointer; transition: background 0.2s, color 0.2s;
+        border-left: 1px solid var(--gray-light); flex-shrink: 0;
+      }
+      .search-container button:hover { background: var(--blue); color: white; }
+      mark { background-color: yellow; }
+
+      /* ── HERO IMAGE ──────────────────────────────────── */
+      .backimg {
+        background-image: url('img/printer.jpg');
+        background-size: cover; background-position: center center;
+        height: 420px; width: 100%; position: relative; overflow: hidden;
+      }
+      .backimg::after {
+        content: ''; position: absolute; inset: 0;
+        background: linear-gradient(to bottom, rgba(0,80,140,0.15) 0%, rgba(0,0,0,0.50) 100%);
+      }
+      .hero-overlay { position: absolute; bottom: 36px; left: 48px; z-index: 2; color: white; }
+      .hero-overlay h2 {
+        font-family: 'Barlow Condensed', sans-serif; font-size: 2.8rem;
+        font-weight: 700; line-height: 1.1; text-shadow: 0 2px 16px rgba(0,0,0,0.5);
+      }
+      .hero-overlay p { font-size: 1rem; opacity: 0.88; margin-top: 6px; text-shadow: 0 1px 8px rgba(0,0,0,0.4); }
+
+      /* ── IMPRESSORES ─────────────────────────────────── */
+      .impressores-wrapper {
+        background: var(--white); width: 100%; padding: 44px 24px;
+        border-bottom: 1px solid var(--gray-light);
+      }
+      .impressores-inner { max-width: 960px; margin: 0 auto; }
+      .impressores-header { text-align: center; margin-bottom: 28px; }
+      .impressores-header h2 {
+        display: inline-block; font-family: 'Barlow Condensed', sans-serif;
+        font-size: 1.6rem; font-weight: 700; color: var(--text-main);
+        letter-spacing: 0.5px; position: relative; padding-bottom: 10px;
+      }
+      .impressores-header h2::after {
+        content: ''; position: absolute; bottom: 0; left: 50%;
+        transform: translateX(-50%); width: 48px; height: 4px; border-radius: 2px; background: var(--blue);
+      }
+      .impressores-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;
+      }
+      .impressora-card {
+        background: var(--gray-bg); border-radius: 14px; padding: 20px 16px 18px;
+        display: flex; flex-direction: column; align-items: center; gap: 10px;
+        border: 2px solid var(--gray-light);
+        transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+      }
+      .impressora-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+      .impressora-card.disponible { border-color: var(--blue); }
+      .impressora-card.ocupada    { border-color: var(--red); }
+      .impressora-icon { font-size: 2rem; line-height: 1; }
+      .impressora-nom { font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--text-main); text-align: center; }
+      .btn-impressora {
+        padding: 8px 0; width: 100%; border-radius: 8px; border: none;
+        font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 700;
+        letter-spacing: 0.3px; cursor: pointer; color: white; box-shadow: var(--shadow-sm);
+        display: flex; align-items: center; justify-content: center; gap: 6px;
+        transition: background-color 0.25s, transform 0.15s, box-shadow 0.2s;
+      }
+      .btn-impressora::before {
+        content: ''; display: inline-block; width: 7px; height: 7px;
+        border-radius: 50%; background: rgba(255,255,255,0.9); flex-shrink: 0; animation: pulse 2s infinite;
+      }
+      .btn-impressora:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+      .btn-impressora.disponible { background-color: var(--blue); }
+      .btn-impressora.ocupada    { background-color: var(--red); }
+
+      /* ── NOTÍCIES ────────────────────────────────────── */
+      .noticies-wrapper { background: var(--gray-bg); width: 100%; padding: 52px 24px; }
+      .noticies { max-width: 860px; margin: 0 auto; }
+      .noticies-header { text-align: center; margin-bottom: 36px; }
+      .noticies-header h2 {
+        display: inline-block; font-family: 'Barlow Condensed', sans-serif;
+        font-size: 1.8rem; font-weight: 700; color: var(--text-main);
+        letter-spacing: 0.5px; position: relative; padding-bottom: 12px;
+      }
+      .noticies-header h2::after {
+        content: ''; position: absolute; bottom: 0; left: 50%;
+        transform: translateX(-50%); width: 56px; height: 4px; border-radius: 2px; background: var(--blue);
+      }
+      .noticia {
+        background-color: var(--white); padding: 22px 26px; margin-bottom: 16px;
+        border-radius: var(--radius); border-left: 5px solid var(--blue); box-shadow: var(--shadow-sm);
+        transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+        display: flex; flex-direction: column; gap: 6px; cursor: pointer; position: relative;
+      }
+      .noticia:hover { box-shadow: var(--shadow-md); transform: translateX(5px); border-color: var(--blue-dark); }
+      .noticia h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--text-main); transition: color 0.2s; }
+      .noticia:hover h3 { color: var(--blue); }
+      .noticia-preview { color: #374151; font-size: 0.96rem; line-height: 1.55; }
+      .llegir-mes { display: inline-flex; align-items: center; gap: 5px; color: var(--blue); font-size: 0.85rem; font-weight: 600; margin-top: 4px; transition: gap 0.2s; }
+      .noticia:hover .llegir-mes { gap: 8px; }
+      .data { font-size: 0.82em; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 5px; }
+      .data::before { content: '\f073'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--blue); font-size: 0.85em; }
+
+      /* ── MODALS ──────────────────────────────────────── */
+      .modal-noticia { display: none; position: fixed; z-index: 998; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); padding: 24px; align-items: center; justify-content: center; }
+      .modal-noticia.actiu { display: flex; }
+      .modal-noticia-content { background: var(--white); border-radius: 16px; box-shadow: var(--shadow-lg); width: 100%; max-width: 680px; max-height: 88vh; overflow-y: auto; animation: slideUp 0.28s ease; position: relative; }
+      @keyframes slideUp { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+      .modal-noticia-header { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); padding: 32px 36px 28px; color: white; position: relative; border-radius: 16px 16px 0 0; }
+      .modal-noticia-header .data-modal { font-size: 0.82rem; opacity: 0.8; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+      .modal-noticia-header h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 2rem; font-weight: 700; line-height: 1.15; }
+      .tancar-noticia { position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,0.15); border: none; color: white; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+      .tancar-noticia:hover { background: rgba(255,255,255,0.3); }
+      .modal-noticia-body { padding: 32px 36px; display: flex; flex-direction: column; gap: 18px; }
+      .modal-noticia-body p { color: #374151; font-size: 1rem; line-height: 1.75; }
+      .categoria-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,123,193,0.1); color: var(--blue); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; align-self: flex-start; }
+      .modal-noticia-footer { padding: 18px 36px; border-top: 1px solid var(--gray-light); display: flex; justify-content: flex-end; }
+      .btn-tancar-footer { padding: 10px 24px; border-radius: 8px; background: var(--gray-bg); border: 2px solid var(--gray-light); color: var(--text-muted); font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; transition: background 0.2s, color 0.2s, border-color 0.2s; }
+      .btn-tancar-footer:hover { background: var(--blue); color: white; border-color: var(--blue); }
+
+      /* ── MODAL LOGIN ─────────────────────────────────── */
+      .modal {
+        display: none; position: fixed; z-index: 999; inset: 0;
+        background: rgba(0,0,0,0.45); backdrop-filter: blur(3px);
+      }
+      .modal.actiu { display: flex; align-items: center; justify-content: center; }
+
+      .modal-login-box {
+        background: var(--white); border-radius: 16px; box-shadow: var(--shadow-lg);
+        width: 380px; max-width: 92vw; overflow: hidden;
+        animation: slideUp 0.25s ease;
+        position: relative;
+      }
+
+      .modal-login-header {
+        background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+        padding: 32px 0 24px; text-align: center; position: relative;
+      }
+      .modal-login-header .avatar-circle {
+        width: 70px; height: 70px; border-radius: 50%;
+        background: rgba(255,255,255,0.2); border: 3px solid rgba(255,255,255,0.5);
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto; font-size: 1.8rem; color: white;
+      }
+      .modal-login-header h3 {
+        font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem;
+        font-weight: 700; color: white; margin-top: 12px; letter-spacing: 0.5px;
+      }
+
+      .close-login {
+        position: absolute; top: 12px; right: 16px;
+        background: rgba(255,255,255,0.15); border: none; color: white;
+        width: 30px; height: 30px; border-radius: 50%; font-size: 16px;
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        transition: background 0.2s;
+      }
+      .close-login:hover { background: rgba(255,255,255,0.3); }
+
+      .modal-login-body { padding: 28px; display: flex; flex-direction: column; gap: 16px; }
+
+      .login-field { display: flex; flex-direction: column; gap: 5px; }
+      .login-field label {
+        font-size: 11px; font-weight: 700; color: var(--text-muted);
+        letter-spacing: 0.8px; text-transform: uppercase;
+      }
+      .login-field input {
+        padding: 11px 14px; border: 2px solid var(--gray-light); border-radius: 8px;
+        font-family: 'Barlow', sans-serif; font-size: 14px; outline: none;
+        transition: border-color 0.2s; color: var(--text-main);
+      }
+      .login-field input:focus { border-color: var(--blue); }
+      .login-field input.error { border-color: var(--red); }
+
+      /* Missatge d'error */
+      .login-error {
+        display: none; background: rgba(230,57,70,0.08); border: 1px solid rgba(230,57,70,0.3);
+        border-radius: 8px; padding: 10px 14px; color: var(--red);
+        font-size: 13px; font-weight: 600; text-align: center;
+      }
+      .login-error.visible { display: block; }
+
+      .btn-login-submit {
+        width: 100%; padding: 13px; background: var(--blue); color: white; border: none;
+        border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 700;
+        font-size: 15px; cursor: pointer; transition: background 0.2s, transform 0.15s;
+      }
+      .btn-login-submit:hover { background: var(--blue-dark); transform: translateY(-1px); }
+
+      .modal-login-footer {
+        padding: 14px 28px; background: var(--gray-bg); border-top: 1px solid var(--gray-light);
+        text-align: center;
+      }
+      .btn-logout {
+        background: none; border: none; color: var(--red); font-family: 'Barlow', sans-serif;
+        font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s;
+      }
+      .btn-logout:hover { opacity: 0.7; }
+
+      /* Panell de sessió iniciada (dins del modal) */
+      .sessio-panel {
+        display: none; padding: 28px; text-align: center; flex-direction: column;
+        align-items: center; gap: 14px;
+      }
+      .sessio-panel.visible { display: flex; }
+      .sessio-panel .check-icon {
+        width: 60px; height: 60px; border-radius: 50%; background: rgba(22,163,74,0.1);
+        border: 2px solid var(--green); display: flex; align-items: center; justify-content: center;
+        font-size: 1.6rem; color: var(--green); margin: 0 auto;
+      }
+      .sessio-panel p {
+        font-size: 0.95rem; color: var(--text-muted); line-height: 1.5;
+      }
+      .sessio-panel strong { color: var(--text-main); }
+
+      footer { background: var(--text-main); color: rgba(255,255,255,0.5); text-align: center; padding: 22px 24px; font-size: 13px; width: 100%; }
+      footer span { color: var(--blue); font-weight: 600; }
+      #intern { display: none; }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- NAVBAR -->
+    <section class="title">
+      <div class="logos">
+        <img src="img/upc-positiu-p3005.png" alt="UPC Logo">
+        <img src="img/logo etseib (còpia).png" alt="ETSEIB Logo">
+      </div>
+      <div class="nav-divider"></div>
+      <h1>Engilab ETSEIB</h1>
+      <button class="login-btn" id="loginBtn" onclick="obrirLogin()">
+        <i class="fa fa-user"></i> Login
+      </button>
+      <button id="statusbutton" onclick="changestatus()">Sincronitzant...</button>
+    </section>
+
+    <!-- SEARCH -->
+    <section class="search-section">
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Cerca contingut...">
+        <button onclick="buscar2()"><i class="fa fa-search"></i></button>
+      </div>
+    </section>
+
+    <!-- HERO IMAGE -->
+    <div class="backimg">
+      <div class="hero-overlay">
+        <h2>Fabricació &amp; Innovació</h2>
+        <p>El laboratori d'enginyeria de l'ETSEIB</p>
+      </div>
+    </div>
+
+    <!-- IMPRESSORES 3D -->
+    <div class="impressores-wrapper">
+      <div class="impressores-inner">
+        <div class="impressores-header">
+          <h2><i class="fa fa-cube" style="margin-right:8px; color:var(--blue);"></i>Estat de les impressores 3D</h2>
+        </div>
+        <div class="impressores-grid" id="impressores-grid"></div>
+      </div>
+    </div>
+
+    <!-- NOTÍCIES -->
+    <div class="noticies-wrapper">
+      <section class="noticies">
+        <div class="noticies-header"><h2>Últimes notícies</h2></div>
+        <article class="noticia" onclick="obrirNoticia(0)">
+          <h3>Nova impressora 3D a Engilab</h3>
+          <p class="data">20 febrer 2026</p>
+          <p class="noticia-preview">Hem incorporat una nova impressora 3D industrial per a projectes d'alta precisió.</p>
+          <span class="llegir-mes"><i class="fa fa-arrow-right"></i> Llegir més</span>
+        </article>
+        <article class="noticia" onclick="obrirNoticia(1)">
+          <h3>Taller de disseny CAD</h3>
+          <p class="data">10 febrer 2026</p>
+          <p class="noticia-preview">S'ha realitzat un taller pràctic sobre modelatge CAD per a estudiants de l'ETSEIB.</p>
+          <span class="llegir-mes"><i class="fa fa-arrow-right"></i> Llegir més</span>
+        </article>
+      </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      © 2026 <span>Engilab ETSEIB</span> · Universitat Politècnica de Catalunya
+    </footer>
+
+    <!-- MODAL NOTÍCIA -->
+    <div id="modal-noticia" class="modal-noticia" onclick="tancarNoticiaFons(event)">
+      <div class="modal-noticia-content">
+        <div class="modal-noticia-header">
+          <div class="data-modal"><i class="fa fa-calendar"></i> <span id="modal-data"></span></div>
+          <h2 id="modal-titol"></h2>
+          <button class="tancar-noticia" onclick="tancarNoticia()">&times;</button>
+        </div>
+        <div class="modal-noticia-body">
+          <span class="categoria-tag"><i class="fa fa-tag"></i> <span id="modal-categoria-text"></span></span>
+          <div id="modal-cos"></div>
+        </div>
+        <div class="modal-noticia-footer">
+          <button class="btn-tancar-footer" onclick="tancarNoticia()">
+            <i class="fa fa-arrow-left" style="margin-right:6px;"></i>Tornar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL LOGIN -->
+    <div id="modal-login" class="modal" onclick="tancarLoginFons(event)">
+      <div class="modal-login-box">
+
+        <div class="modal-login-header">
+          <button class="close-login" onclick="tancarLogin()">&times;</button>
+          <div class="avatar-circle"><i class="fa fa-user"></i></div>
+          <h3>Accés Engilab</h3>
+        </div>
+
+        <!-- Formulari (visible quan no s'ha iniciat sessió) -->
+        <div id="login-form-area">
+          <div class="modal-login-body">
+            <div class="login-field">
+              <label>Correu electrònic</label>
+              <input type="email" id="login-email" placeholder="exemple@gmail.com" autocomplete="email">
+            </div>
+            <div class="login-field">
+              <label>Contrasenya</label>
+              <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+            </div>
+            <div class="login-error" id="login-error">
+              <i class="fa fa-circle-exclamation" style="margin-right:5px;"></i>
+              Correu o contrasenya incorrectes.
+            </div>
+            <button class="btn-login-submit" onclick="intentarLogin()">
+              <i class="fa fa-right-to-bracket" style="margin-right:6px;"></i>Iniciar sessió
+            </button>
+          </div>
+        </div>
+
+        <!-- Panell de sessió iniciada (visible quan s'ha fet login) -->
+        <div class="sessio-panel" id="sessio-panel">
+          <div class="check-icon"><i class="fa fa-check"></i></div>
+          <div>
+            <p><strong id="nom-usuari"></strong></p>
+            <p style="margin-top:4px;">Sessió iniciada correctament.</p>
+          </div>
+          <div class="modal-login-footer" style="width:100%; border-radius: 0 0 16px 16px;">
+            <button class="btn-logout" onclick="tancarSessio()">
+              <i class="fa fa-right-from-bracket" style="margin-right:5px;"></i>Tancar sessió
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="intern"><p>BUG2</p></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-database-compat.js"></script>
+
+    <script>
+
+      /* ════════════════════════════════════════════════
+         USUARIS VÀLIDS
+         Afegeix aquí els comptes autoritzats:
+         { email: "...", password: "...", nom: "..." }
+      ════════════════════════════════════════════════ */
+      const USUARIS = [
+        { email: "admin@engilab.com",     password: "Engi2026!",  nom: "Administrador"  },
+        { email: "professor@etseib.upc.edu", password: "Prof2026#", nom: "Professor"     },
+        { email: "estudiant@etseib.upc.edu", password: "Est2026@",  nom: "Estudiant"    },
+      ];
+
+      /* ════════════════════════════════════════════════
+         LOGIN
+      ════════════════════════════════════════════════ */
+      let sessioActiva = false;
+
+      function obrirLogin() {
+        document.getElementById('modal-login').classList.add('actiu');
+        document.body.style.overflow = 'hidden';
+        actualitzarModalLogin();
+      }
+
+      function tancarLogin() {
+        document.getElementById('modal-login').classList.remove('actiu');
+        document.body.style.overflow = '';
+        // Netejar camps i error
+        document.getElementById('login-email').value = '';
+        document.getElementById('login-pass').value  = '';
+        document.getElementById('login-error').classList.remove('visible');
+        document.getElementById('login-email').classList.remove('error');
+        document.getElementById('login-pass').classList.remove('error');
+      }
+
+      function tancarLoginFons(e) {
+        if (e.target === document.getElementById('modal-login')) tancarLogin();
+      }
+
+      function actualitzarModalLogin() {
+        const formArea    = document.getElementById('login-form-area');
+        const sessioPanel = document.getElementById('sessio-panel');
+        const loginBtn    = document.getElementById('loginBtn');
+
+        if (sessioActiva) {
+          formArea.style.display    = 'none';
+          sessioPanel.classList.add('visible');
+          loginBtn.innerHTML        = '<i class="fa fa-circle-check"></i> Sessió activa';
+          loginBtn.classList.add('sessio-activa');
+        } else {
+          formArea.style.display    = 'block';
+          sessioPanel.classList.remove('visible');
+          loginBtn.innerHTML        = '<i class="fa fa-user"></i> Login';
+          loginBtn.classList.remove('sessio-activa');
+        }
+      }
+
+      function intentarLogin() {
+        const email = document.getElementById('login-email').value.trim().toLowerCase();
+        const pass  = document.getElementById('login-pass').value;
+        const errorEl = document.getElementById('login-error');
+
+        // Cerca l'usuari
+        const usuari = USUARIS.find(u =>
+          u.email.toLowerCase() === email && u.password === pass
+        );
+
+        if (usuari) {
+          // Login correcte
+          sessioActiva = true;
+          document.getElementById('nom-usuari').textContent = usuari.nom + ' (' + usuari.email + ')';
+          errorEl.classList.remove('visible');
+          document.getElementById('login-email').classList.remove('error');
+          document.getElementById('login-pass').classList.remove('error');
+          actualitzarModalLogin();
+        } else {
+          // Error
+          errorEl.classList.add('visible');
+          document.getElementById('login-email').classList.add('error');
+          document.getElementById('login-pass').classList.add('error');
+          // Shake animation
+          const box = document.querySelector('.modal-login-box');
+          box.style.animation = 'none';
+          box.offsetHeight; // reflow
+          box.style.animation = 'shake 0.35s ease';
+        }
+      }
+
+      function tancarSessio() {
+        sessioActiva = false;
+        tancarLogin();
+        actualitzarModalLogin();
+      }
+
+      // Permet fer login amb Enter
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && document.getElementById('modal-login').classList.contains('actiu')) {
+          intentarLogin();
+        }
+      });
+
+      /* ════════════════════════════════════════════════
+         FIREBASE INIT
+      ════════════════════════════════════════════════ */
+      const firebaseConfig = {
+        apiKey:            "AIzaSyDNrrjgc0TyT4dAdZiYJlNZrbia1jr8X-Q",
+        authDomain:        "engilab2026.firebaseapp.com",
+        databaseURL:       "https://engilab2026-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId:         "engilab2026",
+        storageBucket:     "engilab2026.firebasestorage.app",
+        messagingSenderId: "960568396971",
+        appId:             "1:960568396971:web:41479521862bfceefbbbee"
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+
+      /* ════════════════════════════════════════════════
+         BOTÓ ENGILAB OBERT / TANCAT
+      ════════════════════════════════════════════════ */
+      const boton     = document.getElementById('statusbutton');
+      const statusRef = db.ref('statuslab');
+
+      statusRef.on('value', (snapshot) => {
+        const estat = snapshot.val();
+        if (estat === 'open') {
+          boton.textContent           = 'EngiLab OBERT';
+          boton.style.backgroundColor = 'rgb(0, 123, 193)';
+        } else {
+          boton.textContent           = 'EngiLab TANCAT';
+          boton.style.backgroundColor = '#e63946';
+        }
+      });
+
+      function changestatus() {
+        const nouEstat = boton.textContent.trim() === 'EngiLab OBERT' ? 'closed' : 'open';
+        statusRef.set(nouEstat);
+      }
+
+      /* ════════════════════════════════════════════════
+         IMPRESSORES 3D
+      ════════════════════════════════════════════════ */
+      const IMPRESSORES = [
+        { id: 'imp1', nom: 'Impressora 1' },
+        { id: 'imp2', nom: 'Impressora 2' },
+        { id: 'imp3', nom: 'Impressora 3' },
+        { id: 'imp4', nom: 'Impressora 4' },
+        { id: 'imp5', nom: 'Impressora 5' },
+      ];
+
+      const grid = document.getElementById('impressores-grid');
+      IMPRESSORES.forEach(imp => {
+        const card = document.createElement('div');
+        card.className = 'impressora-card';
+        card.id        = 'card-' + imp.id;
+        card.innerHTML = `
+          <div class="impressora-icon">🖨️</div>
+          <div class="impressora-nom">${imp.nom}</div>
+          <button class="btn-impressora disponible" id="btn-${imp.id}" onclick="canviarImpressora('${imp.id}')">
+            DISPONIBLE
+          </button>`;
+        grid.appendChild(card);
+      });
+
+      IMPRESSORES.forEach(imp => {
+        db.ref('impressores/' + imp.id).on('value', (snapshot) => {
+          const estat = snapshot.val() || 'disponible';
+          const btn   = document.getElementById('btn-'  + imp.id);
+          const card  = document.getElementById('card-' + imp.id);
+          if (estat === 'ocupada') {
+            btn.textContent = 'OCUPADA';
+            btn.className   = 'btn-impressora ocupada';
+            card.className  = 'impressora-card ocupada';
+          } else {
+            btn.textContent = 'DISPONIBLE';
+            btn.className   = 'btn-impressora disponible';
+            card.className  = 'impressora-card disponible';
+          }
+        });
+      });
+
+      function canviarImpressora(id) {
+        const btn      = document.getElementById('btn-' + id);
+        const nouEstat = btn.textContent.trim() === 'DISPONIBLE' ? 'ocupada' : 'disponible';
+        db.ref('impressores/' + id).set(nouEstat);
+      }
+
+      /* ════════════════════════════════════════════════
+         NOTÍCIES
+      ════════════════════════════════════════════════ */
+      const noticies = [
+        {
+          titol: "Nova impressora 3D a Engilab", data: "20 febrer 2026", categoria: "Equipament",
+          cos: `
+            <p>Hem incorporat una nova impressora 3D industrial al laboratori Engilab de l'ETSEIB. Es tracta d'un model d'alta precisió capaç de treballar amb una àmplia gamma de materials tècnics, incloent-hi PLA, PETG, TPU i filaments de fibra de carboni.</p>
+            <p>Aquesta incorporació permetrà als estudiants i investigadors realitzar prototips de major qualitat per als seus projectes de final de grau i de recerca. La impressora compta amb una àrea d'impressió de 300×300×400 mm i una resolució de capa de fins a 0,05 mm.</p>
+            <p>La màquina estarà disponible per a reserves a partir de la setmana vinent. Es requerirà una formació prèvia obligatòria d'una hora per poder utilitzar-la de manera autònoma.</p>
+          `
+        },
+        {
+          titol: "Taller de disseny CAD", data: "10 febrer 2026", categoria: "Formació",
+          cos: `
+            <p>El passat 10 de febrer es va dur a terme un taller pràctic sobre modelatge CAD destinat als estudiants de l'ETSEIB. L'activitat va comptar amb la participació de més de 30 alumnes de diferents cursos i especialitats.</p>
+            <p>Durant la sessió, els participants van aprendre a modelar peces mecàniques complexes utilitzant SolidWorks i Fusion 360, amb especial èmfasi en les funcionalitats de simulació d'esforços i anàlisi de tensions.</p>
+            <p>Donada l'excel·lent acollida, el proper taller está previst per al 15 de març. Les places estan obertes a tots els estudiants de la universitat.</p>
+          `
+        }
+      ];
+
+      function obrirNoticia(index) {
+        const n = noticies[index];
+        document.getElementById('modal-titol').textContent          = n.titol;
+        document.getElementById('modal-data').textContent           = n.data;
+        document.getElementById('modal-categoria-text').textContent = n.categoria;
+        document.getElementById('modal-cos').innerHTML              = n.cos;
+        document.getElementById('modal-noticia').classList.add('actiu');
+        document.body.style.overflow = 'hidden';
+      }
+      function tancarNoticia() {
+        document.getElementById('modal-noticia').classList.remove('actiu');
+        document.body.style.overflow = '';
+      }
+      function tancarNoticiaFons(e) {
+        if (e.target === document.getElementById('modal-noticia')) tancarNoticia();
+      }
+
+      /* ════════════════════════════════════════════════
+         ALTRES
+      ════════════════════════════════════════════════ */
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          tancarNoticia();
+          tancarLogin();
+        }
+      });
+
+      function buscar2() {
+        const q = document.getElementById('searchInput').value;
+        if (q.trim()) console.log('Cercant:', q);
+      }
+
+    </script>
+    <script src="script_search2.js"></script>
+  </body>
+</html>
