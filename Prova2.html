@@ -298,6 +298,9 @@
     .usuari-nom { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .usuari-email { font-size: .78rem; color: rgba(255,255,255,0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .usuaris-buit { text-align: center; padding: 32px; color: rgba(255,255,255,0.25); font-size: .95rem; }
+    .usuari-card { position: relative; }
+    .btn-del-usuari { position: absolute; top: 8px; right: 8px; background: none; border: none; color: rgba(255,100,100,0.4); cursor: pointer; font-size: 13px; padding: 4px 6px; border-radius: 6px; transition: color .2s, background .2s; }
+    .btn-del-usuari:hover { color: #ff6b6b; background: rgba(230,57,70,0.15); }
   </style>
 </head>
 <body>
@@ -1047,10 +1050,15 @@
           grid.innerHTML = '<div class="usuaris-buit">Encara no hi ha estudiants registrats.</div>';
           return;
         }
-        const llista = Object.values(dades).sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+        const llista = Object.entries(dades)
+          .map(([key, v]) => ({ key, ...v }))
+          .sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
         document.getElementById('usuaris-counter').textContent = llista.length;
         grid.innerHTML = llista.map(u => `
-          <div class="usuari-card">
+          <div class="usuari-card" id="ucard-${u.key}">
+            <button class="btn-del-usuari" onclick="eliminarUsuari('${u.key}','${esc(u.email)}')" title="Eliminar compte">
+              <i class="fa fa-trash"></i>
+            </button>
             <div class="usuari-avatar"><i class="fa fa-user-graduate"></i></div>
             <div class="usuari-info">
               <div class="usuari-nom">${esc(u.nom)} ${esc(u.cognom)}</div>
@@ -1058,6 +1066,16 @@
             </div>
           </div>`).join('');
       });
+    }
+
+    function eliminarUsuari(key, email) {
+      if (!confirm('Segur que vols eliminar el compte de ' + email + '?\nAixò eliminarà les seves dades però no podrà iniciar sessió.')) return;
+      db.ref('usuaris/' + key).remove()
+        .then(() => {
+          mostrarToast('<i class="fa fa-circle-check" style="color:var(--green);"></i> Compte de ' + email + ' eliminat.');
+          renderUsuaris();
+        })
+        .catch(() => mostrarToast('<i class="fa fa-circle-xmark" style="color:var(--red);"></i> Error en eliminar el compte.'));
     }
 
     /* ══ LOGIN ════════════════════════════════════════ */
