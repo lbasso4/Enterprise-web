@@ -306,6 +306,15 @@
       footer { background: var(--text-main); color: rgba(255,255,255,0.5); text-align: center; padding: 22px 24px; font-size: 13px; width: 100%; }
       footer span { color: var(--blue); font-weight: 600; }
       #intern { display: none; }
+
+      @keyframes shake {
+        0%,100% { transform: translateX(0); }
+        20%     { transform: translateX(-8px); }
+        40%     { transform: translateX(8px); }
+        60%     { transform: translateX(-5px); }
+        80%     { transform: translateX(5px); }
+      }
+      #toast-admin { transition: opacity 0.4s ease; }
     </style>
   </head>
 
@@ -453,19 +462,20 @@
 
       /* ════════════════════════════════════════════════
          USUARIS VÀLIDS
-         Afegeix aquí els comptes autoritzats:
-         { email: "...", password: "...", nom: "..." }
+         rol: 'admin'  → pot canviar estats
+         rol: 'usuari' → només pot veure
       ════════════════════════════════════════════════ */
       const USUARIS = [
-        { email: "admin@engilab.com",     password: "Engi2026!",  nom: "Administrador"  },
-        { email: "professor@etseib.upc.edu", password: "Prof2026#", nom: "Professor"     },
-        { email: "estudiant@etseib.upc.edu", password: "Est2026@",  nom: "Estudiant"    },
+        { email: "admin@engilab.com",        password: "Engi2026!",  nom: "Administrador",  rol: "admin"  },
+        { email: "professor@etseib.upc.edu",  password: "Prof2026#",  nom: "Professor",      rol: "usuari" },
+        { email: "estudiant@etseib.upc.edu",  password: "Est2026@",   nom: "Estudiant",      rol: "usuari" },
       ];
 
       /* ════════════════════════════════════════════════
          LOGIN
       ════════════════════════════════════════════════ */
       let sessioActiva = false;
+      let rolActiu     = null; // 'admin' | 'usuari' | null
 
       function obrirLogin() {
         document.getElementById('modal-login').classList.add('actiu');
@@ -496,7 +506,10 @@
         if (sessioActiva) {
           formArea.style.display    = 'none';
           sessioPanel.classList.add('visible');
-          loginBtn.innerHTML        = '<i class="fa fa-circle-check"></i> Sessió activa';
+          const etiquetaRol = rolActiu === 'admin'
+            ? '<span style="background:var(--blue);color:white;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;margin-left:6px;">ADMIN</span>'
+            : '<span style="background:var(--gray-light);color:var(--text-muted);padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;margin-left:6px;">USUARI</span>';
+          loginBtn.innerHTML = '<i class="fa fa-circle-check"></i> Sessió activa' + etiquetaRol;
           loginBtn.classList.add('sessio-activa');
         } else {
           formArea.style.display    = 'block';
@@ -504,6 +517,60 @@
           loginBtn.innerHTML        = '<i class="fa fa-user"></i> Login';
           loginBtn.classList.remove('sessio-activa');
         }
+        actualitzarBotons();
+      }
+
+      /* Bloqueja o desbloqueja els botons d'estat segons el rol */
+      function actualitzarBotons() {
+        const esAdmin = sessioActiva && rolActiu === 'admin';
+
+        // Botó Engilab
+        const statusBtn = document.getElementById('statusbutton');
+        if (esAdmin) {
+          statusBtn.onclick = changestatus;
+          statusBtn.style.opacity = '1';
+          statusBtn.style.cursor  = 'pointer';
+          statusBtn.title = '';
+        } else {
+          statusBtn.onclick = mostrarAvisAdmin;
+          statusBtn.style.opacity = '0.6';
+          statusBtn.style.cursor  = 'not-allowed';
+          statusBtn.title = 'Necessites ser administrador';
+        }
+
+        // Botons impressores (poden no existir encara)
+        document.querySelectorAll('.btn-impressora').forEach(btn => {
+          if (esAdmin) {
+            btn.style.opacity = '1';
+            btn.style.cursor  = 'pointer';
+            btn.title = '';
+          } else {
+            btn.style.opacity = '0.6';
+            btn.style.cursor  = 'not-allowed';
+            btn.title = 'Necessites ser administrador';
+          }
+        });
+      }
+
+      function mostrarAvisAdmin() {
+        // Toast d'avís
+        let toast = document.getElementById('toast-admin');
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.id = 'toast-admin';
+          toast.style.cssText = `
+            position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+            background: #1a1a2e; color: white; padding: 12px 22px; border-radius: 10px;
+            font-family: 'Barlow', sans-serif; font-size: 14px; font-weight: 600;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 9999;
+            display: flex; align-items: center; gap: 8px;
+          `;
+          document.body.appendChild(toast);
+        }
+        toast.innerHTML = '<i class="fa fa-lock" style="color:#e63946;"></i> Necessites iniciar sessió com a administrador.';
+        toast.style.opacity = '1';
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 3000);
       }
 
       function intentarLogin() {
@@ -511,34 +578,32 @@
         const pass  = document.getElementById('login-pass').value;
         const errorEl = document.getElementById('login-error');
 
-        // Cerca l'usuari
         const usuari = USUARIS.find(u =>
           u.email.toLowerCase() === email && u.password === pass
         );
 
         if (usuari) {
-          // Login correcte
           sessioActiva = true;
+          rolActiu     = usuari.rol;
           document.getElementById('nom-usuari').textContent = usuari.nom + ' (' + usuari.email + ')';
           errorEl.classList.remove('visible');
           document.getElementById('login-email').classList.remove('error');
           document.getElementById('login-pass').classList.remove('error');
           actualitzarModalLogin();
         } else {
-          // Error
           errorEl.classList.add('visible');
           document.getElementById('login-email').classList.add('error');
           document.getElementById('login-pass').classList.add('error');
-          // Shake animation
           const box = document.querySelector('.modal-login-box');
           box.style.animation = 'none';
-          box.offsetHeight; // reflow
+          box.offsetHeight;
           box.style.animation = 'shake 0.35s ease';
         }
       }
 
       function tancarSessio() {
         sessioActiva = false;
+        rolActiu     = null;
         tancarLogin();
         actualitzarModalLogin();
       }
@@ -583,6 +648,7 @@
       });
 
       function changestatus() {
+        if (!sessioActiva || rolActiu !== 'admin') { mostrarAvisAdmin(); return; }
         const nouEstat = boton.textContent.trim() === 'EngiLab OBERT' ? 'closed' : 'open';
         statusRef.set(nouEstat);
       }
@@ -630,10 +696,14 @@
       });
 
       function canviarImpressora(id) {
+        if (!sessioActiva || rolActiu !== 'admin') { mostrarAvisAdmin(); return; }
         const btn      = document.getElementById('btn-' + id);
         const nouEstat = btn.textContent.trim() === 'DISPONIBLE' ? 'ocupada' : 'disponible';
         db.ref('impressores/' + id).set(nouEstat);
       }
+
+      // Bloqueja botons inicialment (cap sessió activa)
+      actualitzarBotons();
 
       /* ════════════════════════════════════════════════
          NOTÍCIES
