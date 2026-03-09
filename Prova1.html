@@ -395,6 +395,22 @@
         </h2>
         <p>Omple el formulari per enviar la teva sol·licitud. Un cop revisada et contactarem per correu.</p>
       </div>
+
+      <!-- Banner: cal iniciar sessió -->
+      <div class="login-required-banner visible" id="login-required-banner">
+        <i class="fa fa-lock"></i>
+        <p><strong>Has d'iniciar sessió</strong> per poder enviar una sol·licitud d'impressió.<br>Si encara no tens compte, pots registrar-te gratuïtament.</p>
+        <button class="btn-login-now" onclick="obrirLogin()">
+          <i class="fa fa-right-to-bracket"></i> Iniciar sessió / Registrar-se
+        </button>
+      </div>
+
+      <!-- Formulari real (només visible amb sessió) -->
+      <div id="form-contingut" style="display:none;">
+        <div class="usuari-info-form" id="usuari-info-form">
+          <i class="fa fa-circle-check"></i>
+          <span>Sol·licitant: <strong id="form-nom-usuari"></strong> &nbsp;·&nbsp; <span id="form-email-usuari" style="color:var(--blue);font-weight:600;"></span></span>
+        </div>
       <div class="form-grid">
         <div class="form-field">
           <label><i class="fa fa-user" style="margin-right:4px;"></i>Nom complet</label>
@@ -695,7 +711,7 @@
       const banner   = document.getElementById('login-required-banner');
       const formCont = document.getElementById('form-contingut');
       if (banner && formCont) {
-        banner.classList.toggle('visible', !sessioActiva);
+        banner.classList.toggle('visible', !sessioActiva && !esAdmin);
         formCont.style.display = teSessioNoAdmin ? 'block' : 'none';
         // Mostrar nom i email de l'usuari identificat
         if (teSessioNoAdmin) {
