@@ -27,162 +27,132 @@
         --radius:     10px;
       }
 
-      body {
-        font-family: 'Barlow', sans-serif;
-        background-color: var(--gray-bg);
-        color: var(--text-main);
-        min-height: 100vh;
-      }
+      body { font-family: 'Barlow', sans-serif; background-color: var(--gray-bg); color: var(--text-main); min-height: 100vh; }
 
       /* ── NAVBAR ─────────────────────────────────────── */
-      .title {
-        display: flex; align-items: center; background-color: var(--white);
-        padding: 0 24px; height: 70px; box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-        position: sticky; top: 0; z-index: 100; gap: 14px; width: 100%;
-      }
+      .title { display: flex; align-items: center; background-color: var(--white); padding: 0 24px; height: 70px; box-shadow: 0 2px 12px rgba(0,0,0,0.10); position: sticky; top: 0; z-index: 100; gap: 14px; width: 100%; }
       .logos { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
       .logos img { height: 44px; width: auto; display: block; }
       .nav-divider { width: 1px; height: 32px; background: var(--gray-light); flex-shrink: 0; }
-      .title h1 {
-        font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
-        font-size: 1.5rem; letter-spacing: 0.5px; color: var(--blue);
-        flex-grow: 1; text-align: center; cursor: pointer; transition: color 0.2s; white-space: nowrap;
-      }
+      .title h1 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: 0.5px; color: var(--blue); flex-grow: 1; text-align: center; cursor: pointer; transition: color 0.2s; white-space: nowrap; }
       .title h1:hover { color: var(--blue-dark); }
-
-      /* Botó login / sessió iniciada */
-      .login-btn {
-        padding: 8px 14px; border-radius: 8px; background: transparent;
-        border: 2px solid var(--blue); color: var(--blue);
-        font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 13px;
-        cursor: pointer; transition: background 0.2s, color 0.2s, border-color 0.2s;
-        flex-shrink: 0; white-space: nowrap; display: flex; align-items: center; gap: 6px;
-      }
+      .login-btn { padding: 8px 14px; border-radius: 8px; background: transparent; border: 2px solid var(--blue); color: var(--blue); font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer; transition: background 0.2s, color 0.2s, border-color 0.2s; flex-shrink: 0; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
       .login-btn:hover { background: var(--blue); color: white; }
-      .login-btn.sessio-activa {
-        border-color: var(--green); color: var(--green);
-      }
+      .login-btn.sessio-activa { border-color: var(--green); color: var(--green); }
       .login-btn.sessio-activa:hover { background: var(--green); color: white; }
-
-      #statusbutton {
-        padding: 9px 16px; border-radius: 8px; background-color: var(--blue);
-        border: none; font-size: 12px; font-weight: 700; font-family: 'Barlow', sans-serif;
-        letter-spacing: 0.3px; color: white; cursor: pointer; box-shadow: var(--shadow-sm);
-        width: 160px; flex-shrink: 0; transition: background-color 0.25s, transform 0.15s;
-        display: flex; align-items: center; justify-content: center; gap: 7px;
-      }
-      #statusbutton::before {
-        content: ''; display: inline-block; width: 8px; height: 8px;
-        border-radius: 50%; background: rgba(255,255,255,0.9); flex-shrink: 0; animation: pulse 2s infinite;
-      }
-      @keyframes pulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50%       { opacity: 0.5; transform: scale(1.3); }
-      }
+      #statusbutton { padding: 9px 16px; border-radius: 8px; background-color: var(--blue); border: none; font-size: 12px; font-weight: 700; font-family: 'Barlow', sans-serif; letter-spacing: 0.3px; color: white; cursor: pointer; box-shadow: var(--shadow-sm); width: 160px; flex-shrink: 0; transition: background-color 0.25s, transform 0.15s; display: flex; align-items: center; justify-content: center; gap: 7px; }
+      #statusbutton::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.9); flex-shrink: 0; animation: pulse 2s infinite; }
+      @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.3); } }
       #statusbutton:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
 
       /* ── SEARCH ─────────────────────────────────────── */
-      .search-section {
-        background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%);
-        padding: 18px 24px; display: flex; justify-content: center; width: 100%;
-      }
-      .search-container {
-        display: flex; width: 100%; max-width: 580px;
-        border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-md);
-      }
-      .search-container input {
-        flex: 1; padding: 13px 18px; border: none; font-family: 'Barlow', sans-serif;
-        font-size: 15px; color: var(--text-main); background: white; outline: none; min-width: 0;
-      }
-      .search-container button {
-        padding: 13px 20px; background: white; border: none; color: var(--blue);
-        font-size: 16px; cursor: pointer; transition: background 0.2s, color 0.2s;
-        border-left: 1px solid var(--gray-light); flex-shrink: 0;
-      }
+      .search-section { background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 100%); padding: 18px 24px; display: flex; justify-content: center; width: 100%; }
+      .search-container { display: flex; width: 100%; max-width: 580px; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-md); }
+      .search-container input { flex: 1; padding: 13px 18px; border: none; font-family: 'Barlow', sans-serif; font-size: 15px; color: var(--text-main); background: white; outline: none; min-width: 0; }
+      .search-container button { padding: 13px 20px; background: white; border: none; color: var(--blue); font-size: 16px; cursor: pointer; transition: background 0.2s, color 0.2s; border-left: 1px solid var(--gray-light); flex-shrink: 0; }
       .search-container button:hover { background: var(--blue); color: white; }
       mark { background-color: yellow; }
 
       /* ── HERO IMAGE ──────────────────────────────────── */
-      .backimg {
-        background-image: url('img/printer.jpg');
-        background-size: cover; background-position: center center;
-        height: 420px; width: 100%; position: relative; overflow: hidden;
-      }
-      .backimg::after {
-        content: ''; position: absolute; inset: 0;
-        background: linear-gradient(to bottom, rgba(0,80,140,0.15) 0%, rgba(0,0,0,0.50) 100%);
-      }
+      .backimg { background-image: url('img/printer.jpg'); background-size: cover; background-position: center center; height: 420px; width: 100%; position: relative; overflow: hidden; }
+      .backimg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,80,140,0.15) 0%, rgba(0,0,0,0.50) 100%); }
       .hero-overlay { position: absolute; bottom: 36px; left: 48px; z-index: 2; color: white; }
-      .hero-overlay h2 {
-        font-family: 'Barlow Condensed', sans-serif; font-size: 2.8rem;
-        font-weight: 700; line-height: 1.1; text-shadow: 0 2px 16px rgba(0,0,0,0.5);
-      }
+      .hero-overlay h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 2.8rem; font-weight: 700; line-height: 1.1; text-shadow: 0 2px 16px rgba(0,0,0,0.5); }
       .hero-overlay p { font-size: 1rem; opacity: 0.88; margin-top: 6px; text-shadow: 0 1px 8px rgba(0,0,0,0.4); }
 
       /* ── IMPRESSORES ─────────────────────────────────── */
-      .impressores-wrapper {
-        background: var(--white); width: 100%; padding: 44px 24px;
-        border-bottom: 1px solid var(--gray-light);
-      }
+      .impressores-wrapper { background: var(--white); width: 100%; padding: 44px 24px; border-bottom: 1px solid var(--gray-light); }
       .impressores-inner { max-width: 960px; margin: 0 auto; }
       .impressores-header { text-align: center; margin-bottom: 28px; }
-      .impressores-header h2 {
-        display: inline-block; font-family: 'Barlow Condensed', sans-serif;
-        font-size: 1.6rem; font-weight: 700; color: var(--text-main);
-        letter-spacing: 0.5px; position: relative; padding-bottom: 10px;
-      }
-      .impressores-header h2::after {
-        content: ''; position: absolute; bottom: 0; left: 50%;
-        transform: translateX(-50%); width: 48px; height: 4px; border-radius: 2px; background: var(--blue);
-      }
-      .impressores-grid {
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;
-      }
-      .impressora-card {
-        background: var(--gray-bg); border-radius: 14px; padding: 20px 16px 18px;
-        display: flex; flex-direction: column; align-items: center; gap: 10px;
-        border: 2px solid var(--gray-light);
-        transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
-      }
+      .impressores-header h2 { display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--text-main); letter-spacing: 0.5px; position: relative; padding-bottom: 10px; }
+      .impressores-header h2::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 48px; height: 4px; border-radius: 2px; background: var(--blue); }
+      .impressores-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+      .impressora-card { background: var(--gray-bg); border-radius: 14px; padding: 20px 16px 18px; display: flex; flex-direction: column; align-items: center; gap: 10px; border: 2px solid var(--gray-light); transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s; }
       .impressora-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
       .impressora-card.disponible { border-color: var(--blue); }
       .impressora-card.ocupada    { border-color: var(--red); }
       .impressora-icon { font-size: 2rem; line-height: 1; }
       .impressora-nom { font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--text-main); text-align: center; }
-      .btn-impressora {
-        padding: 8px 0; width: 100%; border-radius: 8px; border: none;
-        font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 700;
-        letter-spacing: 0.3px; cursor: pointer; color: white; box-shadow: var(--shadow-sm);
-        display: flex; align-items: center; justify-content: center; gap: 6px;
-        transition: background-color 0.25s, transform 0.15s, box-shadow 0.2s;
-      }
-      .btn-impressora::before {
-        content: ''; display: inline-block; width: 7px; height: 7px;
-        border-radius: 50%; background: rgba(255,255,255,0.9); flex-shrink: 0; animation: pulse 2s infinite;
-      }
+      .btn-impressora { padding: 8px 0; width: 100%; border-radius: 8px; border: none; font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.3px; cursor: pointer; color: white; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: center; gap: 6px; transition: background-color 0.25s, transform 0.15s, box-shadow 0.2s; }
+      .btn-impressora::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.9); flex-shrink: 0; animation: pulse 2s infinite; }
       .btn-impressora:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
       .btn-impressora.disponible { background-color: var(--blue); }
       .btn-impressora.ocupada    { background-color: var(--red); }
+
+      /* ── FORMULARI SOL·LICITUD ───────────────────────── */
+      .formulari-wrapper { background: var(--white); width: 100%; padding: 52px 24px; border-bottom: 1px solid var(--gray-light); }
+      .formulari-inner { max-width: 700px; margin: 0 auto; }
+      .formulari-header { text-align: center; margin-bottom: 36px; }
+      .formulari-header h2 { display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--text-main); letter-spacing: 0.5px; position: relative; padding-bottom: 12px; }
+      .formulari-header h2::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 56px; height: 4px; border-radius: 2px; background: var(--blue); }
+      .formulari-header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 12px; line-height: 1.5; }
+
+      .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+      @media (max-width: 540px) { .form-grid { grid-template-columns: 1fr; } }
+
+      .form-field { display: flex; flex-direction: column; gap: 6px; }
+      .form-field.full { grid-column: 1 / -1; }
+      .form-field label { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; }
+      .form-field input[type="text"],
+      .form-field input[type="email"],
+      .form-field textarea { width: 100%; padding: 12px 14px; border: 2px solid var(--gray-light); border-radius: 10px; font-family: 'Barlow', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; color: var(--text-main); background: var(--gray-bg); resize: vertical; }
+      .form-field input:focus,
+      .form-field textarea:focus { border-color: var(--blue); background: white; }
+      .form-field textarea { min-height: 110px; }
+
+      /* Zona d'upload STL */
+      .stl-upload-area { border: 2px dashed var(--gray-light); border-radius: 10px; padding: 28px 20px; text-align: center; cursor: pointer; position: relative; transition: border-color 0.2s, background 0.2s; background: var(--gray-bg); }
+      .stl-upload-area:hover, .stl-upload-area.drag-over { border-color: var(--blue); background: rgba(0,123,193,0.04); }
+      .stl-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+      .stl-upload-icon { font-size: 2rem; color: var(--blue); margin-bottom: 8px; }
+      .stl-upload-text { font-size: 0.88rem; color: var(--text-muted); line-height: 1.55; }
+      .stl-upload-text strong { color: var(--blue); }
+      .stl-fitxer-nom { margin-top: 10px; font-size: 0.85rem; font-weight: 600; color: var(--green); display: none; align-items: center; gap: 6px; justify-content: center; }
+      .stl-fitxer-nom.visible { display: flex; }
+
+      /* Botons formulari */
+      .formulari-footer-btns { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; }
+      .btn-enviar { padding: 13px 30px; background: var(--blue); color: white; border: none; border-radius: 10px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: background 0.2s, transform 0.15s; display: flex; align-items: center; gap: 8px; }
+      .btn-enviar:hover { background: var(--blue-dark); transform: translateY(-1px); }
+      .btn-reset-form { padding: 13px 20px; background: transparent; color: var(--text-muted); border: 2px solid var(--gray-light); border-radius: 10px; font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+      .btn-reset-form:hover { border-color: var(--red); color: var(--red); }
+
+      .form-success { display: none; background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.3); border-radius: 10px; padding: 16px 20px; color: var(--green); font-size: 14px; font-weight: 600; text-align: center; align-items: center; gap: 8px; justify-content: center; margin-top: 16px; }
+      .form-success.visible { display: flex; }
+
+      /* ── PANELL ADMIN ────────────────────────────────── */
+      .admin-panel-wrapper { display: none; background: #1a1a2e; width: 100%; padding: 52px 24px; }
+      .admin-panel-wrapper.visible { display: block; }
+      .admin-panel-inner { max-width: 900px; margin: 0 auto; }
+      .admin-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+      .admin-panel-header h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.6rem; font-weight: 700; color: white; letter-spacing: 0.5px; display: flex; align-items: center; gap: 10px; }
+      .admin-badge { background: var(--blue); color: white; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
+      .admin-counter { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+      .btn-netejar-admin { padding: 8px 16px; background: rgba(230,57,70,0.15); color: #ff6b6b; border: 1px solid rgba(230,57,70,0.3); border-radius: 8px; font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+      .btn-netejar-admin:hover { background: rgba(230,57,70,0.3); }
+
+      .sol-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 22px 26px; margin-bottom: 14px; animation: slideUp 0.3s ease; }
+      .sol-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 12px; flex-wrap: wrap; }
+      .sol-nom { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 700; color: white; }
+      .sol-email { font-size: 0.82rem; color: rgba(255,255,255,0.45); margin-top: 2px; }
+      .sol-data-badge { background: rgba(0,123,193,0.25); color: rgba(100,200,255,0.9); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+      .sol-detalls { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.65; margin: 10px 0 14px; border-left: 3px solid rgba(0,123,193,0.5); padding-left: 12px; }
+      .sol-accions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+      .sol-stl-btn { display: inline-flex; align-items: center; gap: 7px; background: rgba(22,163,74,0.15); color: #4ade80; padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid rgba(22,163,74,0.3); text-decoration: none; transition: background 0.2s; }
+      .sol-stl-btn:hover { background: rgba(22,163,74,0.3); }
+      .sol-eliminar-btn { background: none; border: none; color: rgba(255,100,100,0.55); cursor: pointer; font-size: 13px; font-weight: 600; transition: color 0.2s; padding: 7px 10px; border-radius: 6px; font-family: 'Barlow', sans-serif; display: flex; align-items: center; gap: 5px; }
+      .sol-eliminar-btn:hover { color: var(--red); background: rgba(230,57,70,0.1); }
+
+      .admin-buit { text-align: center; padding: 48px; color: rgba(255,255,255,0.25); }
+      .admin-buit i { font-size: 2.5rem; margin-bottom: 12px; display: block; }
 
       /* ── NOTÍCIES ────────────────────────────────────── */
       .noticies-wrapper { background: var(--gray-bg); width: 100%; padding: 52px 24px; }
       .noticies { max-width: 860px; margin: 0 auto; }
       .noticies-header { text-align: center; margin-bottom: 36px; }
-      .noticies-header h2 {
-        display: inline-block; font-family: 'Barlow Condensed', sans-serif;
-        font-size: 1.8rem; font-weight: 700; color: var(--text-main);
-        letter-spacing: 0.5px; position: relative; padding-bottom: 12px;
-      }
-      .noticies-header h2::after {
-        content: ''; position: absolute; bottom: 0; left: 50%;
-        transform: translateX(-50%); width: 56px; height: 4px; border-radius: 2px; background: var(--blue);
-      }
-      .noticia {
-        background-color: var(--white); padding: 22px 26px; margin-bottom: 16px;
-        border-radius: var(--radius); border-left: 5px solid var(--blue); box-shadow: var(--shadow-sm);
-        transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
-        display: flex; flex-direction: column; gap: 6px; cursor: pointer; position: relative;
-      }
+      .noticies-header h2 { display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--text-main); letter-spacing: 0.5px; position: relative; padding-bottom: 12px; }
+      .noticies-header h2::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 56px; height: 4px; border-radius: 2px; background: var(--blue); }
+      .noticia { background-color: var(--white); padding: 22px 26px; margin-bottom: 16px; border-radius: var(--radius); border-left: 5px solid var(--blue); box-shadow: var(--shadow-sm); transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s; display: flex; flex-direction: column; gap: 6px; cursor: pointer; position: relative; }
       .noticia:hover { box-shadow: var(--shadow-md); transform: translateX(5px); border-color: var(--blue-dark); }
       .noticia h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--text-main); transition: color 0.2s; }
       .noticia:hover h3 { color: var(--blue); }
@@ -192,7 +162,7 @@
       .data { font-size: 0.82em; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 5px; }
       .data::before { content: '\f073'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--blue); font-size: 0.85em; }
 
-      /* ── MODALS ──────────────────────────────────────── */
+      /* ── MODAL NOTÍCIA ───────────────────────────────── */
       .modal-noticia { display: none; position: fixed; z-index: 998; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); padding: 24px; align-items: center; justify-content: center; }
       .modal-noticia.actiu { display: flex; }
       .modal-noticia-content { background: var(--white); border-radius: 16px; box-shadow: var(--shadow-lg); width: 100%; max-width: 680px; max-height: 88vh; overflow-y: auto; animation: slideUp 0.28s ease; position: relative; }
@@ -210,110 +180,38 @@
       .btn-tancar-footer:hover { background: var(--blue); color: white; border-color: var(--blue); }
 
       /* ── MODAL LOGIN ─────────────────────────────────── */
-      .modal {
-        display: none; position: fixed; z-index: 999; inset: 0;
-        background: rgba(0,0,0,0.45); backdrop-filter: blur(3px);
-      }
+      .modal { display: none; position: fixed; z-index: 999; inset: 0; background: rgba(0,0,0,0.45); backdrop-filter: blur(3px); }
       .modal.actiu { display: flex; align-items: center; justify-content: center; }
-
-      .modal-login-box {
-        background: var(--white); border-radius: 16px; box-shadow: var(--shadow-lg);
-        width: 380px; max-width: 92vw; overflow: hidden;
-        animation: slideUp 0.25s ease;
-        position: relative;
-      }
-
-      .modal-login-header {
-        background: linear-gradient(135deg, var(--blue-dark), var(--blue));
-        padding: 32px 0 24px; text-align: center; position: relative;
-      }
-      .modal-login-header .avatar-circle {
-        width: 70px; height: 70px; border-radius: 50%;
-        background: rgba(255,255,255,0.2); border: 3px solid rgba(255,255,255,0.5);
-        display: flex; align-items: center; justify-content: center;
-        margin: 0 auto; font-size: 1.8rem; color: white;
-      }
-      .modal-login-header h3 {
-        font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem;
-        font-weight: 700; color: white; margin-top: 12px; letter-spacing: 0.5px;
-      }
-
-      .close-login {
-        position: absolute; top: 12px; right: 16px;
-        background: rgba(255,255,255,0.15); border: none; color: white;
-        width: 30px; height: 30px; border-radius: 50%; font-size: 16px;
-        cursor: pointer; display: flex; align-items: center; justify-content: center;
-        transition: background 0.2s;
-      }
+      .modal-login-box { background: var(--white); border-radius: 16px; box-shadow: var(--shadow-lg); width: 380px; max-width: 92vw; overflow: hidden; animation: slideUp 0.25s ease; position: relative; }
+      .modal-login-header { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); padding: 32px 0 24px; text-align: center; position: relative; }
+      .modal-login-header .avatar-circle { width: 70px; height: 70px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 3px solid rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.8rem; color: white; }
+      .modal-login-header h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem; font-weight: 700; color: white; margin-top: 12px; letter-spacing: 0.5px; }
+      .close-login { position: absolute; top: 12px; right: 16px; background: rgba(255,255,255,0.15); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
       .close-login:hover { background: rgba(255,255,255,0.3); }
-
       .modal-login-body { padding: 28px; display: flex; flex-direction: column; gap: 16px; }
-
       .login-field { display: flex; flex-direction: column; gap: 5px; }
-      .login-field label {
-        font-size: 11px; font-weight: 700; color: var(--text-muted);
-        letter-spacing: 0.8px; text-transform: uppercase;
-      }
-      .login-field input {
-        padding: 11px 14px; border: 2px solid var(--gray-light); border-radius: 8px;
-        font-family: 'Barlow', sans-serif; font-size: 14px; outline: none;
-        transition: border-color 0.2s; color: var(--text-main);
-      }
+      .login-field label { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.8px; text-transform: uppercase; }
+      .login-field input { padding: 11px 14px; border: 2px solid var(--gray-light); border-radius: 8px; font-family: 'Barlow', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s; color: var(--text-main); }
       .login-field input:focus { border-color: var(--blue); }
       .login-field input.error { border-color: var(--red); }
-
-      /* Missatge d'error */
-      .login-error {
-        display: none; background: rgba(230,57,70,0.08); border: 1px solid rgba(230,57,70,0.3);
-        border-radius: 8px; padding: 10px 14px; color: var(--red);
-        font-size: 13px; font-weight: 600; text-align: center;
-      }
+      .login-error { display: none; background: rgba(230,57,70,0.08); border: 1px solid rgba(230,57,70,0.3); border-radius: 8px; padding: 10px 14px; color: var(--red); font-size: 13px; font-weight: 600; text-align: center; }
       .login-error.visible { display: block; }
-
-      .btn-login-submit {
-        width: 100%; padding: 13px; background: var(--blue); color: white; border: none;
-        border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 700;
-        font-size: 15px; cursor: pointer; transition: background 0.2s, transform 0.15s;
-      }
+      .btn-login-submit { width: 100%; padding: 13px; background: var(--blue); color: white; border: none; border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: background 0.2s, transform 0.15s; }
       .btn-login-submit:hover { background: var(--blue-dark); transform: translateY(-1px); }
-
-      .modal-login-footer {
-        padding: 14px 28px; background: var(--gray-bg); border-top: 1px solid var(--gray-light);
-        text-align: center;
-      }
-      .btn-logout {
-        background: none; border: none; color: var(--red); font-family: 'Barlow', sans-serif;
-        font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s;
-      }
+      .modal-login-footer { padding: 14px 28px; background: var(--gray-bg); border-top: 1px solid var(--gray-light); text-align: center; }
+      .btn-logout { background: none; border: none; color: var(--red); font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
       .btn-logout:hover { opacity: 0.7; }
-
-      /* Panell de sessió iniciada (dins del modal) */
-      .sessio-panel {
-        display: none; padding: 28px; text-align: center; flex-direction: column;
-        align-items: center; gap: 14px;
-      }
+      .sessio-panel { display: none; padding: 28px; text-align: center; flex-direction: column; align-items: center; gap: 14px; }
       .sessio-panel.visible { display: flex; }
-      .sessio-panel .check-icon {
-        width: 60px; height: 60px; border-radius: 50%; background: rgba(22,163,74,0.1);
-        border: 2px solid var(--green); display: flex; align-items: center; justify-content: center;
-        font-size: 1.6rem; color: var(--green); margin: 0 auto;
-      }
-      .sessio-panel p {
-        font-size: 0.95rem; color: var(--text-muted); line-height: 1.5;
-      }
+      .sessio-panel .check-icon { width: 60px; height: 60px; border-radius: 50%; background: rgba(22,163,74,0.1); border: 2px solid var(--green); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: var(--green); margin: 0 auto; }
+      .sessio-panel p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.5; }
       .sessio-panel strong { color: var(--text-main); }
 
       footer { background: var(--text-main); color: rgba(255,255,255,0.5); text-align: center; padding: 22px 24px; font-size: 13px; width: 100%; }
       footer span { color: var(--blue); font-weight: 600; }
       #intern { display: none; }
 
-      @keyframes shake {
-        0%,100% { transform: translateX(0); }
-        20%     { transform: translateX(-8px); }
-        40%     { transform: translateX(8px); }
-        60%     { transform: translateX(-5px); }
-        80%     { transform: translateX(5px); }
-      }
+      @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
       #toast-admin { transition: opacity 0.4s ease; }
     </style>
   </head>
@@ -357,6 +255,83 @@
           <h2><i class="fa fa-cube" style="margin-right:8px; color:var(--blue);"></i>Estat de les impressores 3D</h2>
         </div>
         <div class="impressores-grid" id="impressores-grid"></div>
+      </div>
+    </div>
+
+    <!-- FORMULARI SOL·LICITUD D'IMPRESSIÓ -->
+    <div class="formulari-wrapper">
+      <div class="formulari-inner">
+        <div class="formulari-header">
+          <h2><i class="fa fa-print" style="margin-right:8px; color:var(--blue);"></i>Sol·licitar impressió 3D</h2>
+          <p>Omple el formulari per enviar la teva sol·licitud d'impressió. Un cop revisada per l'equip, et contactarem per correu.</p>
+        </div>
+
+        <div class="form-grid" id="form-area">
+          <div class="form-field">
+            <label for="f-nom"><i class="fa fa-user" style="margin-right:4px;"></i>Nom complet</label>
+            <input type="text" id="f-nom" placeholder="El teu nom i cognoms">
+          </div>
+          <div class="form-field">
+            <label for="f-email"><i class="fa fa-envelope" style="margin-right:4px;"></i>Correu electrònic</label>
+            <input type="email" id="f-email" placeholder="exemple@gmail.com">
+          </div>
+          <div class="form-field full">
+            <label for="f-detalls"><i class="fa fa-comment-dots" style="margin-right:4px;"></i>Detalls de la impressió</label>
+            <textarea id="f-detalls" placeholder="Descriu el material (PLA, PETG...), dimensions aproximades, nombre d'unitats, ús final i qualsevol detall rellevant..."></textarea>
+          </div>
+          <div class="form-field full">
+            <label><i class="fa fa-file" style="margin-right:4px;"></i>Fitxer STL</label>
+            <div class="stl-upload-area" id="stl-area">
+              <input type="file" id="f-stl" accept=".stl" onchange="arxiuSeleccionat(this)">
+              <div class="stl-upload-icon"><i class="fa fa-cloud-arrow-up"></i></div>
+              <div class="stl-upload-text">
+                <strong>Fes clic o arrossega aquí</strong> el fitxer .STL<br>
+                Mida màxima recomanada: 50 MB
+              </div>
+              <div class="stl-fitxer-nom" id="stl-nom-display">
+                <i class="fa fa-check-circle"></i>
+                <span id="stl-nom-text"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-success" id="form-success">
+          <i class="fa fa-circle-check"></i>
+          Sol·licitud enviada correctament! Et contactarem aviat.
+        </div>
+
+        <div class="formulari-footer-btns">
+          <button class="btn-reset-form" onclick="resetFormulari()">
+            <i class="fa fa-rotate-left" style="margin-right:6px;"></i>Netejar
+          </button>
+          <button class="btn-enviar" onclick="enviarSolicitud()">
+            <i class="fa fa-paper-plane"></i> Enviar sol·licitud
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANELL ADMIN — Sol·licituds rebudes (només visible per admin) -->
+    <div class="admin-panel-wrapper" id="admin-panel">
+      <div class="admin-panel-inner">
+        <div class="admin-panel-header">
+          <h2>
+            <i class="fa fa-inbox"></i>
+            Sol·licituds rebudes
+            <span class="admin-badge">ADMIN</span>
+            <span class="admin-counter" id="admin-counter">0</span>
+          </h2>
+          <button class="btn-netejar-admin" onclick="netejarTotes()">
+            <i class="fa fa-trash" style="margin-right:5px;"></i>Eliminar totes
+          </button>
+        </div>
+        <div id="llista-solicituds">
+          <div class="admin-buit" id="admin-buit">
+            <i class="fa fa-inbox"></i>
+            Encara no hi ha sol·licituds.
+          </div>
+        </div>
       </div>
     </div>
 
@@ -407,14 +382,11 @@
     <!-- MODAL LOGIN -->
     <div id="modal-login" class="modal" onclick="tancarLoginFons(event)">
       <div class="modal-login-box">
-
         <div class="modal-login-header">
           <button class="close-login" onclick="tancarLogin()">&times;</button>
           <div class="avatar-circle"><i class="fa fa-user"></i></div>
           <h3>Accés Engilab</h3>
         </div>
-
-        <!-- Formulari (visible quan no s'ha iniciat sessió) -->
         <div id="login-form-area">
           <div class="modal-login-body">
             <div class="login-field">
@@ -426,29 +398,25 @@
               <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
             </div>
             <div class="login-error" id="login-error">
-              <i class="fa fa-circle-exclamation" style="margin-right:5px;"></i>
-              Correu o contrasenya incorrectes.
+              <i class="fa fa-circle-exclamation" style="margin-right:5px;"></i>Correu o contrasenya incorrectes.
             </div>
             <button class="btn-login-submit" onclick="intentarLogin()">
               <i class="fa fa-right-to-bracket" style="margin-right:6px;"></i>Iniciar sessió
             </button>
           </div>
         </div>
-
-        <!-- Panell de sessió iniciada (visible quan s'ha fet login) -->
         <div class="sessio-panel" id="sessio-panel">
           <div class="check-icon"><i class="fa fa-check"></i></div>
           <div>
             <p><strong id="nom-usuari"></strong></p>
             <p style="margin-top:4px;">Sessió iniciada correctament.</p>
           </div>
-          <div class="modal-login-footer" style="width:100%; border-radius: 0 0 16px 16px;">
+          <div class="modal-login-footer" style="width:100%;">
             <button class="btn-logout" onclick="tancarSessio()">
               <i class="fa fa-right-from-bracket" style="margin-right:5px;"></i>Tancar sessió
             </button>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -461,159 +429,21 @@
     <script>
 
       /* ════════════════════════════════════════════════
-         USUARIS VÀLIDS
-         rol: 'admin'  → pot canviar estats
-         rol: 'usuari' → només pot veure
+         USUARIS
+         rol: 'admin'  → pot canviar estats + veu sol·licituds
+         rol: 'usuari' → només llegeix
       ════════════════════════════════════════════════ */
       const USUARIS = [
-        { email: "admin@engilab.com",        password: "Engi2026!",  nom: "Administrador",  rol: "admin"  },
-        { email: "professor@etseib.upc.edu",  password: "Prof2026#",  nom: "Professor",      rol: "usuari" },
-        { email: "estudiant@etseib.upc.edu",  password: "Est2026@",   nom: "Estudiant",      rol: "usuari" },
+        { email: "admin@engilab.com",          password: "Engi2026!",  nom: "Administrador", rol: "admin"  },
+        { email: "professor@etseib.upc.edu",   password: "Prof2026#",  nom: "Professor",     rol: "usuari" },
+        { email: "estudiant@etseib.upc.edu",   password: "Est2026@",   nom: "Estudiant",     rol: "usuari" },
       ];
 
       /* ════════════════════════════════════════════════
-         LOGIN
+         ESTAT SESSIÓ
       ════════════════════════════════════════════════ */
       let sessioActiva = false;
-      let rolActiu     = null; // 'admin' | 'usuari' | null
-
-      function obrirLogin() {
-        document.getElementById('modal-login').classList.add('actiu');
-        document.body.style.overflow = 'hidden';
-        actualitzarModalLogin();
-      }
-
-      function tancarLogin() {
-        document.getElementById('modal-login').classList.remove('actiu');
-        document.body.style.overflow = '';
-        // Netejar camps i error
-        document.getElementById('login-email').value = '';
-        document.getElementById('login-pass').value  = '';
-        document.getElementById('login-error').classList.remove('visible');
-        document.getElementById('login-email').classList.remove('error');
-        document.getElementById('login-pass').classList.remove('error');
-      }
-
-      function tancarLoginFons(e) {
-        if (e.target === document.getElementById('modal-login')) tancarLogin();
-      }
-
-      function actualitzarModalLogin() {
-        const formArea    = document.getElementById('login-form-area');
-        const sessioPanel = document.getElementById('sessio-panel');
-        const loginBtn    = document.getElementById('loginBtn');
-
-        if (sessioActiva) {
-          formArea.style.display    = 'none';
-          sessioPanel.classList.add('visible');
-          const etiquetaRol = rolActiu === 'admin'
-            ? '<span style="background:var(--blue);color:white;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;margin-left:6px;">ADMIN</span>'
-            : '<span style="background:var(--gray-light);color:var(--text-muted);padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;margin-left:6px;">USUARI</span>';
-          loginBtn.innerHTML = '<i class="fa fa-circle-check"></i> Sessió activa' + etiquetaRol;
-          loginBtn.classList.add('sessio-activa');
-        } else {
-          formArea.style.display    = 'block';
-          sessioPanel.classList.remove('visible');
-          loginBtn.innerHTML        = '<i class="fa fa-user"></i> Login';
-          loginBtn.classList.remove('sessio-activa');
-        }
-        actualitzarBotons();
-      }
-
-      /* Bloqueja o desbloqueja els botons d'estat segons el rol */
-      function actualitzarBotons() {
-        const esAdmin = sessioActiva && rolActiu === 'admin';
-
-        // Botó Engilab
-        const statusBtn = document.getElementById('statusbutton');
-        if (esAdmin) {
-          statusBtn.onclick = changestatus;
-          statusBtn.style.opacity = '1';
-          statusBtn.style.cursor  = 'pointer';
-          statusBtn.title = '';
-        } else {
-          statusBtn.onclick = mostrarAvisAdmin;
-          statusBtn.style.opacity = '0.6';
-          statusBtn.style.cursor  = 'not-allowed';
-          statusBtn.title = 'Necessites ser administrador';
-        }
-
-        // Botons impressores (poden no existir encara)
-        document.querySelectorAll('.btn-impressora').forEach(btn => {
-          if (esAdmin) {
-            btn.style.opacity = '1';
-            btn.style.cursor  = 'pointer';
-            btn.title = '';
-          } else {
-            btn.style.opacity = '0.6';
-            btn.style.cursor  = 'not-allowed';
-            btn.title = 'Necessites ser administrador';
-          }
-        });
-      }
-
-      function mostrarAvisAdmin() {
-        // Toast d'avís
-        let toast = document.getElementById('toast-admin');
-        if (!toast) {
-          toast = document.createElement('div');
-          toast.id = 'toast-admin';
-          toast.style.cssText = `
-            position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
-            background: #1a1a2e; color: white; padding: 12px 22px; border-radius: 10px;
-            font-family: 'Barlow', sans-serif; font-size: 14px; font-weight: 600;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 9999;
-            display: flex; align-items: center; gap: 8px;
-          `;
-          document.body.appendChild(toast);
-        }
-        toast.innerHTML = '<i class="fa fa-lock" style="color:#e63946;"></i> Necessites iniciar sessió com a administrador.';
-        toast.style.opacity = '1';
-        clearTimeout(toast._timer);
-        toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 3000);
-      }
-
-      function intentarLogin() {
-        const email = document.getElementById('login-email').value.trim().toLowerCase();
-        const pass  = document.getElementById('login-pass').value;
-        const errorEl = document.getElementById('login-error');
-
-        const usuari = USUARIS.find(u =>
-          u.email.toLowerCase() === email && u.password === pass
-        );
-
-        if (usuari) {
-          sessioActiva = true;
-          rolActiu     = usuari.rol;
-          document.getElementById('nom-usuari').textContent = usuari.nom + ' (' + usuari.email + ')';
-          errorEl.classList.remove('visible');
-          document.getElementById('login-email').classList.remove('error');
-          document.getElementById('login-pass').classList.remove('error');
-          actualitzarModalLogin();
-        } else {
-          errorEl.classList.add('visible');
-          document.getElementById('login-email').classList.add('error');
-          document.getElementById('login-pass').classList.add('error');
-          const box = document.querySelector('.modal-login-box');
-          box.style.animation = 'none';
-          box.offsetHeight;
-          box.style.animation = 'shake 0.35s ease';
-        }
-      }
-
-      function tancarSessio() {
-        sessioActiva = false;
-        rolActiu     = null;
-        tancarLogin();
-        actualitzarModalLogin();
-      }
-
-      // Permet fer login amb Enter
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && document.getElementById('modal-login').classList.contains('actiu')) {
-          intentarLogin();
-        }
-      });
+      let rolActiu     = null;
 
       /* ════════════════════════════════════════════════
          FIREBASE INIT
@@ -649,8 +479,7 @@
 
       function changestatus() {
         if (!sessioActiva || rolActiu !== 'admin') { mostrarAvisAdmin(); return; }
-        const nouEstat = boton.textContent.trim() === 'EngiLab OBERT' ? 'closed' : 'open';
-        statusRef.set(nouEstat);
+        statusRef.set(boton.textContent.trim() === 'EngiLab OBERT' ? 'closed' : 'open');
       }
 
       /* ════════════════════════════════════════════════
@@ -672,9 +501,7 @@
         card.innerHTML = `
           <div class="impressora-icon">🖨️</div>
           <div class="impressora-nom">${imp.nom}</div>
-          <button class="btn-impressora disponible" id="btn-${imp.id}" onclick="canviarImpressora('${imp.id}')">
-            DISPONIBLE
-          </button>`;
+          <button class="btn-impressora disponible" id="btn-${imp.id}" onclick="canviarImpressora('${imp.id}')">DISPONIBLE</button>`;
         grid.appendChild(card);
       });
 
@@ -692,18 +519,278 @@
             btn.className   = 'btn-impressora disponible';
             card.className  = 'impressora-card disponible';
           }
+          actualitzarBotons(); // re-aplica permisos
         });
       });
 
       function canviarImpressora(id) {
         if (!sessioActiva || rolActiu !== 'admin') { mostrarAvisAdmin(); return; }
-        const btn      = document.getElementById('btn-' + id);
-        const nouEstat = btn.textContent.trim() === 'DISPONIBLE' ? 'ocupada' : 'disponible';
-        db.ref('impressores/' + id).set(nouEstat);
+        const btn = document.getElementById('btn-' + id);
+        db.ref('impressores/' + id).set(btn.textContent.trim() === 'DISPONIBLE' ? 'ocupada' : 'disponible');
       }
 
-      // Bloqueja botons inicialment (cap sessió activa)
-      actualitzarBotons();
+      /* ════════════════════════════════════════════════
+         PERMISOS — bloqueja botons si no és admin
+      ════════════════════════════════════════════════ */
+      function actualitzarBotons() {
+        const esAdmin = sessioActiva && rolActiu === 'admin';
+        const statusBtn = document.getElementById('statusbutton');
+        statusBtn.style.opacity = esAdmin ? '1' : '0.55';
+        statusBtn.style.cursor  = esAdmin ? 'pointer' : 'not-allowed';
+        statusBtn.title         = esAdmin ? '' : 'Necessites ser administrador';
+
+        document.querySelectorAll('.btn-impressora').forEach(btn => {
+          btn.style.opacity = esAdmin ? '1' : '0.55';
+          btn.style.cursor  = esAdmin ? 'pointer' : 'not-allowed';
+          btn.title         = esAdmin ? '' : 'Necessites ser administrador';
+        });
+
+        // Panell admin
+        document.getElementById('admin-panel').classList.toggle('visible', esAdmin);
+      }
+
+      function mostrarAvisAdmin() {
+        let toast = document.getElementById('toast-admin');
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.id = 'toast-admin';
+          toast.style.cssText = `position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:white;padding:12px 22px;border-radius:10px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:9999;display:flex;align-items:center;gap:8px;transition:opacity 0.4s ease;`;
+          document.body.appendChild(toast);
+        }
+        toast.innerHTML = '<i class="fa fa-lock" style="color:#e63946;"></i> Necessites iniciar sessió com a administrador.';
+        toast.style.opacity = '1';
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 3000);
+      }
+
+      /* ════════════════════════════════════════════════
+         LOGIN
+      ════════════════════════════════════════════════ */
+      function obrirLogin() {
+        document.getElementById('modal-login').classList.add('actiu');
+        document.body.style.overflow = 'hidden';
+        actualitzarModalLogin();
+      }
+
+      function tancarLogin() {
+        document.getElementById('modal-login').classList.remove('actiu');
+        document.body.style.overflow = '';
+        document.getElementById('login-email').value = '';
+        document.getElementById('login-pass').value  = '';
+        document.getElementById('login-error').classList.remove('visible');
+        document.getElementById('login-email').classList.remove('error');
+        document.getElementById('login-pass').classList.remove('error');
+      }
+
+      function tancarLoginFons(e) {
+        if (e.target === document.getElementById('modal-login')) tancarLogin();
+      }
+
+      function actualitzarModalLogin() {
+        const formArea    = document.getElementById('login-form-area');
+        const sessioPanel = document.getElementById('sessio-panel');
+        const loginBtn    = document.getElementById('loginBtn');
+
+        if (sessioActiva) {
+          formArea.style.display = 'none';
+          sessioPanel.classList.add('visible');
+          const etiqueta = rolActiu === 'admin'
+            ? '<span style="background:var(--blue);color:white;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;margin-left:6px;">ADMIN</span>'
+            : '';
+          loginBtn.innerHTML = '<i class="fa fa-circle-check"></i> Sessió activa' + etiqueta;
+          loginBtn.classList.add('sessio-activa');
+        } else {
+          formArea.style.display = 'block';
+          sessioPanel.classList.remove('visible');
+          loginBtn.innerHTML = '<i class="fa fa-user"></i> Login';
+          loginBtn.classList.remove('sessio-activa');
+        }
+        actualitzarBotons();
+      }
+
+      function intentarLogin() {
+        const email = document.getElementById('login-email').value.trim().toLowerCase();
+        const pass  = document.getElementById('login-pass').value;
+        const errorEl = document.getElementById('login-error');
+        const usuari  = USUARIS.find(u => u.email.toLowerCase() === email && u.password === pass);
+
+        if (usuari) {
+          sessioActiva = true;
+          rolActiu     = usuari.rol;
+          document.getElementById('nom-usuari').textContent = usuari.nom + ' (' + usuari.email + ')';
+          errorEl.classList.remove('visible');
+          document.getElementById('login-email').classList.remove('error');
+          document.getElementById('login-pass').classList.remove('error');
+          actualitzarModalLogin();
+          if (rolActiu === 'admin') renderSolicituds(); // carrega sol·licituds si és admin
+        } else {
+          errorEl.classList.add('visible');
+          document.getElementById('login-email').classList.add('error');
+          document.getElementById('login-pass').classList.add('error');
+          const box = document.querySelector('.modal-login-box');
+          box.style.animation = 'none';
+          box.offsetHeight;
+          box.style.animation = 'shake 0.35s ease';
+        }
+      }
+
+      function tancarSessio() {
+        sessioActiva = false;
+        rolActiu     = null;
+        tancarLogin();
+        actualitzarModalLogin();
+      }
+
+      /* ════════════════════════════════════════════════
+         FORMULARI SOL·LICITUD D'IMPRESSIÓ
+      ════════════════════════════════════════════════ */
+      let arxiuSTL = null; // guarda l'objecte File
+
+      function arxiuSeleccionat(input) {
+        const fitxer = input.files[0];
+        if (!fitxer) return;
+        arxiuSTL = fitxer;
+        document.getElementById('stl-nom-text').textContent = fitxer.name + ' (' + (fitxer.size / 1024 / 1024).toFixed(2) + ' MB)';
+        document.getElementById('stl-nom-display').classList.add('visible');
+      }
+
+      // Drag & drop
+      const stlArea = document.getElementById('stl-area');
+      stlArea.addEventListener('dragover',  e => { e.preventDefault(); stlArea.classList.add('drag-over'); });
+      stlArea.addEventListener('dragleave', () => stlArea.classList.remove('drag-over'));
+      stlArea.addEventListener('drop', e => {
+        e.preventDefault();
+        stlArea.classList.remove('drag-over');
+        const fitxer = e.dataTransfer.files[0];
+        if (fitxer && fitxer.name.endsWith('.stl')) {
+          arxiuSTL = fitxer;
+          document.getElementById('stl-nom-text').textContent = fitxer.name + ' (' + (fitxer.size / 1024 / 1024).toFixed(2) + ' MB)';
+          document.getElementById('stl-nom-display').classList.add('visible');
+        }
+      });
+
+      function enviarSolicitud() {
+        const nom     = document.getElementById('f-nom').value.trim();
+        const email   = document.getElementById('f-email').value.trim();
+        const detalls = document.getElementById('f-detalls').value.trim();
+
+        if (!nom || !email || !detalls) {
+          mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Omple tots els camps obligatoris.');
+          return;
+        }
+        if (!arxiuSTL) {
+          mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Adjunta un fitxer .STL.');
+          return;
+        }
+
+        // Llegeix el fitxer STL com a base64 per guardar-lo a Firebase
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const solicitud = {
+            nom:      nom,
+            email:    email,
+            detalls:  detalls,
+            fitxer:   arxiuSTL.name,
+            stlData:  e.target.result, // base64
+            data:     new Date().toLocaleDateString('ca-ES', { day: '2-digit', month: 'long', year: 'numeric' }),
+            timestamp: Date.now()
+          };
+
+          // Desa a Firebase
+          db.ref('solicituds').push(solicitud)
+            .then(() => {
+              document.getElementById('form-success').classList.add('visible');
+              resetFormulari();
+              setTimeout(() => document.getElementById('form-success').classList.remove('visible'), 5000);
+            })
+            .catch(err => {
+              mostrarToast('<i class="fa fa-circle-xmark" style="color:var(--red);"></i> Error en enviar. Torna-ho a intentar.');
+              console.error(err);
+            });
+        };
+        reader.readAsDataURL(arxiuSTL);
+      }
+
+      function resetFormulari() {
+        document.getElementById('f-nom').value     = '';
+        document.getElementById('f-email').value   = '';
+        document.getElementById('f-detalls').value = '';
+        document.getElementById('f-stl').value     = '';
+        arxiuSTL = null;
+        document.getElementById('stl-nom-display').classList.remove('visible');
+      }
+
+      /* ════════════════════════════════════════════════
+         PANELL ADMIN — Sol·licituds
+      ════════════════════════════════════════════════ */
+      // Escolta en temps real les sol·licituds (sempre actiu)
+      db.ref('solicituds').on('value', (snapshot) => {
+        if (rolActiu === 'admin') renderSolicituds();
+      });
+
+      function renderSolicituds() {
+        const llista = document.getElementById('llista-solicituds');
+        const buit   = document.getElementById('admin-buit');
+        db.ref('solicituds').orderByChild('timestamp').once('value', (snapshot) => {
+          const dades = snapshot.val();
+          if (!dades) {
+            llista.innerHTML = '<div class="admin-buit" id="admin-buit"><i class="fa fa-inbox"></i>Encara no hi ha sol·licituds.</div>';
+            document.getElementById('admin-counter').textContent = '0';
+            return;
+          }
+
+          const keys = Object.keys(dades).reverse(); // més recent primer
+          document.getElementById('admin-counter').textContent = keys.length;
+
+          llista.innerHTML = keys.map(key => {
+            const s = dades[key];
+            return `
+              <div class="sol-card" id="sol-${key}">
+                <div class="sol-card-top">
+                  <div>
+                    <div class="sol-nom"><i class="fa fa-user" style="margin-right:6px;opacity:0.5;"></i>${escHTML(s.nom)}</div>
+                    <div class="sol-email">${escHTML(s.email)}</div>
+                  </div>
+                  <span class="sol-data-badge"><i class="fa fa-calendar" style="margin-right:5px;"></i>${escHTML(s.data)}</span>
+                </div>
+                <div class="sol-detalls">${escHTML(s.detalls)}</div>
+                <div class="sol-accions">
+                  <a class="sol-stl-btn" onclick="descarregarSTL('${key}')" href="#">
+                    <i class="fa fa-download"></i> ${escHTML(s.fitxer)}
+                  </a>
+                  <button class="sol-eliminar-btn" onclick="eliminarSolicitud('${key}')">
+                    <i class="fa fa-trash"></i> Eliminar
+                  </button>
+                </div>
+              </div>`;
+          }).join('');
+        });
+      }
+
+      function descarregarSTL(key) {
+        db.ref('solicituds/' + key).once('value', (snapshot) => {
+          const s = snapshot.val();
+          if (!s || !s.stlData) return;
+          const a = document.createElement('a');
+          a.href     = s.stlData;
+          a.download = s.fitxer;
+          a.click();
+        });
+      }
+
+      function eliminarSolicitud(key) {
+        db.ref('solicituds/' + key).remove().then(() => renderSolicituds());
+      }
+
+      function netejarTotes() {
+        if (!confirm('Segur que vols eliminar totes les sol·licituds?')) return;
+        db.ref('solicituds').remove().then(() => renderSolicituds());
+      }
+
+      function escHTML(str) {
+        if (!str) return '';
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      }
 
       /* ════════════════════════════════════════════════
          NOTÍCIES
@@ -711,19 +798,15 @@
       const noticies = [
         {
           titol: "Nova impressora 3D a Engilab", data: "20 febrer 2026", categoria: "Equipament",
-          cos: `
-            <p>Hem incorporat una nova impressora 3D industrial al laboratori Engilab de l'ETSEIB. Es tracta d'un model d'alta precisió capaç de treballar amb una àmplia gamma de materials tècnics, incloent-hi PLA, PETG, TPU i filaments de fibra de carboni.</p>
-            <p>Aquesta incorporació permetrà als estudiants i investigadors realitzar prototips de major qualitat per als seus projectes de final de grau i de recerca. La impressora compta amb una àrea d'impressió de 300×300×400 mm i una resolució de capa de fins a 0,05 mm.</p>
-            <p>La màquina estarà disponible per a reserves a partir de la setmana vinent. Es requerirà una formació prèvia obligatòria d'una hora per poder utilitzar-la de manera autònoma.</p>
-          `
+          cos: `<p>Hem incorporat una nova impressora 3D industrial al laboratori Engilab de l'ETSEIB. Es tracta d'un model d'alta precisió capaç de treballar amb una àmplia gamma de materials tècnics, incloent-hi PLA, PETG, TPU i filaments de fibra de carboni.</p>
+                <p>Aquesta incorporació permetrà als estudiants i investigadors realitzar prototips de major qualitat per als seus projectes. La impressora compta amb una àrea d'impressió de 300×300×400 mm i una resolució de fins a 0,05 mm.</p>
+                <p>La màquina estarà disponible per a reserves a partir de la setmana vinent. Es requerirà una formació prèvia d'una hora per poder-la utilitzar de manera autònoma.</p>`
         },
         {
           titol: "Taller de disseny CAD", data: "10 febrer 2026", categoria: "Formació",
-          cos: `
-            <p>El passat 10 de febrer es va dur a terme un taller pràctic sobre modelatge CAD destinat als estudiants de l'ETSEIB. L'activitat va comptar amb la participació de més de 30 alumnes de diferents cursos i especialitats.</p>
-            <p>Durant la sessió, els participants van aprendre a modelar peces mecàniques complexes utilitzant SolidWorks i Fusion 360, amb especial èmfasi en les funcionalitats de simulació d'esforços i anàlisi de tensions.</p>
-            <p>Donada l'excel·lent acollida, el proper taller está previst per al 15 de març. Les places estan obertes a tots els estudiants de la universitat.</p>
-          `
+          cos: `<p>El passat 10 de febrer es va dur a terme un taller pràctic sobre modelatge CAD destinat als estudiants de l'ETSEIB. L'activitat va comptar amb la participació de més de 30 alumnes.</p>
+                <p>Durant la sessió, els participants van aprendre a modelar peces mecàniques complexes amb SolidWorks i Fusion 360, amb especial èmfasi en la simulació d'esforços i anàlisi de tensions.</p>
+                <p>Donada l'excel·lent acollida, el proper taller está previst per al 15 de març. Les places estan obertes a tots els estudiants de la universitat.</p>`
         }
       ];
 
@@ -745,14 +828,35 @@
       }
 
       /* ════════════════════════════════════════════════
+         TOAST GENERAL
+      ════════════════════════════════════════════════ */
+      function mostrarToast(html) {
+        let toast = document.getElementById('toast-admin');
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.id = 'toast-admin';
+          toast.style.cssText = `position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:white;padding:12px 22px;border-radius:10px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:9999;display:flex;align-items:center;gap:8px;transition:opacity 0.4s ease;`;
+          document.body.appendChild(toast);
+        }
+        toast.innerHTML = html;
+        toast.style.opacity = '1';
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 3500);
+      }
+
+      /* ════════════════════════════════════════════════
          ALTRES
       ════════════════════════════════════════════════ */
       document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          tancarNoticia();
-          tancarLogin();
-        }
+        if (e.key === 'Escape') { tancarNoticia(); tancarLogin(); }
+        if (e.key === 'Enter' && document.getElementById('modal-login').classList.contains('actiu')) intentarLogin();
       });
+      window.onclick = function(e) {
+        if (e.target === document.getElementById('modal-login')) tancarLogin();
+      };
+
+      // Inicialitza permisos
+      actualitzarBotons();
 
       function buscar2() {
         const q = document.getElementById('searchInput').value;
