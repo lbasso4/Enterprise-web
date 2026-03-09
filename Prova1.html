@@ -230,6 +230,27 @@
     @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
     #toast-msg { transition: opacity .4s ease; }
 
+    /* ── PANELL COMANDES USUARI ── */
+    .comandes-wrapper { display: none; background: var(--white); width: 100%; padding: 44px 24px; border-bottom: 1px solid var(--gray-light); }
+    .comandes-wrapper.visible { display: block; }
+    .comandes-inner { max-width: 860px; margin: 0 auto; }
+    .comandes-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+    .comandes-header h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+    .comandes-counter { background: var(--blue); color: white; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .comanda-card { background: var(--gray-bg); border-radius: 12px; padding: 20px 24px; margin-bottom: 14px; border-left: 4px solid var(--blue); box-shadow: var(--shadow-sm); animation: slideUp .3s ease; }
+    .comanda-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 12px; flex-wrap: wrap; }
+    .comanda-fitxer { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 7px; }
+    .comanda-fitxer i { color: var(--blue); }
+    .comanda-data-badge { background: rgba(0,123,193,0.1); color: var(--blue); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .comanda-detalls { font-size: .9rem; color: var(--text-muted); line-height: 1.6; margin: 8px 0 14px; border-left: 3px solid var(--gray-light); padding-left: 12px; }
+    .comanda-dl-btn { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,123,193,0.08); color: var(--blue); padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid rgba(0,123,193,0.2); text-decoration: none; transition: background .2s; }
+    .comanda-dl-btn:hover { background: rgba(0,123,193,0.18); }
+    .comandes-buit { text-align: center; padding: 40px; color: var(--text-muted); }
+    .comandes-buit i { font-size: 2.2rem; margin-bottom: 10px; display: block; color: var(--gray-light); }
+
+    /* Ampliar modal login per mostrar comandes */
+    .modal-login-box.ample { width: 620px; }
+
     /* ── PANELL USUARIS REGISTRATS (admin) ── */
     .usuaris-panel-wrapper { display: none; background: #12121f; width: 100%; padding: 40px 24px; border-top: 1px solid rgba(255,255,255,0.06); }
     .usuaris-panel-wrapper.visible { display: block; }
@@ -319,6 +340,18 @@
         </h2>
       </div>
       <div class="impressores-grid" id="impressores-grid"></div>
+    </div>
+  </div>
+
+  <!-- COMANDES PRÈVIES (visible per usuaris amb sessió) -->
+  <div class="comandes-wrapper" id="comandes-wrapper">
+    <div class="comandes-inner">
+      <div class="comandes-header">
+        <h2><i class="fa fa-clock-rotate-left" style="color:var(--blue);"></i> Les meves sol·licituds <span class="comandes-counter" id="comandes-counter">0</span></h2>
+      </div>
+      <div id="llista-comandes">
+        <div class="comandes-buit"><i class="fa fa-box-open"></i>Encara no has fet cap sol·licitud.</div>
+      </div>
     </div>
   </div>
 
@@ -555,6 +588,7 @@
 
     let sessioActiva = false;
     let rolActiu     = null;
+    let emailActiu   = null;
 
     /* ══ FIREBASE ═════════════════════════════════════ */
     const firebaseConfig = {
@@ -584,6 +618,11 @@
       // Panell usuaris registrats
       document.getElementById('usuaris-panel').classList.toggle('visible', esAdmin);
       if (esAdmin) renderUsuaris();
+
+      // Comandes de l'usuari (estudiant amb sessió)
+      const esEstudiant = sessioActiva && rolActiu !== 'admin';
+      document.getElementById('comandes-wrapper').classList.toggle('visible', esEstudiant);
+      if (esEstudiant) renderComandes();
 
       // Botó nova notícia
       document.getElementById('btn-nova-noticia').classList.toggle('visible', esAdmin);
@@ -956,7 +995,7 @@
     }
 
     function iniciarSessio(nomComplet, rol, email) {
-      sessioActiva = true; rolActiu = rol;
+      sessioActiva = true; rolActiu = rol; emailActiu = email;
       document.getElementById('nom-usuari').textContent = nomComplet + ' (' + email + ')';
       actualitzarModalLogin();
       tancarLogin();
@@ -1015,10 +1054,54 @@
     }
 
     function tancarSessio() {
-      sessioActiva = false; rolActiu = null;
+      sessioActiva = false; rolActiu = null; emailActiu = null;
       tancarLogin();
       actualitzarModalLogin();
+      // Amaga comandes
+      document.getElementById('comandes-wrapper').classList.remove('visible');
+      document.getElementById('llista-comandes').innerHTML = '<div class="comandes-buit"><i class="fa fa-box-open"></i>Encara no has fet cap sol·licitud.</div>';
     }
+
+    /* ══ COMANDES DE L'USUARI ════════════════════════ */
+    function renderComandes() {
+      if (!emailActiu) return;
+      const llista = document.getElementById('llista-comandes');
+      db.ref('solicituds').orderByChild('email').equalTo(emailActiu).once('value', snap => {
+        const dades = snap.val();
+        if (!dades) {
+          document.getElementById('comandes-counter').textContent = '0';
+          llista.innerHTML = '<div class="comandes-buit"><i class="fa fa-box-open"></i>Encara no has fet cap sol·licitud.</div>';
+          return;
+        }
+        const comandes = Object.entries(dades)
+          .map(([key, v]) => ({ key, ...v }))
+          .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        document.getElementById('comandes-counter').textContent = comandes.length;
+        llista.innerHTML = comandes.map(c => `
+          <div class="comanda-card">
+            <div class="comanda-card-top">
+              <div class="comanda-fitxer"><i class="fa fa-file"></i>${esc(c.fitxer)}</div>
+              <span class="comanda-data-badge"><i class="fa fa-calendar" style="margin-right:5px;"></i>${esc(c.data)}</span>
+            </div>
+            <div class="comanda-detalls">${esc(c.detalls)}</div>
+            <a class="comanda-dl-btn" onclick="descarregarSTLComanda('${c.key}')" href="#">
+              <i class="fa fa-download"></i> Descarregar STL
+            </a>
+          </div>`).join('');
+      });
+    }
+
+    function descarregarSTLComanda(key) {
+      db.ref('solicituds/' + key).once('value', snap => {
+        const s = snap.val(); if (!s || !s.stlData) return;
+        const a = document.createElement('a'); a.href = s.stlData; a.download = s.fitxer; a.click();
+      });
+    }
+
+    // Quan s'envia una sol·licitud nova, refresca les comandes de l'usuari
+    db.ref('solicituds').on('value', () => {
+      if (sessioActiva && rolActiu !== 'admin' && emailActiu) renderComandes();
+    });
 
     /* ══ HELPERS ══════════════════════════════════════ */
     function mostrarToast(html) {
