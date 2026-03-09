@@ -230,6 +230,23 @@
     @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
     #toast-msg { transition: opacity .4s ease; }
 
+    /* ── SELECTOR MATERIAL I PES ── */
+    .material-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    @media (max-width: 540px) { .material-grid { grid-template-columns: 1fr; } }
+    .material-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .material-opt { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border: 2px solid var(--gray-light); border-radius: 10px; cursor: pointer; transition: border-color .2s, background .2s; background: var(--gray-bg); }
+    .material-opt:hover { border-color: var(--blue); background: rgba(0,123,193,0.04); }
+    .material-opt.seleccionat { border-color: var(--blue); background: rgba(0,123,193,0.08); }
+    .material-opt input[type="radio"] { display: none; }
+    .material-nom { font-weight: 700; font-size: 14px; color: var(--text-main); }
+    .material-preu { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+    .material-opt.seleccionat .material-nom { color: var(--blue); }
+    .material-opt.seleccionat .material-preu { color: var(--blue); opacity: .8; }
+    .preu-estimat-box { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); border-radius: 10px; padding: 14px 18px; display: none; align-items: center; justify-content: space-between; color: white; }
+    .preu-estimat-box.visible { display: flex; }
+    .preu-label { font-size: 13px; opacity: .85; }
+    .preu-valor { font-family: 'Barlow Condensed', sans-serif; font-size: 1.8rem; font-weight: 700; }
+
     /* ── PANELL COMANDES USUARI ── */
     .comandes-wrapper { display: none; background: var(--white); width: 100%; padding: 44px 24px; border-bottom: 1px solid var(--gray-light); }
     .comandes-wrapper.visible { display: block; }
@@ -716,12 +733,18 @@
         document.getElementById('admin-counter').textContent = keys.length;
         llista.innerHTML = keys.map(key => {
           const s = dades[key];
+          const materialInfo = s.material ? `${s.material}${s.pes ? ' · ' + s.pes + ' g' : ''}` : '';
+          const preuInfo = s.preuEstimat ? s.preuEstimat + ' €' : '';
           return `<div class="sol-card" id="sol-${key}">
             <div class="sol-card-top">
               <div><div class="sol-nom"><i class="fa fa-user" style="margin-right:6px;opacity:.5;"></i>${esc(s.nom)}</div>
               <div class="sol-email">${esc(s.email)}</div></div>
               <span class="sol-data-badge"><i class="fa fa-calendar" style="margin-right:5px;"></i>${esc(s.data)}</span>
             </div>
+            ${materialInfo ? `<div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+              <span style="background:rgba(0,123,193,0.2);color:rgba(100,200,255,0.9);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;"><i class="fa fa-layer-group" style="margin-right:4px;"></i>${esc(materialInfo)}</span>
+              ${preuInfo ? `<span style="background:rgba(22,163,74,0.2);color:#4ade80;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;"><i class="fa fa-tag" style="margin-right:4px;"></i>${preuInfo}</span>` : ''}
+            </div>` : ''}
             <div class="sol-detalls">${esc(s.detalls)}</div>
             <div class="sol-accions">
               <a class="sol-stl-btn" onclick="descarregarSTL('${key}')" href="#">
@@ -767,15 +790,41 @@
         document.getElementById('stl-nom-display').classList.add('visible');
       }
     });
+    // Material seleccionat
+    let materialActiu = null;
+    let preuPerKg     = 0;
+
+    function seleccionarMaterial(nom, preu) {
+      materialActiu = nom; preuPerKg = preu;
+      document.querySelectorAll('.material-opt').forEach(el => el.classList.remove('seleccionat'));
+      const opts = document.querySelectorAll('.material-opt');
+      opts.forEach(el => { if (el.querySelector('input').value === nom) el.classList.add('seleccionat'); });
+      calcularPreu();
+    }
+
+    function calcularPreu() {
+      const pes = parseFloat(document.getElementById('f-pes').value);
+      const box = document.getElementById('preu-box');
+      if (!materialActiu || !pes || pes <= 0) { box.classList.remove('visible'); return; }
+      const preu = ((pes / 1000) * preuPerKg).toFixed(2);
+      document.getElementById('preu-valor').textContent = preu + ' €';
+      box.classList.add('visible');
+    }
+
     function enviarSolicitud() {
       const nom     = document.getElementById('f-nom').value.trim();
       const email   = document.getElementById('f-email').value.trim();
       const detalls = document.getElementById('f-detalls').value.trim();
+      const pes     = parseFloat(document.getElementById('f-pes').value);
       if (!nom || !email || !detalls) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Omple tots els camps obligatoris.'); return; }
+      if (!materialActiu) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Selecciona un material.'); return; }
+      if (!pes || pes <= 0) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Introdueix el pes estimat.'); return; }
       if (!arxiuSTL) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Adjunta un fitxer .STL.'); return; }
+      const preuEstimat = ((pes / 1000) * preuPerKg).toFixed(2);
       const reader = new FileReader();
       reader.onload = e => {
-        const sol = { nom, email, detalls, fitxer: arxiuSTL.name, stlData: e.target.result,
+        const sol = { nom, email, detalls, material: materialActiu, pes, preuEstimat,
+          fitxer: arxiuSTL.name, stlData: e.target.result,
           data: new Date().toLocaleDateString('ca-ES', {day:'2-digit',month:'long',year:'numeric'}), timestamp: Date.now() };
         db.ref('solicituds').push(sol).then(() => {
           document.getElementById('form-success').classList.add('visible');
@@ -785,11 +834,14 @@
       };
       reader.readAsDataURL(arxiuSTL);
     }
+
     function resetFormulari() {
-      ['f-nom','f-email','f-detalls'].forEach(id => document.getElementById(id).value = '');
+      ['f-nom','f-email','f-detalls','f-pes'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('f-stl').value = '';
-      arxiuSTL = null;
+      arxiuSTL = null; materialActiu = null; preuPerKg = 0;
       document.getElementById('stl-nom-display').classList.remove('visible');
+      document.getElementById('preu-box').classList.remove('visible');
+      document.querySelectorAll('.material-opt').forEach(el => el.classList.remove('seleccionat'));
     }
 
     /* ══ NOTÍCIES ═════════════════════════════════════ */
@@ -1077,17 +1129,24 @@
           .map(([key, v]) => ({ key, ...v }))
           .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
         document.getElementById('comandes-counter').textContent = comandes.length;
-        llista.innerHTML = comandes.map(c => `
-          <div class="comanda-card">
+        llista.innerHTML = comandes.map(c => {
+          const preuText = c.preuEstimat ? c.preuEstimat + ' €' : '—';
+          const materialText = c.material ? c.material + (c.pes ? ' · ' + c.pes + ' g' : '') : '';
+          return `<div class="comanda-card">
             <div class="comanda-card-top">
               <div class="comanda-fitxer"><i class="fa fa-file"></i>${esc(c.fitxer)}</div>
               <span class="comanda-data-badge"><i class="fa fa-calendar" style="margin-right:5px;"></i>${esc(c.data)}</span>
             </div>
+            ${materialText ? `<div style="display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap;">
+              <span style="background:rgba(0,123,193,0.08);color:var(--blue);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;"><i class="fa fa-layer-group" style="margin-right:5px;"></i>${esc(materialText)}</span>
+              <span style="background:rgba(22,163,74,0.08);color:var(--green);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;"><i class="fa fa-tag" style="margin-right:5px;"></i>Preu estimat: <strong>${preuText}</strong></span>
+            </div>` : ''}
             <div class="comanda-detalls">${esc(c.detalls)}</div>
             <a class="comanda-dl-btn" onclick="descarregarSTLComanda('${c.key}')" href="#">
               <i class="fa fa-download"></i> Descarregar STL
             </a>
-          </div>`).join('');
+          </div>`;
+        }).join('');
       });
     }
 
