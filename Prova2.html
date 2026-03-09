@@ -1219,6 +1219,9 @@
       if (pass !== pass2) {
         errTxt.textContent = 'Les contrasenyes no coincideixen.'; errEl.classList.add('visible'); okEl.classList.remove('visible'); return;
       }
+      if (!email.endsWith('@upc.edu') && !email.endsWith('.upc.edu')) {
+        errTxt.textContent = 'Només es permeten correus institucionals (@upc.edu). Aquest correu no està autoritzat.'; errEl.classList.add('visible'); okEl.classList.remove('visible'); return;
+      }
       if (USUARIS.some(u => u.email.toLowerCase() === email)) {
         errTxt.textContent = 'Aquest correu ja està en ús.'; errEl.classList.add('visible'); okEl.classList.remove('visible'); return;
       }
