@@ -390,9 +390,54 @@
           <label><i class="fa fa-envelope" style="margin-right:4px;"></i>Correu electrònic</label>
           <input type="email" id="f-email" placeholder="exemple@gmail.com">
         </div>
+
+        <div class="form-field full">
+          <label><i class="fa fa-layer-group" style="margin-right:4px;"></i>Material d'impressió</label>
+          <div class="material-options" id="material-options">
+            <label class="material-opt" onclick="seleccionarMaterial('PLA',20)">
+              <input type="radio" name="material" value="PLA">
+              <span class="material-nom">PLA</span>
+              <span class="material-preu">20 €/kg</span>
+            </label>
+            <label class="material-opt" onclick="seleccionarMaterial('ABS',23)">
+              <input type="radio" name="material" value="ABS">
+              <span class="material-nom">ABS</span>
+              <span class="material-preu">23 €/kg</span>
+            </label>
+            <label class="material-opt" onclick="seleccionarMaterial('PETG',23)">
+              <input type="radio" name="material" value="PETG">
+              <span class="material-nom">PETG</span>
+              <span class="material-preu">23 €/kg</span>
+            </label>
+            <label class="material-opt" onclick="seleccionarMaterial('SLA',35)">
+              <input type="radio" name="material" value="SLA">
+              <span class="material-nom">SLA</span>
+              <span class="material-preu">35 €/kg</span>
+            </label>
+            <label class="material-opt" style="grid-column:1/-1;" onclick="seleccionarMaterial('DLP',140)">
+              <input type="radio" name="material" value="DLP">
+              <span class="material-nom">DLP</span>
+              <span class="material-preu">140 €/kg</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label><i class="fa fa-weight-hanging" style="margin-right:4px;"></i>Pes estimat (grams)</label>
+          <input type="number" id="f-pes" placeholder="Ex: 150" min="1" max="10000" oninput="calcularPreu()">
+        </div>
+        <div class="form-field">
+          <label><i class="fa fa-tag" style="margin-right:4px;"></i>Preu estimat</label>
+          <div class="preu-estimat-box" id="preu-box">
+            <span class="preu-label">Total aproximat</span>
+            <span class="preu-valor" id="preu-valor">— €</span>
+          </div>
+          <p style="font-size:11px;color:var(--text-muted);margin-top:6px;"><i class="fa fa-circle-info" style="margin-right:4px;"></i>Preu orientatiu, pot variar segons la peça.</p>
+        </div>
+
         <div class="form-field full">
           <label><i class="fa fa-comment-dots" style="margin-right:4px;"></i>Detalls de la impressió</label>
-          <textarea id="f-detalls" placeholder="Descriu el material (PLA, PETG...), dimensions, nombre d'unitats, ús final..."></textarea>
+          <textarea id="f-detalls" placeholder="Dimensions, nombre d'unitats, ús final i qualsevol detall rellevant..."></textarea>
         </div>
         <div class="form-field full">
           <label><i class="fa fa-file" style="margin-right:4px;"></i>Fitxer STL</label>
