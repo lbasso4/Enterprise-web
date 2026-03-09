@@ -656,26 +656,14 @@
 
     /* ══ NOTÍCIES ═════════════════════════════════════ */
     // Notícies inicials (fixes, s'hi afegiran les de Firebase)
-    const noticiesInicials = [
-      { key: '__init1', titol: "Nova impressora 3D a Engilab", data: "20 febrer 2026", categoria: "Equipament",
-        preview: "Hem incorporat una nova impressora 3D industrial per a projectes d'alta precisió.",
-        cos: "<p>Hem incorporat una nova impressora 3D industrial al laboratori Engilab. Es tracta d'un model d'alta precisió capaç de treballar amb PLA, PETG, TPU i filaments de fibra de carboni.</p><p>La màquina compta amb una àrea d'impressió de 300×300×400 mm i una resolució de capa de fins a 0,05 mm. Es requerirà una formació prèvia obligatòria per poder-la utilitzar de manera autònoma.</p>",
-        timestamp: 1
-      },
-      { key: '__init2', titol: "Taller de disseny CAD", data: "10 febrer 2026", categoria: "Formació",
-        preview: "S'ha realitzat un taller pràctic sobre modelatge CAD per a estudiants de l'ETSEIB.",
-        cos: "<p>El passat 10 de febrer es va dur a terme un taller pràctic sobre modelatge CAD amb la participació de més de 30 alumnes. Es van treballar SolidWorks i Fusion 360 amb especial èmfasi en simulació d'esforços.</p><p>El proper taller és el 15 de març. Les places estan obertes a tots els estudiants de la universitat.</p>",
-        timestamp: 2
-      }
-    ];
+    let todesNoticies = [];
 
-    let todesNoticies = [...noticiesInicials]; // es complementarà amb les de Firebase
-
-    // Escolta notícies a Firebase
+    // Totes les notícies venen de Firebase (cap hardcodejada)
     db.ref('noticies').on('value', snap => {
       const dades = snap.val() || {};
-      const fbNoticies = Object.entries(dades).map(([key, v]) => ({ key, ...v }));
-      todesNoticies = [...noticiesInicials, ...fbNoticies].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      todesNoticies = Object.entries(dades)
+        .map(([key, v]) => ({ key, ...v }))
+        .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
       renderNoticies();
     });
 
@@ -683,15 +671,14 @@
       const esAdmin = sessioActiva && rolActiu === 'admin';
       const llista  = document.getElementById('llista-noticies');
       if (todesNoticies.length === 0) {
-        llista.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:32px;">Encara no hi ha notícies.</p>';
+        llista.innerHTML = `<p style="text-align:center;color:var(--text-muted);padding:32px;">${esAdmin ? 'Encara no hi ha notícies. Crea\'n una amb el botó de dalt.' : 'Encara no hi ha notícies.'}</p>`;
         return;
       }
       llista.innerHTML = todesNoticies.map((n, i) => {
-        const isDeletable = !n.key.startsWith('__init'); // les inicials no es poden eliminar des d'admin
         return `
           <div class="noticia ${!esAdmin ? 'clickable' : ''}" ${!esAdmin ? `onclick="obrirNoticia(${i})"` : ''}>
             ${esAdmin ? `<div class="noticia-admin-btns visible">
-              ${isDeletable ? `<button class="btn-elim-noticia" onclick="eliminarNoticia('${n.key}')"><i class="fa fa-trash"></i> Eliminar</button>` : ''}
+              <button class="btn-elim-noticia" onclick="eliminarNoticia('${n.key}')"><i class="fa fa-trash"></i> Eliminar</button>
             </div>` : ''}
             <h3>${esc(n.titol)}</h3>
             <p class="data">${esc(n.data)}</p>
@@ -836,7 +823,22 @@
       if (e.key === 'Enter' && document.getElementById('modal-login').classList.contains('actiu')) intentarLogin();
     });
 
-    // Inicialitza
+    // Inicialitza: si Firebase no té notícies, afegeix les dues d'exemple
+    db.ref('noticies').once('value', snap => {
+      if (!snap.val()) {
+        db.ref('noticies').push({ titol: "Nova impressora 3D a Engilab", data: "20 febrer 2026", categoria: "Equipament",
+          preview: "Hem incorporat una nova impressora 3D industrial per a projectes d'alta precisió.",
+          cos: "<p>Hem incorporat una nova impressora 3D industrial al laboratori Engilab. Capaç de treballar amb PLA, PETG, TPU i filaments de fibra de carboni.</p><p>Àrea d'impressió de 300×300×400 mm i resolució de 0,05 mm. Es requerirà formació prèvia obligatòria per poder-la utilitzar de manera autònoma.</p>",
+          timestamp: Date.now() + 2
+        });
+        db.ref('noticies').push({ titol: "Taller de disseny CAD", data: "10 febrer 2026", categoria: "Formació",
+          preview: "S'ha realitzat un taller pràctic sobre modelatge CAD per a estudiants de l'ETSEIB.",
+          cos: "<p>El passat 10 de febrer es va dur a terme un taller sobre CAD amb la participació de més de 30 alumnes. Es van treballar SolidWorks i Fusion 360 amb especial èmfasi en simulació d'esforços.</p><p>El proper taller és el 15 de març. Les places estan obertes a tots els estudiants.</p>",
+          timestamp: Date.now() + 1
+        });
+      }
+    });
+
     aplicarLayoutRol();
     renderNoticies();
 
