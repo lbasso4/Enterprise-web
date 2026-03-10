@@ -1562,7 +1562,7 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
 
       try {
         const response = await fetch(
-          'https://openrouter.ai/api/v1/chat/completions',
+          'https://api.groq.com/openai/v1/chat/completions',
           {
             method: 'POST',
             headers: {
@@ -1570,7 +1570,8 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
               'Authorization': 'Bearer ' + chatApiKey
             },
             body: JSON.stringify({
-              model: 'mistralai/mistral-small-3.1-24b-instruct:free',
+              model: 'llama-3.1-8b-instant',
+              max_tokens: 600,
               messages: [
                 { role: 'system', content: CHAT_SYSTEM + contextExtra },
                 ...chatHistorial
@@ -1641,9 +1642,9 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
 
     <!-- Banner API Key (si no en té) -->
     <div class="chat-apikey-banner" id="chat-apikey-banner" style="display:none;">
-      <span><strong>🔑 Cal una API Key de Google Gemini</strong><br>Gratuïta a <a href="https://aistudio.google.com" target="_blank" style="color:#92400e;">aistudio.google.com</a> → Get API Key</span>
+      <span><strong>🔑 Cal una API Key de Google Gemini</strong><br>Gratuïta a <a href="https://console.groq.com" target="_blank" style="color:#92400e;">console.groq.com</a> → API Keys → Create API Key</span>
       <div class="chat-apikey-input-row">
-        <input class="chat-apikey-input" type="password" id="chat-apikey-input" placeholder="sk-or-v1-...">
+        <input class="chat-apikey-input" type="password" id="chat-apikey-input" placeholder="gsk_...">
         <button class="chat-apikey-save" onclick="desarApiKey()">Desar</button>
       </div>
     </div>
