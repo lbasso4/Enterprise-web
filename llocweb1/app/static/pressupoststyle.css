@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ca">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+        <title>Pressupost al Client - Engilab ETSEIB</title>
+
+        <style>
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            html, body { overflow-x: hidden; width: 100%; }
+
+            :root {
+                --blue:       rgb(0, 123, 193);
+                --blue-dark:  rgb(0, 95, 155);
+                --red:        #e63946;
+                --gray-bg:    #f2f4f7;
+                --gray-light: #e8eaed;
+                --text-main:  #1a1a2e;
+                --text-muted: #6b7280;
+                --white:      #ffffff;
+                --shadow-sm:  0 1px 4px rgba(0,0,0,0.08);
+                --shadow-md:  0 4px 16px rgba(0,0,0,0.12);
+                --shadow-lg:  0 8px 32px rgba(0,0,0,0.18);
+                --radius:     10px;
+            }
+
+            body {
+                font-family: 'Barlow', sans-serif;
+                background-color: var(--gray-bg);
+                color: var(--text-main);
+                min-height: 100vh;
+            }
+
+            /* ── NAVBAR ── */
+            .title {
+                display: flex; align-items: center; background-color: var(--white);
+                padding: 0 24px; height: 70px; box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+                position: sticky; top: 0; z-index: 100; gap: 14px; width: 100%;
+            }
+            .logos { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+            .logos img { height: 44px; width: auto; display: block; }
+            .nav-divider { width: 1px; height: 32px; background: var(--gray-light); flex-shrink: 0; }
+            .title h1 {
+                font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+                font-size: 1.5rem; color: var(--blue); flex-grow: 1; text-align: center;
+                white-space: nowrap;
+            }
+            .nav-btn {
+                padding: 8px 14px; border-radius: 8px; background: transparent;
+                border: 2px solid var(--blue); color: var(--blue);
+                font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 13px;
+                cursor: pointer; transition: background 0.2s, color 0.2s;
+                flex-shrink: 0; white-space: nowrap; text-decoration: none;
+            }
+            .nav-btn:hover { background: var(--blue); color: white; }
+
+            /* ── CONTINGUT PRINCIPAL ── */
+            .page-wrapper {
+                max-width: 860px;
+                margin: 48px auto;
+                padding: 0 24px;
+            }
+
+            .page-header {
+                text-align: center;
+                margin-bottom: 36px;
+            }
+
+            .page-header h2 {
+                display: inline-block;
+                font-family: 'Barlow Condensed', sans-serif;
+                font-size: 1.8rem; font-weight: 700;
+                color: var(--text-main); letter-spacing: 0.5px;
+                position: relative; padding-bottom: 12px;
+            }
+
+            .page-header h2::after {
+                content: ''; position: absolute; bottom: 0; left: 50%;
+                transform: translateX(-50%); width: 56px; height: 4px;
+                border-radius: 2px; background: var(--blue);
+            }
+
+            /* ── CARD DEL FORMULARI ── */
+            .card {
+                background: var(--white);
+                border-radius: 14px;
+                box-shadow: var(--shadow-md);
+                padding: 36px 40px;
+                margin-bottom: 24px;
+            }
+
+            .card h3 {
+                font-family: 'Barlow Condensed', sans-serif;
+                font-size: 1.1rem; font-weight: 700;
+                color: var(--blue); margin-bottom: 20px;
+                display: flex; align-items: center; gap: 8px;
+            }
+
+            /* ── GRUPS DE CAMP ── */
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                margin-bottom: 20px;
+            }
+
+            .form-group label {
+                font-size: 11px; font-weight: 700;
+                color: var(--text-muted); letter-spacing: 0.8px;
+                text-transform: uppercase;
+            }
+
+            input[type="text"],
+            textarea,
+            select {
+                width: 100%;
+                padding: 11px 14px;
+                border: 2px solid var(--gray-light);
+                border-radius: 8px;
+                font-family: 'Barlow', sans-serif;
+                font-size: 14px;
+                color: var(--text-main);
+                background: #fafafa;
+                outline: none;
+                transition: border-color 0.2s;
+            }
+
+            input[type="text"]:focus,
+            textarea:focus,
+            select:focus {
+                border-color: var(--blue);
+                background: var(--white);
+            }
+
+            textarea { resize: vertical; min-height: 100px; }
+
+            /* ── TAULA DE MATERIALS ── */
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 16px;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: var(--shadow-sm);
+            }
+
+            th {
+                background: var(--blue);
+                color: white;
+                font-family: 'Barlow Condensed', sans-serif;
+                font-size: 0.95rem; font-weight: 700;
+                letter-spacing: 0.5px;
+                padding: 12px 16px;
+                text-align: center;
+            }
+
+            td {
+                border: 1px solid var(--gray-light);
+                padding: 10px 12px;
+                text-align: center;
+                background: var(--white);
+            }
+
+            tr:hover td { background: #f0f4ff; }
+
+            td select, td input[type="text"] {
+                border: 1px solid var(--gray-light);
+                padding: 7px 10px;
+                font-size: 13px;
+                width: auto;
+            }
+            table td:last-child {
+                width: 100px;
+                white-space: nowrap;
+            }
+
+            /* ── BOTONS ── */
+            .btn-primary {
+                padding: 11px 22px;
+                border-radius: 8px; border: none;
+                background-color: var(--blue); color: white;
+                font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 14px;
+                cursor: pointer; transition: background-color 0.2s, transform 0.15s;
+                box-shadow: var(--shadow-sm);
+            }
+            .btn-primary:hover { background-color: var(--blue-dark); transform: translateY(-1px); }
+
+            .btn-secondary {
+                padding: 11px 22px;
+                border-radius: 8px;
+                background: transparent;
+                border: 2px solid var(--blue); color: var(--blue);
+                font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 14px;
+                cursor: pointer; transition: background 0.2s, color 0.2s, transform 0.15s;
+                margin-right: 10px;
+            }
+            .btn-secondary:hover { background: var(--blue); color: white; transform: translateY(-1px); }
+
+            .btn-eliminar {
+                padding: 6px 12px;
+                border-radius: 6px; border: 1px solid #f5c2c5;
+                background: #fff0f1; color: var(--red);
+                font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 12px;
+                cursor: pointer; transition: background 0.2s, color 0.2s;
+            }
+            .btn-eliminar:hover { background: var(--red); color: white; }
+
+            .botons-accio { margin-top: 8px; display: flex; align-items: center; gap: 10px; }
+
+            footer {
+                background: var(--text-main); color: rgba(255,255,255,0.5);
+                text-align: center; padding: 22px 24px; font-size: 13px; width: 100%;
+                margin-top: 48px;
+            }
+            footer span { color: var(--blue); font-weight: 600; }
+        </style>
+    </head>
+    <body>
+
+        <!-- NAVBAR -->
+        <section class="title">
+            <div class="logos">
+                <img src="{{ url_for('static', filename='img/upc-positiu-p3005.png') }}" alt="UPC Logo">
+                <img src="{{ url_for('static', filename='img/logo etseib (còpia).png') }}" alt="ETSEIB Logo">
+            </div>
+            <div class="nav-divider"></div>
+            <h1>Engilab ETSEIB</h1>
+            <a href="/" class="nav-btn"><i class="fa fa-home" style="margin-right:5px;"></i>Inici</a>
+            <a href="/contacte" class="nav-btn"><i class="fa fa-envelope" style="margin-right:5px;"></i>Contacte</a>
+        </section>
+
+        <!-- CONTINGUT -->
+        <div class="page-wrapper">
+            <div class="page-header">
+                <h2><i class="fa fa-file-invoice" style="margin-right:8px; color:var(--blue);"></i>Pressupost al client</h2>
+            </div>
+
+            <!-- Dades del client -->
+            <div class="card">
+                <h3><i class="fa fa-user"></i> Dades del client</h3>
+
+                <div class="form-group">
+                    <label>Nom i cognoms</label>
+                    <input type="text" name="nom" placeholder="Nom Cognom1 Cognom2">
+                </div>
+
+                <div class="form-group">
+                    <label>Adreça electrònica</label>
+                    <input type="text" name="email" placeholder="nom@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Relació amb el centre</label>
+                    <select name="relació">
+                        <option value="Estudiant">Estudiant</option>
+                        <option value="Docent">Docent</option>
+                        <option value="Extern">Extern</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Descripció del projecte</label>
+                    <textarea name="descripcio_projecte" placeholder="Descriu el teu projecte..."></textarea>
+                </div>
+            </div>
+
+            <!-- Taula de materials -->
+            <div class="card">
+                <h3><i class="fa fa-list"></i> Materials i serveis</h3>
+
+                <table id="taula_materials">
+                    <tbody>
+                        <tr>
+                            <th>Tipus de servei</th>
+                            <th>Material</th>
+                            <th>Gast de material (g, m²)</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select name="Servei">
+                                    <option value="Impresió 3D">Impressió 3D</option>
+                                    <option value="Gravat i tall làser">Gravat i tall làser</option>
+                                    <option value="Escanejat 3D">Escanejat 3D</option>
+                                    <option value="Estampació">Estampació</option>
+                                    <option value="Impressió 3D resina">Impressió 3D resina</option>
+                                    <option value="Plaques electròniques">Plaques electròniques</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="Material">
+                                    <option value="Fil PLA">Fil PLA</option>
+                                    <option value="Fusta">Fusta</option>
+                                    <option value="Metacrilat">Metacrilat</option>
+                                    <option value="Vinil">Vinil</option>
+                                </select>
+                            </td>
+                            <td><input type="text" placeholder="0"></td>
+                            <td><button type="button" class="btn-eliminar" onclick="this.closest('tr').remove()">🗑️ Eliminar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="botons-accio">
+                    <button type="button" class="btn-secondary" onclick="afegirFila()">
+                        <i class="fa fa-plus" style="margin-right:5px;"></i>Afegir material
+                    </button>
+                    <button type="button" class="btn-primary" onclick="enviarSolicitud()">
+                        <i class="fa fa-paper-plane" style="margin-right:5px;"></i>Enviar sol·licitud
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            © 2026 <span>Engilab ETSEIB</span> · Universitat Politècnica de Catalunya
+        </footer>
+
+        <script>
+            function afegirFila() {
+                const tbody = document.querySelector('#taula_materials tbody');
+                const novaFila = document.createElement('tr');
+                novaFila.innerHTML = `
+                    <td><select name="Servei">
+                        <option value="Impresió 3D">Impressió 3D</option>
+                        <option value="Gravat i tall làser">Gravat i tall làser</option>
+                        <option value="Escanejat 3D">Escanejat 3D</option>
+                        <option value="Estampació">Estampació</option>
+                        <option value="Impressió 3D resina">Impressió 3D resina</option>
+                        <option value="Plaques electròniques">Plaques electròniques</option>
+                    </select></td>
+                    <td><select name="Material">
+                        <option value="Fil PLA">Fil PLA</option>
+                        <option value="Fusta">Fusta</option>
+                        <option value="Metacrilat">Metacrilat</option>
+                        <option value="Vinil">Vinil</option>
+                    </select></td>
+                    <td><input type="text" placeholder="0"></td>
+                    <td><button type="button" class="btn-eliminar" onclick="this.closest('tr').remove()">🗑️ Eliminar</button></td>
+                `;
+                tbody.appendChild(novaFila);
+            }
+
+            async function enviarSolicitud() {
+                const formData = new FormData();
+
+                formData.append('nom',       document.querySelector('input[name="nom"]').value);
+                formData.append('email',     document.querySelector('input[name="email"]').value);
+                formData.append('relacio',   document.querySelector('select[name="relacio"]').value);
+                formData.append('descripcio', document.querySelector('textarea[name="descripcio"]').value);
+
+                // Fitxers
+                const fitxers = document.getElementById('fitxers-projecte').files;
+                Array.from(fitxers).forEach(f => formData.append('fitxers', f));
+
+                // Materials
+                const files = document.querySelectorAll('#taula_materials tbody tr:nth-child(n+2)');
+                const materials = [];
+                files.forEach(fila => {
+                    materials.push({
+                        servei:   fila.querySelector('select[name="Servei"]').value,
+                        material: fila.querySelector('select[name="Material"]').value,
+                        gast:     fila.querySelector('input[type="text"]').value
+                    });
+                });
+                formData.append('materials', JSON.stringify(materials));
+
+                const resposta = await fetch('/generar', {
+                    method: 'POST',
+                    body: formData   // sense headers Content-Type, el navegador ho posa sol
+                });
+
+                const resultat = await resposta.json();
+                alert(resultat.missatge);
+            }
+        </script>
+    </body>
+</html>

@@ -8,11 +8,28 @@ from flask import jsonify, redirect, url_for
 from app import app
 from flask import request
 
+import requests
+import time
+
+from flask import Flask, render_template, request, url_for, redirect
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+
 import mysql.connector
 from datetime import datetime
 import serial
 import re
 
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SECRET_KEY"] = "supersecretkey"
+
+# Initialize database and login manager
+db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
 #meter datos
 dades_base_dades = {
     "host": "localhost",
@@ -25,14 +42,23 @@ codi_colors = {
     "R": "Vermell", "G": "Verd", "B": "Blau", "Y": "Groc",
     "K": "Negre", "W": "Blanc", "C": "Cyan", "M": "Magenta",
 }
-SERIAL_PORT = "Port4"   # ex. "COM3" on Windows
-BAUD_RATE   = 115200
-TIMEOUT     = 0.1
+SERIAL_PORT = 'COM3'    # aquí hem de posar el nostre port
+BAUD_RATE = 9600        # velocitat de comunicació amb l'Arduino
+FLASK_URL = 'http://127.0.0.1:5000/stock_web'
 
 
 def get_connection():
     return mysql.connector.connect(**dades_base_dades)
 
+# User model
+class Users(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(250), unique=True, nullable=False)
+    password = db.Column(db.String(250), nullable=False)
+
+# Create database
+with app.app_context():
+    db.create_all()
 
 def setup_database():
     # Crear taula buida - comencem eliminant l'inexistent base de dades, del contrari quin sentit tindria cridar-la??
@@ -50,7 +76,7 @@ def setup_database():
             colour      VARCHAR(10) NOT NULL,
             is_in_stock BOOLEAN NOT NULL DEFAULT TRUE,
             weight_g    VARCHAR(4) NOT NULL,
-            marca       VARCHAR(10) NOT NULL,
+            marca       VARCHAR(20) NOT NULL,
             notes       TEXT,
             arrival_date DATE NOT NULL
         )
@@ -96,7 +122,7 @@ def add_item(colourCodigo: str, number: int, arrival_date: datetime,
     conn.close()
 
 
-def search_items(item_id=None, colour=None, in_stock=None, min_weight=None, max_weight=None, marca=None):
+def search_items(item_id=None, colour=None, in_stock=None, marca=None,min_weight=None, max_weight=None):
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -175,24 +201,47 @@ def delete_item(item_id):
     rows = cursor.rowcount
     cursor.close()
     conn.close()
-    print(f"Deleted item '{item_id}'." if rows else f"❌ Item '{item_id}' not found.")
+    print(f"Deleted item '{item_id}'." if rows else f"Item '{item_id}' no identificat.")
 
 #codi claudia
 def llegir_arduino():
-    return 20
+    print("Esperant dades de l'Arduino...")
+
+    # obrim la connexió amb l'Arduino per USB
+    ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
+    time.sleep(2)  # esperem que l'Arduino s'inicialitzi
+
+    try:
+        if ser.in_waiting > 0:
+            linia = ser.readline().decode('utf-8').strip()
+            print(f"Rebut: {linia}")
+
+            # el format que envia l'Arduino és: DATA:UID:PES
+            # exemple: DATA:A3 F2 10 BC:312.5
+            if linia.startswith('DATA:'):
+                parts = linia.split(':')    # separem per ':'
+                codi_nfc = parts[1]         # la segona part és el UID
+                pes_g = float(parts[2])     # la tercera part és el pes en grams
+
+                # enviem les dades al servidor Flask
+                dades = {
+                    'codi_nfc': codi_nfc,
+                    'pes_g': pes_g  # convertim grams a grams
+                }
+
+                return codi_nfc, pes_g
+    except:
+        return None, None
+
 #upon finishing la fase beta introducir EngiLab.html que, con su php, hará que todo tire
 @app.route('/')
 def index():
-    items = search_items()
-    # serialise dates for template
-    for item in items:
-        if hasattr(item.get('arrival_date'), 'strftime'):
-            item['arrival_date'] = item['arrival_date'].strftime('%d/%m/%Y')
-    return render_template("stock_web.html",
-                                  items=items,
-                                  colours=codi_colors,
-                                  msg=request.args.get('msg'),
-                                  err=request.args.get('err'))
+    return render_template('index.html')
+
+# Load user for Flask-Login
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))
 
 @app.route('/index')
 def index2():
@@ -210,10 +259,10 @@ def index2():
 
 @app.route('/read_weight', methods=['GET'])
 def api_read_weight():
-    pes = llegir_arduino()
+    codi_nfc, pes = llegir_arduino()
     if pes is None:
         return jsonify({"ok": False, "error": "No s'ha obtingut cap resposta."})
-    return jsonify({"ok": True, "weight": pes})
+    return jsonify({"ok": True, "item_id": codi_nfc, "weight": pes})
 
 
 @app.route('/add', methods=['POST'])
@@ -259,6 +308,50 @@ def update():
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
 
+# Register route
+@app.route('/register', methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if Users.query.filter_by(username=username).first():
+            return render_template("sign_up.html", error="Username already taken!")
+
+        hashed_password = generate_password_hash(password, method="pbkdf2:sha256")
+
+        new_user = Users(username=username, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        return redirect(url_for("login"))
+    
+    return render_template("sign_up.html")
+
+# Login route
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        user = Users.query.filter_by(username=username).first()
+
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            items = search_items()
+            for item in items:
+                if hasattr(item.get('arrival_date'), 'strftime'):
+                    item['arrival_date'] = item['arrival_date'].strftime('%d/%m/%Y')
+                    return render_template("stock_web.html",
+                                        items=items,
+                                        colours=codi_colors,
+                                        msg=request.args.get('msg'),
+                                        err=request.args.get('err'))
+        else:
+            return render_template("sign_up.html", error="Invalid username or password")
+
+    return render_template("index.html")
 
 @app.route('/delete/<item_id>', methods=['POST'])
 def delete(item_id):

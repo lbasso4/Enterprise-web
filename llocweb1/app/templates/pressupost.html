@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang = "ca">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+        <a href="/" class="nav-btn"><i class="fa fa-home" style="margin-right:5px;"></i>Inici</a>
+        <link rel="stylesheet" href="{{ url_for('static', filename='pressupoststyle.css') }}">
+        <meta charset="utf-8" >
+        <!-- en local -->
+    </head>
+    <body>
+        <p>Nom i cognoms del client</p>
+        <input type="text" name="nom">
+        <br>
+       
+        <p>Adreça electrònica</p>
+        <input type="text" name="email">
+        <br>
+       
+        <p>Relació amb el centre</p>
+        <select name="relacio">
+            <option value="Estudiant">Estudiant</option>
+            <option value="Docent">Docent</option>
+            <option value="Extern">Extern</option>
+        </select>
+        <br>
+        <p>Descripció del projecte</p>
+        <textarea name="descripcio"></textarea>
+        <br>
+        <br>
+        <p>Fitxers del projecte</p>
+        <div class="form-group">
+            <label>Fitxers del projecte</label>
+            <input type="file" id="fitxers-projecte" name="fitxers" multiple accept=".stl,.svg,.pdf,.png,.jpg,.jpeg,.dxf">
+            <small style="color: var(--text-muted); font-size: 12px;">Formats acceptats: STL, SVG, PDF, PNG, JPG, DXF</small>
+            <ul id="llista-fitxers" style="margin-top: 8px; padding-left: 16px; font-size: 13px;"></ul>
+        </div>
+        <br>
+        <table id = "taula_materials">
+            <tbody>
+                <tr>
+                    <th>Tipus de servei</th>
+                    <th>Material</th>
+                    <th>Gast de material g, m^3</th>
+                </tr>
+                <tr>
+                    <td><select name="Servei">
+                            <option value="Impresió 3D">Impresió 3D</option>
+                            <option value="Gravat i tall làser">Gravat i tall làser</option>
+                            <option value="Escanejat 3D">Escanejat 3D</option>
+                            <option value="Estampació">Estampació</option>
+                            <option value="Impressió 3D resina">Impressió 3D resina</option>
+                            <option value="Plaques electròniques">Plaques electròniques</option>
+                        </select>
+                    </td>
+                    <td><select name="Material">
+                            <option value="Fil PLA">Fil PLA</option>
+                            <option value="Fusta">Fusta</option>
+                            <option value="Metacrilat">Metacrilat</option>
+                            <option value="Vinil">Vinil</option>
+                        </select>
+                    </td>
+                    <td><input type="text"></td>
+                    <td><button type="button" onclick="this.closest('tr').remove()">🗑️ Eliminar</button></td>
+                </tr>
+            </tbody>
+       </table>
+       <button type="button" onclick="afegirFila()">+ Afegir material</button>
+    <button type="button" onclick="enviarSolicitud()">Enviar sol·licitud</button>
+       <script>
+            function afegirFila() {
+                const tbody = document.querySelector('#taula_materials tbody');
+                const novaFila = document.createElement('tr');
+                novaFila.innerHTML = `
+                    <td><select name="Servei">
+                        <option value="Impresió 3D">Impresió 3D</option>
+                        <option value="Gravat i tall làser">Gravat i tall làser</option>
+                        <option value="Escanejat 3D">Escanejat 3D</option>
+                        <option value="Estampació">Estampació</option>
+                        <option value="Impressió 3D resina">Impressió 3D resina</option>
+                        <option value="Plaques electròniques">Plaques electròniques</option>
+                    </select></td>
+                    <td><select name="Material">
+                        <option value="Fil PLA">Fil PLA</option>
+                        <option value="Fusta">Fusta</option>
+                        <option value="Metacrilat">Metacrilat</option>
+                        <option value="Vinil">Vinil</option>
+                    </select></td>
+                    <td><input type="text"></td>
+                    <td><button type="button" onclick="this.closest('tr').remove()">🗑️ Eliminar</button></td>
+                `;
+                tbody.appendChild(novaFila);
+            }
+            async function enviarSolicitud() {
+                const formData = new FormData();
+
+                formData.append('nom',       document.querySelector('input[name="nom"]').value);
+                formData.append('email',     document.querySelector('input[name="email"]').value);
+                formData.append('relacio',   document.querySelector('select[name="relacio"]').value);
+                formData.append('descripcio', document.querySelector('textarea[name="descripcio"]').value);
+
+                // Fitxers
+                const fitxers = document.getElementById('fitxers-projecte').files;
+                Array.from(fitxers).forEach(f => formData.append('fitxers', f));
+
+                // Materials
+                const files = document.querySelectorAll('#taula_materials tbody tr:nth-child(n+2)');
+                const materials = [];
+                files.forEach(fila => {
+                    materials.push({
+                        servei:   fila.querySelector('select[name="Servei"]').value,
+                        material: fila.querySelector('select[name="Material"]').value,
+                        gast:     fila.querySelector('input[type="text"]').value
+                    });
+                });
+                formData.append('materials', JSON.stringify(materials));
+
+                const resposta = await fetch('/generar', {
+                    method: 'POST',
+                    body: formData  // sense headers Content-Type
+                });
+
+                const resultat = await resposta.json();
+                alert(resultat.missatge);
+            }
+            document.getElementById('fitxers-projecte').addEventListener('change', function () {
+                const llista = document.getElementById('llista-fitxers');
+                llista.innerHTML = '';
+                Array.from(this.files).forEach(f => {
+                    const li = document.createElement('li');
+                    li.textContent = `📎 ${f.name} (${(f.size / 1024).toFixed(1)} KB)`;
+                    llista.appendChild(li);
+                });
+            });
+       </script>
+    </body>
+</html>

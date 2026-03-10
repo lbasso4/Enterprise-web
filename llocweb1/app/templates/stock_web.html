@@ -66,9 +66,10 @@
           <option value="3DCpi">3DCpi</option>
           <option value="Sunlu">Sunlu</option>
           <option value="Loopha">Loopha</option>
-          <option value="Form Futura">Form Futura</option>
+          <option value="Futura">Form Futura</option>
           <option value="Elegoo">Elegoo</option>
-          <option value="Esun Filament">Esun Filament</option>
+          <option value="Esun">Esun Filament</option>
+          <option value="Altre">Altre</option>
         </select>
       <label>Notes (opcional)</label>
       <textarea id="add-notes" rows="2" placeholder="Informació adicional…"></textarea>
@@ -103,7 +104,8 @@
         <option value="No">No</option>
       </select>
       <label>Marca</label>
-        <select id="f-marca" required>
+        <select id="f-marca">
+          <option value="">Tot</option>
           <option value="3DCpi">3DCpi</option>
           <option value="Sunlu">Sunlu</option>
           <option value="Loopha">Loopha</option>
@@ -317,21 +319,41 @@
 
   async function readWeight() {
     document.getElementById('weight-display').textContent = '...';
-    document.getElementById('serial-error').textContent   = '';
+    document.getElementById('serial-error').textContent = '';
     try {
-      const res  = await fetch('/read_weight');
-      const data = await res.json();
-      if (data.ok) {
-        lastWeight = data.weight;
-        document.getElementById('weight-display').textContent = data.weight + ' g';
-      } else {
-        document.getElementById('serial-error').textContent = data.error;
-        document.getElementById('weight-display').textContent = 'Sense dades';
-      }
+        const res  = await fetch('/read_weight');
+        const data = await res.json();
+        if (data.ok) {
+            lastWeight = data.weight;
+            document.getElementById('weight-display').textContent = data.weight + ' g';
+
+            // ── Auto-update if we got an item_id from NFC ──
+            if (data.item_id) {
+                document.getElementById('weight-display').textContent =
+                    `${data.weight} g — actualitzant ${data.item_id}...`;
+
+                const body = new URLSearchParams({
+                    item_id:  data.item_id,
+                    weight_g: data.weight,
+                });
+                const upd  = await fetch('/update', { method: 'POST', body });
+                const result = await upd.json();
+
+                if (result.ok) {
+                    flash(`Pes de ${data.item_id} actualitzat a ${data.weight}g`);
+                    loadStock();  // refresh the table
+                } else {
+                    flash(result.error, 'err');
+                }
+            }
+        } else {
+            document.getElementById('serial-error').textContent = data.error;
+            document.getElementById('weight-display').textContent = 'Sense dades';
+        }
     } catch (e) {
-      document.getElementById('serial-error').textContent = 'Network error.';
+        document.getElementById('serial-error').textContent = 'Network error.';
     }
-  }
+}
 
   function fillWeight() {
     if (lastWeight !== null) {
@@ -351,6 +373,7 @@
     const params = {};
     const id   = document.getElementById('f-id').value.trim();
     const col  = document.getElementById('f-colour').value;
+    const mar  = document.getElementById('f-marca').value;
     const stk  = document.getElementById('f-stock').value;
     const minw = document.getElementById('f-minw').value;
     const maxw = document.getElementById('f-maxw').value;
@@ -364,7 +387,7 @@
   }
 
   function clearFilter() {
-    ['f-id','f-colour','f-stock','f-minw','f-maxw']
+    ['f-id','f-colour','f-stock',"f-marca",'f-minw','f-maxw']
       .forEach(id => document.getElementById(id).value = '');
     loadStock();
   }
