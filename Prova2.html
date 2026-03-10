@@ -1484,9 +1484,7 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
       if (chatObert && chatHistorial.length === 0) {
         // Missatge de benvinguda
         setTimeout(() => {
-          afegirMissatgeChat('bot', '👋 Hola! Soc l'assistent d'Engilab. Puc ajudar-te a trobar informació sobre el laboratori, els materials, els preus o com fer una sol·licitud d'impressió.
-
-En què et puc ajudar?');
+          afegirMissatgeChat('bot', "👋 Hola! Soc l'assistent d'Engilab. Puc ajudar-te a trobar informació sobre el laboratori, els materials, els preus o com fer una sol·licitud d'impressió.\n\nEn què et puc ajudar?");
         }, 300);
         // Comprovar API key
         if (!chatApiKey) {
