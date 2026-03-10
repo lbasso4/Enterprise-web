@@ -225,8 +225,15 @@
     .register-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .register-grid .login-field { grid-column: auto; }
     .register-grid .login-field.full { grid-column: 1 / -1; }
-    .login-success { display: none; background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.3); border-radius: 8px; padding: 10px 14px; color: var(--green); font-size: 13px; font-weight: 600; text-align: center; align-items: center; gap: 6px; justify-content: center; }
-    .login-success.visible { display: flex; }
+    /* Success verification banner */
+    .login-success { display: none; }
+    .login-success.visible { display: block; }
+    .verify-success-box { background: linear-gradient(135deg, rgba(22,163,74,0.08), rgba(22,163,74,0.04)); border: 1.5px solid rgba(22,163,74,0.35); border-radius: 12px; padding: 20px 18px; text-align: center; }
+    .verify-success-box .vs-icon { width: 52px; height: 52px; border-radius: 50%; background: rgba(22,163,74,0.12); border: 2px solid var(--green); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--green); margin: 0 auto 12px; }
+    .verify-success-box .vs-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; color: #16a34a; margin-bottom: 6px; }
+    .verify-success-box .vs-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .verify-success-box .vs-email { font-weight: 700; color: var(--text-main); display: block; margin-top: 4px; font-size: 13px; }
+    .verify-success-box .vs-note { margin-top: 10px; font-size: 11.5px; color: #888; background: rgba(0,0,0,0.04); border-radius: 6px; padding: 7px 10px; }
     @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
     #toast-msg { transition: opacity .4s ease; }
     .verify-banner { display: none; background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 14px 18px; color: #92400e; font-size: 13px; font-weight: 600; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
@@ -285,7 +292,7 @@
     .comandes-buit i { font-size: 2.2rem; margin-bottom: 10px; display: block; color: var(--gray-light); }
 
     /* Ampliar modal login per mostrar comandes */
-    .modal-login-box.ample { width: 620px; }
+    .modal-login-box.ample { width: 460px; }
 
     /* ── PANELL USUARIS REGISTRATS (admin) ── */
     .usuaris-panel-wrapper { display: none; background: #12121f; width: 100%; padding: 40px 24px; border-top: 1px solid rgba(255,255,255,0.06); }
@@ -638,9 +645,21 @@
               <span id="reg-error-text">Error en el registre.</span>
             </div>
             <div class="login-success" id="reg-success">
-              <i class="fa fa-circle-check"></i> Compte creat! Ja pots iniciar sessió.
+              <div class="verify-success-box">
+                <div class="vs-icon"><i class="fa fa-envelope-circle-check"></i></div>
+                <div class="vs-title">Comprova el teu correu!</div>
+                <div class="vs-desc">
+                  Hem enviat un correu de verificació a:
+                  <span class="vs-email" id="reg-success-email"></span>
+                </div>
+                <div class="vs-note">
+                  <i class="fa fa-triangle-exclamation" style="color:#f59e0b;margin-right:4px;"></i>
+                  Comprova també la carpeta de <strong>correu no desitjat</strong>.<br>
+                  Un cop verificat, ja podràs iniciar sessió.
+                </div>
+              </div>
             </div>
-            <button class="btn-login-submit" onclick="intentarRegistre()">
+            <button class="btn-login-submit" id="btn-crear-compte" onclick="intentarRegistre()">
               <i class="fa fa-user-plus" style="margin-right:6px;"></i>Crear compte
             </button>
           </div>
@@ -1091,6 +1110,8 @@
       document.getElementById('login-error').classList.remove('visible');
       document.getElementById('reg-error').classList.remove('visible');
       document.getElementById('reg-success').classList.remove('visible');
+      const btnCrear = document.getElementById('btn-crear-compte');
+      if (btnCrear) btnCrear.style.display = '';
     }
 
     function obrirLogin() {
@@ -1245,10 +1266,12 @@
         })
         .then(() => {
           errEl.classList.remove('visible');
-          okEl.innerHTML = '<i class="fa fa-envelope"></i> Compte creat! Hem enviat un correu de verificaci\u00f3 a <strong>' + email + '</strong>. Comprova la safata d\'entrada i fes clic a l\'enlla\u00e7 per activar el compte.';
+          document.getElementById('reg-success-email').textContent = email;
           okEl.classList.add('visible');
+          const btnCrear = document.getElementById('btn-crear-compte');
+          if (btnCrear) btnCrear.style.display = 'none';
           ['reg-nom','reg-cognom','reg-email','reg-pass','reg-pass2'].forEach(id => document.getElementById(id).value = '');
-          setTimeout(() => { okEl.classList.remove('visible'); canviarTab('login'); }, 6000);
+          setTimeout(() => { okEl.classList.remove('visible'); canviarTab('login'); }, 8000);
         })
         .catch(err => {
           let msg = 'Error en crear el compte.';
