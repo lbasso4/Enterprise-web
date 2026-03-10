@@ -1037,7 +1037,7 @@
       const esAdmin = sessioActiva && rolActiu === 'admin';
       const llista  = document.getElementById('llista-noticies');
       if (todesNoticies.length === 0) {
-        llista.innerHTML = `<p style="text-align:center;color:var(--text-muted);padding:32px;">${esAdmin ? 'Encara no hi ha notícies. Crea\'n una amb el botó de dalt.' : 'Encara no hi ha notícies.'}</p>`;
+        llista.innerHTML = `<p style="text-align:center;color:var(--text-muted);padding:32px;">${esAdmin ? "Encara no hi ha notícies. Crea'n una amb el botó de dalt." : "Encara no hi ha notícies."}</p>`;
         return;
       }
       llista.innerHTML = todesNoticies.map((n, i) => {
@@ -1155,7 +1155,7 @@
       document.getElementById('panel-registre').classList.toggle('actiu', tab === 'registre');
       // Redimensionar modal
       const box = document.querySelector('.modal-login-box');
-      box.style.width = tab === 'registre' ? '480px' : '380px';
+      if (box) box.style.width = tab === 'registre' ? '480px' : '380px';
       // Netejar errors
       document.getElementById('login-error').classList.remove('visible');
       document.getElementById('reg-error').classList.remove('visible');
@@ -1442,7 +1442,8 @@
     /* ══ CHATBOT IA ═══════════════════════════════════ */
     let chatObert      = false;
     let chatHistorial  = [];
-    let chatApiKey     = localStorage.getItem('engilab_apikey') || '';
+    let chatApiKey     = '';
+    try { chatApiKey = localStorage.getItem('engilab_apikey') || ''; } catch(e) {}
 
     const CHAT_SYSTEM = `Ets l'assistent virtual d'Engilab, el laboratori de fabricació de l'ETSEIB (Escola Tècnica Superior d'Enginyeria Industrial de Barcelona) de la UPC.
 
@@ -1501,7 +1502,7 @@ En què et puc ajudar?');
         return;
       }
       chatApiKey = key;
-      localStorage.setItem('engilab_apikey', key);
+      try { localStorage.setItem('engilab_apikey', key); } catch(e) {}
       document.getElementById('chat-apikey-banner').style.display = 'none';
       mostrarToast('<i class="fa fa-circle-check" style="color:var(--green);"></i> API Key desada correctament!');
     }
