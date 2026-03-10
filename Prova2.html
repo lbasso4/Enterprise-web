@@ -308,6 +308,53 @@
     .usuari-card { position: relative; }
     .btn-del-usuari { position: absolute; top: 8px; right: 8px; background: none; border: none; color: rgba(255,100,100,0.4); cursor: pointer; font-size: 13px; padding: 4px 6px; border-radius: 6px; transition: color .2s, background .2s; }
     .btn-del-usuari:hover { color: #ff6b6b; background: rgba(230,57,70,0.15); }
+
+    /* ── CHATBOT IA ── */
+    .chat-fab { position: fixed; bottom: 28px; right: 28px; z-index: 1000; width: 58px; height: 58px; border-radius: 50%; background: linear-gradient(135deg, var(--blue-dark), var(--blue)); border: none; color: white; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 20px rgba(0,123,193,0.45); display: flex; align-items: center; justify-content: center; transition: transform .2s, box-shadow .2s; }
+    .chat-fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(0,123,193,0.6); }
+    .chat-fab .chat-fab-badge { position: absolute; top: -2px; right: -2px; width: 18px; height: 18px; background: var(--red); border-radius: 50%; border: 2px solid white; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .chat-window { position: fixed; bottom: 100px; right: 28px; z-index: 1000; width: 370px; max-width: calc(100vw - 40px); background: white; border-radius: 18px; box-shadow: 0 8px 40px rgba(0,0,0,0.18); display: none; flex-direction: column; overflow: hidden; animation: slideUp .25s ease; max-height: 560px; }
+    .chat-window.obert { display: flex; }
+    .chat-header { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); padding: 16px 20px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .chat-header-avatar { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: white; flex-shrink: 0; }
+    .chat-header-info { flex: 1; }
+    .chat-header-info strong { display: block; color: white; font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; font-weight: 700; }
+    .chat-header-info span { font-size: 11px; color: rgba(255,255,255,0.75); display: flex; align-items: center; gap: 4px; }
+    .chat-header-info span::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #4ade80; display: inline-block; }
+    .chat-close { background: rgba(255,255,255,0.15); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; flex-shrink: 0; }
+    .chat-close:hover { background: rgba(255,255,255,0.3); }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; background: #f8f9fb; min-height: 300px; }
+    .chat-msg { max-width: 85%; display: flex; flex-direction: column; gap: 3px; animation: slideUp .2s ease; }
+    .chat-msg.bot { align-self: flex-start; }
+    .chat-msg.user { align-self: flex-end; }
+    .chat-bubble { padding: 10px 14px; border-radius: 14px; font-size: 13.5px; line-height: 1.55; font-family: 'Barlow', sans-serif; }
+    .chat-msg.bot .chat-bubble { background: white; color: var(--text-main); border: 1px solid var(--gray-light); border-radius: 4px 14px 14px 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .chat-msg.user .chat-bubble { background: var(--blue); color: white; border-radius: 14px 4px 14px 14px; }
+    .chat-msg .chat-time { font-size: 10px; color: var(--text-muted); padding: 0 4px; }
+    .chat-msg.user .chat-time { text-align: right; }
+    .chat-typing { display: none; align-self: flex-start; }
+    .chat-typing.visible { display: flex; }
+    .chat-typing .chat-bubble { background: white; border: 1px solid var(--gray-light); display: flex; align-items: center; gap: 4px; padding: 12px 16px; border-radius: 4px 14px 14px 14px; }
+    .typing-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); opacity: .4; animation: typingPulse 1.2s infinite; }
+    .typing-dot:nth-child(2) { animation-delay: .2s; }
+    .typing-dot:nth-child(3) { animation-delay: .4s; }
+    @keyframes typingPulse { 0%,80%,100%{opacity:.4;transform:scale(1)} 40%{opacity:1;transform:scale(1.3)} }
+    .chat-input-area { padding: 12px 14px; border-top: 1px solid var(--gray-light); display: flex; gap: 8px; flex-shrink: 0; background: white; }
+    .chat-input { flex: 1; padding: 10px 14px; border: 2px solid var(--gray-light); border-radius: 22px; font-family: 'Barlow', sans-serif; font-size: 13.5px; outline: none; transition: border-color .2s; resize: none; overflow: hidden; max-height: 80px; line-height: 1.4; }
+    .chat-input:focus { border-color: var(--blue); }
+    .chat-send { width: 38px; height: 38px; border-radius: 50%; background: var(--blue); border: none; color: white; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s, transform .15s; flex-shrink: 0; align-self: flex-end; }
+    .chat-send:hover { background: var(--blue-dark); transform: scale(1.08); }
+    .chat-send:disabled { background: var(--gray-light); cursor: not-allowed; transform: none; }
+    .chat-suggestions { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px 12px; background: #f8f9fb; flex-shrink: 0; }
+    .chat-sugg-btn { padding: 5px 11px; border-radius: 20px; border: 1.5px solid rgba(0,123,193,0.3); background: rgba(0,123,193,0.05); color: var(--blue); font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: background .2s, border-color .2s; white-space: nowrap; }
+    .chat-sugg-btn:hover { background: rgba(0,123,193,0.12); border-color: var(--blue); }
+    .chat-apikey-banner { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 12px 14px; margin: 12px; font-size: 12.5px; color: #92400e; display: flex; flex-direction: column; gap: 8px; }
+    .chat-apikey-banner strong { color: #78350f; }
+    .chat-apikey-input-row { display: flex; gap: 6px; }
+    .chat-apikey-input { flex: 1; padding: 8px 10px; border: 1.5px solid rgba(245,158,11,0.4); border-radius: 8px; font-family: 'Barlow', sans-serif; font-size: 12px; outline: none; background: white; }
+    .chat-apikey-input:focus { border-color: #f59e0b; }
+    .chat-apikey-save { padding: 8px 12px; background: #f59e0b; color: white; border: none; border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer; white-space: nowrap; }
+    .chat-apikey-save:hover { background: #d97706; }
   </style>
 </head>
 <body>
@@ -1392,12 +1439,242 @@
     aplicarLayoutRol();
     renderNoticies();
 
+    /* ══ CHATBOT IA ═══════════════════════════════════ */
+    let chatObert      = false;
+    let chatHistorial  = [];
+    let chatApiKey     = localStorage.getItem('engilab_apikey') || '';
+
+    const CHAT_SYSTEM = `Ets l'assistent virtual d'Engilab, el laboratori de fabricació de l'ETSEIB (Escola Tècnica Superior d'Enginyeria Industrial de Barcelona) de la UPC.
+
+El teu nom és "Assistent Engilab". Ets amable, concís i ajudes els estudiants i professors a:
+- Entendre com funciona el laboratori
+- Sol·licitar impressions 3D
+- Conèixer els materials disponibles i els seus preus
+- Navegar per la web
+
+MATERIALS I PREUS:
+- PLA: 20 €/kg (material estàndard, fàcil d'imprimir)
+- ABS: 23 €/kg (més resistent a la calor)
+- PETG: 23 €/kg (flexible i resistent)
+- SLA: 35 €/kg (alta precisió, resina)
+- DLP: 140 €/kg (màxima resolució, resina fotopolimeritzable)
+
+COM SOL·LICITAR UNA IMPRESSIÓ:
+1. Cal iniciar sessió (registre amb correu @upc.edu)
+2. Anar a la secció "Sol·licitar impressió 3D"
+3. Seleccionar material, indicar pes estimat en grams, afegir detalls i pujar el fitxer STL
+4. Enviar la sol·licitud i l'equip del lab us contactarà
+
+REGISTRE:
+- Només es pot registrar amb correu institucional @upc.edu
+- Cal verificar el correu electrònic abans d'iniciar sessió
+- Administradors i professors tenen comptes especials
+
+IMPRESSORES 3D:
+- Disposem de 5 impressores 3D (Impressora 1 a 5)
+- L'estat (disponible/ocupada) es veu en temps real a la pàgina
+
+Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de les impressores, digues que el pots consultar a la secció "Estat de les impressores 3D" de la web, i afegeix la informació que t'he donat.`;
+
+    function toggleChat() {
+      chatObert = !chatObert;
+      const win = document.getElementById('chat-window');
+      win.classList.toggle('obert', chatObert);
+      if (chatObert && chatHistorial.length === 0) {
+        // Missatge de benvinguda
+        setTimeout(() => {
+          afegirMissatgeChat('bot', '👋 Hola! Soc l'assistent d'Engilab. Puc ajudar-te a trobar informació sobre el laboratori, els materials, els preus o com fer una sol·licitud d'impressió.
+
+En què et puc ajudar?');
+        }, 300);
+        // Comprovar API key
+        if (!chatApiKey) {
+          document.getElementById('chat-apikey-banner').style.display = 'block';
+        }
+      }
+    }
+
+    function desarApiKey() {
+      const key = document.getElementById('chat-apikey-input').value.trim();
+      if (!key.startsWith('sk-ant-')) {
+        mostrarToast('<i class="fa fa-circle-xmark" style="color:var(--red);"></i> La clau ha de començar per sk-ant-');
+        return;
+      }
+      chatApiKey = key;
+      localStorage.setItem('engilab_apikey', key);
+      document.getElementById('chat-apikey-banner').style.display = 'none';
+      mostrarToast('<i class="fa fa-circle-check" style="color:var(--green);"></i> API Key desada correctament!');
+    }
+
+    function afegirMissatgeChat(rol, text) {
+      const msgs = document.getElementById('chat-messages');
+      const ara  = new Date().toLocaleTimeString('ca-ES', {hour:'2-digit', minute:'2-digit'});
+      const div  = document.createElement('div');
+      div.className = 'chat-msg ' + rol;
+      // Convertir salts de línia i negretes bàsiques
+      const textHtml = esc(text)
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+      div.innerHTML = `<div class="chat-bubble">${textHtml}</div><span class="chat-time">${ara}</span>`;
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+      return div;
+    }
+
+    async function enviarMissatgeChat() {
+      const input = document.getElementById('chat-input');
+      const text  = input.value.trim();
+      if (!text) return;
+      if (!chatApiKey) {
+        document.getElementById('chat-apikey-banner').style.display = 'block';
+        mostrarToast('<i class="fa fa-key" style="color:#f59e0b;"></i> Introdueix primer la teva API Key.');
+        return;
+      }
+
+      input.value = '';
+      autoResizeChat(input);
+      document.getElementById('chat-send-btn').disabled = true;
+      document.getElementById('chat-suggestions').style.display = 'none';
+
+      // Afegir missatge de l'usuari
+      afegirMissatgeChat('user', text);
+      chatHistorial.push({ role: 'user', content: text });
+
+      // Mostrar typing
+      const typing = document.getElementById('chat-typing');
+      typing.classList.add('visible');
+      document.getElementById('chat-messages').scrollTop = 99999;
+
+      // Afegir context en temps real de les impressores
+      let contextExtra = '';
+      try {
+        const snap = await db.ref('impressores').once('value');
+        const impData = snap.val() || {};
+        const estats = Object.entries(impData).map(([id, estat]) => {
+          const num = id.replace('imp','');
+          return `Impressora ${num}: ${estat === 'ocupada' ? 'OCUPADA' : 'DISPONIBLE'}`;
+        });
+        if (estats.length) contextExtra = '\n\nESTAT ACTUAL IMPRESSORES (en temps real):\n' + estats.join('\n');
+
+        const snapLab = await db.ref('statuslab').once('value');
+        const estatLab = snapLab.val();
+        contextExtra += '\nESTAT LABORATORI: ' + (estatLab === 'open' ? 'OBERT' : 'TANCAT');
+      } catch(e) {}
+
+      try {
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': chatApiKey,
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-access': 'true'
+          },
+          body: JSON.stringify({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 600,
+            system: CHAT_SYSTEM + contextExtra,
+            messages: chatHistorial
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error.message || 'Error de l\'API');
+        }
+
+        const resposta = data.content[0].text;
+        chatHistorial.push({ role: 'assistant', content: resposta });
+        typing.classList.remove('visible');
+        afegirMissatgeChat('bot', resposta);
+
+      } catch(err) {
+        typing.classList.remove('visible');
+        let msg = 'Ho sento, hi ha hagut un error. Torna-ho a provar.';
+        if (err.message && err.message.includes('401')) msg = 'API Key incorrecta o caducada.';
+        if (err.message && err.message.includes('429')) msg = 'Massa peticions. Espera uns segons.';
+        afegirMissatgeChat('bot', '⚠️ ' + msg);
+      }
+
+      document.getElementById('chat-send-btn').disabled = false;
+    }
+
+    function enviarSuggestion(text) {
+      document.getElementById('chat-input').value = text;
+      enviarMissatgeChat();
+    }
+
+    function chatKeyDown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviarMissatgeChat(); }
+    }
+
+    function autoResizeChat(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+    }
+
+
     function buscar2() {
       const q = document.getElementById('searchInput').value;
       if (q.trim()) console.log('Cercant:', q);
     }
 
   </script>
+
+  <!-- CHATBOT IA -->
+  <button class="chat-fab" onclick="toggleChat()" id="chat-fab" title="Assistent Engilab IA">
+    <i class="fa fa-robot"></i>
+    <span class="chat-fab-badge">IA</span>
+  </button>
+
+  <div class="chat-window" id="chat-window">
+    <div class="chat-header">
+      <div class="chat-header-avatar"><i class="fa fa-robot"></i></div>
+      <div class="chat-header-info">
+        <strong>Assistent Engilab</strong>
+        <span>En línia · IA</span>
+      </div>
+      <button class="chat-close" onclick="toggleChat()">&times;</button>
+    </div>
+
+    <!-- Banner API Key (si no en té) -->
+    <div class="chat-apikey-banner" id="chat-apikey-banner" style="display:none;">
+      <span><strong>🔑 Cal una API Key d'Anthropic</strong><br>Introdueix la teva clau per activar l'assistent.</span>
+      <div class="chat-apikey-input-row">
+        <input class="chat-apikey-input" type="password" id="chat-apikey-input" placeholder="sk-ant-...">
+        <button class="chat-apikey-save" onclick="desarApiKey()">Desar</button>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chat-messages">
+      <!-- missatges dinàmics -->
+    </div>
+
+    <div class="chat-typing" id="chat-typing">
+      <div class="chat-bubble">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+    </div>
+
+    <div class="chat-suggestions" id="chat-suggestions">
+      <button class="chat-sugg-btn" onclick="enviarSuggestion('Com puc fer una sol·licitud?')">📋 Sol·licitar impressió</button>
+      <button class="chat-sugg-btn" onclick="enviarSuggestion('Quins materials teniu?')">🧱 Materials</button>
+      <button class="chat-sugg-btn" onclick="enviarSuggestion('Quin és l\'estat de les impressores?')">🖨️ Estat impressores</button>
+      <button class="chat-sugg-btn" onclick="enviarSuggestion('Quins preus teniu?')">💰 Preus</button>
+    </div>
+
+    <div class="chat-input-area">
+      <textarea class="chat-input" id="chat-input" placeholder="Escriu la teva pregunta..." rows="1"
+        onkeydown="chatKeyDown(event)" oninput="autoResizeChat(this)"></textarea>
+      <button class="chat-send" id="chat-send-btn" onclick="enviarMissatgeChat()">
+        <i class="fa fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
   <script src="script_search2.js"></script>
 </body>
 </html>
