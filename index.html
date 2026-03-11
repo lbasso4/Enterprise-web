@@ -355,6 +355,28 @@
     .chat-apikey-input:focus { border-color: #f59e0b; }
     .chat-apikey-save { padding: 8px 12px; background: #f59e0b; color: white; border: none; border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer; white-space: nowrap; }
     .chat-apikey-save:hover { background: #d97706; }
+
+    /* ══ DISSENYS PÚBLICS ══════════════════════════════ */
+    .dissenys-wrapper { background: var(--white); width: 100%; padding: 52px 24px; border-bottom: 1px solid var(--gray-light); }
+    .dissenys-inner { max-width: 1100px; margin: 0 auto; }
+    .dissenys-top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; flex-wrap: wrap; gap: 12px; }
+    .dissenys-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .disseny-card { background: var(--gray-bg); border: 1.5px solid var(--gray-light); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: box-shadow 0.2s, transform 0.2s; }
+    .disseny-card:hover { box-shadow: 0 6px 24px rgba(0,123,193,0.13); transform: translateY(-2px); }
+    .disseny-card-icon { width: 48px; height: 48px; background: rgba(0,123,193,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--blue); }
+    .disseny-card-nom { font-weight: 700; font-size: 1rem; color: var(--text-main); word-break: break-all; }
+    .disseny-card-info { font-size: 13px; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; }
+    .disseny-card-info span { display: flex; align-items: center; gap: 6px; }
+    .disseny-card-material { display: inline-block; background: rgba(0,123,193,0.1); color: var(--blue); font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 20px; }
+    .disseny-card-preu { font-size: 1.1rem; font-weight: 800; color: var(--blue); }
+    .disseny-card-btns { display: flex; gap: 8px; margin-top: 4px; }
+    .btn-descarregar { flex: 1; padding: 9px 14px; background: var(--blue); color: white; border: none; border-radius: 10px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
+    .btn-descarregar:hover { background: #0056a3; }
+    .btn-eliminar-disseny { padding: 9px 12px; background: rgba(230,57,70,0.08); color: var(--red); border: 1.5px solid rgba(230,57,70,0.2); border-radius: 10px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; transition: background 0.2s; display: none; }
+    .btn-eliminar-disseny:hover { background: rgba(230,57,70,0.18); }
+    .btn-eliminar-disseny.visible { display: flex; align-items: center; gap: 6px; }
+    .dissenys-buit { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .dissenys-buit i { font-size: 2.5rem; margin-bottom: 12px; display: block; color: var(--gray-light); }
   </style>
 </head>
 <body>
@@ -537,6 +559,15 @@
       <div class="form-success" id="form-success">
         <i class="fa fa-circle-check"></i> Sol·licitud enviada correctament! Et contactarem aviat.
       </div>
+      <div class="form-field full" style="margin-top:4px;">
+        <label class="publicar-label" style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:12px 16px;background:rgba(0,123,193,0.06);border:2px solid rgba(0,123,193,0.2);border-radius:12px;">
+          <input type="checkbox" id="f-publicar" style="width:18px;height:18px;accent-color:var(--blue);cursor:pointer;">
+          <span style="font-size:14px;font-weight:600;color:var(--text-main);">
+            <i class="fa fa-globe" style="color:var(--blue);margin-right:6px;"></i>
+            Vull que el meu disseny sigui visible a l'apartat <strong>Dissenys Públics</strong>
+          </span>
+        </label>
+      </div>
       <div class="formulari-footer-btns">
         <button class="btn-reset-form" onclick="resetFormulari()"><i class="fa fa-rotate-left" style="margin-right:6px;"></i>Netejar</button>
         <button class="btn-enviar" onclick="enviarSolicitud()"><i class="fa fa-paper-plane"></i> Enviar sol·licitud</button>
@@ -555,6 +586,18 @@
         </button>
       </div>
       <div id="llista-noticies"></div>
+    </div>
+  </div>
+
+  <!-- DISSENYS PÚBLICS -->
+  <div class="dissenys-wrapper" id="dissenys-wrapper">
+    <div class="dissenys-inner">
+      <div class="dissenys-top-bar">
+        <h2 class="section-title"><i class="fa fa-cube" style="color:var(--blue);margin-right:10px;"></i>Dissenys Públics</h2>
+      </div>
+      <div class="dissenys-grid" id="dissenys-grid">
+        <div class="dissenys-buit"><i class="fa fa-cube"></i>Encara no hi ha dissenys públics.</div>
+      </div>
     </div>
   </div>
 
@@ -998,9 +1041,11 @@
       const preuEstimat = ((pes / 1000) * preuPerKg).toFixed(2);
       const reader = new FileReader();
       reader.onload = e => {
+        const publicar = document.getElementById('f-publicar').checked;
         const sol = { nom, email, detalls, material: materialActiu, pes, preuEstimat,
           fitxer: arxiuSTL.name, stlData: e.target.result,
           nomUsuari: nomUsuariActiu || nom, emailUsuari: emailActiu || email,
+          public: publicar,
           data: new Date().toLocaleDateString('ca-ES', {day:'2-digit',month:'long',year:'numeric'}), timestamp: Date.now() };
         db.ref('solicituds').push(sol).then(() => {
           document.getElementById('form-success').classList.add('visible');
@@ -1016,6 +1061,7 @@
       document.getElementById('f-stl').value = '';
       arxiuSTL = null; materialActiu = null; preuPerKg = 0;
       document.getElementById('stl-nom-display').classList.remove('visible');
+      document.getElementById('f-publicar').checked = false;
       document.getElementById('preu-box').classList.remove('visible');
       document.querySelectorAll('.material-opt').forEach(el => el.classList.remove('seleccionat'));
     }
@@ -1628,6 +1674,70 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
     function buscar2() {
       const q = document.getElementById('searchInput').value;
       if (q.trim()) console.log('Cercant:', q);
+    }
+
+
+    /* ══ DISSENYS PÚBLICS ═════════════════════════════ */
+    db.ref('solicituds').on('value', snapDis => {
+      const grid = document.getElementById('dissenys-grid');
+      if (!grid) return;
+      const tots = [];
+      snapDis.forEach(child => {
+        const d = child.val();
+        if (d.public) tots.push({ key: child.key, ...d });
+      });
+      tots.sort((a, b) => b.timestamp - a.timestamp);
+
+      if (tots.length === 0) {
+        grid.innerHTML = '<div class="dissenys-buit"><i class="fa fa-cube"></i>Encara no hi ha dissenys públics.</div>';
+        return;
+      }
+
+      grid.innerHTML = tots.map(d => `
+        <div class="disseny-card">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div class="disseny-card-icon"><i class="fa fa-cube"></i></div>
+            <div class="disseny-card-nom">${d.fitxer || 'disseny.stl'}</div>
+          </div>
+          <div class="disseny-card-info">
+            <span><i class="fa fa-user"></i> ${d.nomUsuari || d.nom || 'Usuari'}</span>
+            <span><i class="fa fa-calendar"></i> ${d.data || ''}</span>
+            <span><i class="fa fa-weight-hanging"></i> ${d.pes} g &nbsp; <span class="disseny-card-material">${d.material}</span></span>
+          </div>
+          <div class="disseny-card-preu">Preu estimat: ${d.preuEstimat} €</div>
+          <div class="disseny-card-btns">
+            <button class="btn-descarregar" onclick="descarregarSTL('${d.key}')">
+              <i class="fa fa-download"></i> Descarregar STL
+            </button>
+            <button class="btn-eliminar-disseny" id="del-disseny-${d.key}" onclick="eliminarDisseny('${d.key}')">
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      // Mostrar botons eliminar si admin
+      if (esAdmin) {
+        document.querySelectorAll('.btn-eliminar-disseny').forEach(b => b.classList.add('visible'));
+      }
+    });
+
+    function descarregarSTL(key) {
+      db.ref('solicituds/' + key).once('value').then(snap => {
+        const d = snap.val();
+        if (!d || !d.stlData) { mostrarToast('<i class="fa fa-circle-xmark" style="color:var(--red);"></i> Fitxer no disponible.'); return; }
+        const a = document.createElement('a');
+        a.href = d.stlData;
+        a.download = d.fitxer || 'disseny.stl';
+        a.click();
+      });
+    }
+
+    function eliminarDisseny(key) {
+      if (!confirm('Segur que vols eliminar aquest disseny?')) return;
+      db.ref('solicituds/' + key + '/public').set(false).then(() => {
+        mostrarToast('<i class="fa fa-circle-check" style="color:var(--green);"></i> Disseny eliminat de la galeria.');
+      });
     }
 
   </script>
