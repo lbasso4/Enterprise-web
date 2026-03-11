@@ -590,6 +590,18 @@
     </div>
   </div>
 
+  <!-- DISSENYS PÚBLICS -->
+  <div class="dissenys-wrapper" id="dissenys-wrapper">
+    <div class="dissenys-inner">
+      <div class="dissenys-top-bar">
+        <h2 class="section-title"><i class="fa fa-cube" style="color:var(--blue);margin-right:10px;"></i>Dissenys Públics</h2>
+      </div>
+      <div class="dissenys-grid" id="dissenys-grid">
+        <div class="dissenys-buit"><i class="fa fa-cube"></i>Encara no hi ha dissenys públics.</div>
+      </div>
+    </div>
+  </div>
+
   <!-- NOTÍCIES -->
   <div class="noticies-wrapper">
     <div class="noticies-inner">
@@ -600,18 +612,6 @@
         </button>
       </div>
       <div id="llista-noticies"></div>
-    </div>
-  </div>
-
-  <!-- DISSENYS PÚBLICS -->
-  <div class="dissenys-wrapper" id="dissenys-wrapper">
-    <div class="dissenys-inner">
-      <div class="dissenys-top-bar">
-        <h2 class="section-title"><i class="fa fa-cube" style="color:var(--blue);margin-right:10px;"></i>Dissenys Públics</h2>
-      </div>
-      <div class="dissenys-grid" id="dissenys-grid">
-        <div class="dissenys-buit"><i class="fa fa-cube"></i>Encara no hi ha dissenys públics.</div>
-      </div>
     </div>
   </div>
 
@@ -805,7 +805,7 @@
 
     /* ══ USUARIS ══════════════════════════════════════ */
     const USUARIS = [
-      { email: "admin@engilab.com",          password: "Engi2026!",  nom: "Administrador", rol: "admin"  },
+      { email: "admin",          password: "engilab",  nom: "Administrador", rol: "admin"  },
       { email: "professor@etseib.upc.edu",   password: "Prof2026#",  nom: "Professor",     rol: "usuari" },
       { email: "estudiant@etseib.upc.edu",   password: "Est2026@",   nom: "Estudiant",     rol: "usuari" },
     ];
@@ -1276,7 +1276,7 @@
       const errText = document.getElementById('login-error-text');
 
       // 1. Usuaris fixes (admin, professor) — no passen per Firebase Auth
-      const usuariFixed = USUARIS.find(u => u.email.toLowerCase() === email && u.password === pass);
+      const usuariFixed = USUARIS.find(u => (u.email.toLowerCase() === email || u.email === email) && u.password === pass);
       if (usuariFixed) {
         iniciarSessio(usuariFixed.nom, usuariFixed.rol, usuariFixed.email, true);
         return;
@@ -1734,8 +1734,6 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
             </div>
             <div class="disseny-card-nom"><i class="fa fa-file" style="margin-right:5px;color:var(--blue);"></i>${esc(d.fitxer || '')}</div>
             <div class="disseny-card-info">
-              <span><i class="fa fa-user"></i> ${esc(d.nomUsuari || d.nom || 'Usuari')}</span>
-              <span><i class="fa fa-calendar"></i> ${esc(d.data || '')}</span>
               <span><i class="fa fa-weight-hanging"></i> ${d.pes} g &nbsp;<span class="disseny-card-material">${esc(d.material)}</span></span>
             </div>
             <div class="disseny-card-preu">Preu estimat: ${d.preuEstimat} €</div>
