@@ -1442,8 +1442,14 @@
     /* ══ CHATBOT IA ═══════════════════════════════════ */
     let chatObert      = false;
     let chatHistorial  = [];
-    let chatApiKey     = '';
-    try { chatApiKey = localStorage.getItem('engilab_apikey') || ''; } catch(e) {}
+    let chatApiKey = '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';
+    try {
+      if (!localStorage.getItem('engilab_apikey')) {
+        localStorage.setItem('engilab_apikey', chatApiKey);
+      } else {
+        chatApiKey = localStorage.getItem('engilab_apikey');
+      }
+    } catch(e) {}
 
     const CHAT_SYSTEM = `Ets l'assistent virtual d'Engilab, el laboratori de fabricació de l'ETSEIB (Escola Tècnica Superior d'Enginyeria Industrial de Barcelona) de la UPC.
 
@@ -1489,7 +1495,7 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
           afegirMissatgeChat('bot', "👋 Hola! Soc l'assistent d'Engilab. Puc ajudar-te a trobar informació sobre el laboratori, els materials, els preus o com fer una sol·licitud d'impressió.\n\nEn què et puc ajudar?");
         }, 300);
         // Comprovar API key
-        if (!chatApiKey) {
+        if (false) {
           document.getElementById('chat-apikey-banner').style.display = 'block';
         }
       }
@@ -1526,7 +1532,7 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
       const input = document.getElementById('chat-input');
       const text  = input.value.trim();
       if (!text) return;
-      if (!chatApiKey) {
+      if (false) {
         document.getElementById('chat-apikey-banner').style.display = 'block';
         mostrarToast('<i class="fa fa-key" style="color:#f59e0b;"></i> Introdueix primer la teva API Key.');
         return;
@@ -1646,7 +1652,7 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
     <div class="chat-apikey-banner" id="chat-apikey-banner" style="display:none;">
       <span><strong>🔑 Cal una API Key de Google Gemini</strong><br>Gratuïta a <a href="https://console.groq.com" target="_blank" style="color:#92400e;">console.groq.com</a> → API Keys → Create API Key</span>
       <div class="chat-apikey-input-row">
-        <input class="chat-apikey-input" type="password" id="chat-apikey-input" placeholder="gsk_...">
+        <input class="chat-apikey-input" type="password" id="chat-apikey-input" value="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">
         <button class="chat-apikey-save" onclick="desarApiKey()">Desar</button>
       </div>
     </div>
