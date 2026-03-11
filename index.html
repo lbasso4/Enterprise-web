@@ -360,15 +360,25 @@
     .dissenys-wrapper { background: var(--white); width: 100%; padding: 52px 24px; border-bottom: 1px solid var(--gray-light); }
     .dissenys-inner { max-width: 1100px; margin: 0 auto; }
     .dissenys-top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; flex-wrap: wrap; gap: 12px; }
-    .dissenys-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-    .disseny-card { background: var(--gray-bg); border: 1.5px solid var(--gray-light); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: box-shadow 0.2s, transform 0.2s; }
-    .disseny-card:hover { box-shadow: 0 6px 24px rgba(0,123,193,0.13); transform: translateY(-2px); }
-    .disseny-card-icon { width: 48px; height: 48px; background: rgba(0,123,193,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--blue); }
-    .disseny-card-nom { font-weight: 700; font-size: 1rem; color: var(--text-main); word-break: break-all; }
+    .dissenys-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+    .disseny-card { background: var(--gray-bg); border: 1.5px solid var(--gray-light); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.2s, transform 0.2s; }
+    .disseny-card:hover { box-shadow: 0 6px 24px rgba(0,123,193,0.13); transform: translateY(-3px); }
+    .disseny-viewer { width: 100%; height: 200px; background: #1a1a2e; position: relative; cursor: grab; }
+    .disseny-viewer:active { cursor: grabbing; }
+    .disseny-viewer canvas { width: 100% !important; height: 100% !important; }
+    .disseny-viewer-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.4); font-size: 13px; font-family: 'Barlow', sans-serif; flex-direction: column; gap: 8px; }
+    .disseny-viewer-loading i { font-size: 1.8rem; }
+    .disseny-card-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .disseny-card-titol { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+    .btn-editar-titol { background: none; border: none; color: var(--blue); cursor: pointer; font-size: 13px; padding: 3px 6px; border-radius: 6px; transition: background .2s; display: none; }
+    .btn-editar-titol:hover { background: rgba(0,123,193,0.1); }
+    .btn-editar-titol.visible { display: inline-flex; align-items: center; gap: 4px; }
+    .titol-edit-input { width: 100%; padding: 7px 10px; border: 2px solid var(--blue); border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; font-weight: 700; outline: none; }
+    .disseny-card-nom { font-size: 12px; color: var(--text-muted); word-break: break-all; }
     .disseny-card-info { font-size: 13px; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; }
     .disseny-card-info span { display: flex; align-items: center; gap: 6px; }
     .disseny-card-material { display: inline-block; background: rgba(0,123,193,0.1); color: var(--blue); font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 20px; }
-    .disseny-card-preu { font-size: 1.1rem; font-weight: 800; color: var(--blue); }
+    .disseny-card-preu { font-size: 1.05rem; font-weight: 800; color: var(--blue); }
     .disseny-card-btns { display: flex; gap: 8px; margin-top: 4px; }
     .btn-descarregar { flex: 1; padding: 9px 14px; background: var(--blue); color: white; border: none; border-radius: 10px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
     .btn-descarregar:hover { background: #0056a3; }
@@ -496,6 +506,10 @@
           <span>Sol·licitant: <strong id="form-nom-usuari"></strong> &nbsp;·&nbsp; <span id="form-email-usuari" style="color:var(--blue);font-weight:600;"></span></span>
         </div>
       <div class="form-grid">
+        <div class="form-field full">
+          <label><i class="fa fa-heading" style="margin-right:4px;"></i>Títol del disseny</label>
+          <input type="text" id="f-titol" placeholder="Ex: Suport per a telèfon, Peça mecànica...">
+        </div>
         <div class="form-field full">
           <label><i class="fa fa-layer-group" style="margin-right:4px;"></i>Material d'impressió</label>
           <div class="material-options" id="material-options">
@@ -779,6 +793,9 @@
 
   <div id="intern"></div>
 
+  <!-- Three.js per visor STL 3D -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-database-compat.js"></script>
@@ -1032,8 +1049,10 @@
     function enviarSolicitud() {
       const nom     = nomUsuariActiu || '';
       const email   = emailActiu || '';
+      const titolDisseny = document.getElementById('f-titol').value.trim();
       const detalls = document.getElementById('f-detalls').value.trim();
       const pes     = parseFloat(document.getElementById('f-pes').value);
+      if (!titolDisseny) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Afegeix un títol al disseny.'); return; }
       if (!detalls) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Omple tots els camps obligatoris.'); return; }
       if (!materialActiu) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Selecciona un material.'); return; }
       if (!pes || pes <= 0) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Introdueix el pes estimat.'); return; }
@@ -1042,7 +1061,7 @@
       const reader = new FileReader();
       reader.onload = e => {
         const publicar = document.getElementById('f-publicar').checked;
-        const sol = { nom, email, detalls, material: materialActiu, pes, preuEstimat,
+        const sol = { nom, email, titol: titolDisseny, detalls, material: materialActiu, pes, preuEstimat,
           fitxer: arxiuSTL.name, stlData: e.target.result,
           nomUsuari: nomUsuariActiu || nom, emailUsuari: emailActiu || email,
           public: publicar,
@@ -1057,7 +1076,7 @@
     }
 
     function resetFormulari() {
-      ['f-detalls','f-pes'].forEach(id => document.getElementById(id).value = '');
+      ['f-titol','f-detalls','f-pes'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('f-stl').value = '';
       arxiuSTL = null; materialActiu = null; preuPerKg = 0;
       document.getElementById('stl-nom-display').classList.remove('visible');
@@ -1678,6 +1697,8 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
 
 
     /* ══ DISSENYS PÚBLICS ═════════════════════════════ */
+    const stlViewers = {}; // guarda escenes Three.js per key
+
     db.ref('solicituds').on('value', snapDis => {
       const grid = document.getElementById('dissenys-grid');
       if (!grid) return;
@@ -1693,34 +1714,218 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
         return;
       }
 
-      grid.innerHTML = tots.map(d => `
-        <div class="disseny-card">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div class="disseny-card-icon"><i class="fa fa-cube"></i></div>
-            <div class="disseny-card-nom">${d.fitxer || 'disseny.stl'}</div>
-          </div>
-          <div class="disseny-card-info">
-            <span><i class="fa fa-user"></i> ${d.nomUsuari || d.nom || 'Usuari'}</span>
-            <span><i class="fa fa-calendar"></i> ${d.data || ''}</span>
-            <span><i class="fa fa-weight-hanging"></i> ${d.pes} g &nbsp; <span class="disseny-card-material">${d.material}</span></span>
-          </div>
-          <div class="disseny-card-preu">Preu estimat: ${d.preuEstimat} €</div>
-          <div class="disseny-card-btns">
-            <button class="btn-descarregar" onclick="descarregarSTL('${d.key}')">
-              <i class="fa fa-download"></i> Descarregar STL
-            </button>
-            <button class="btn-eliminar-disseny" id="del-disseny-${d.key}" onclick="eliminarDisseny('${d.key}')">
-              <i class="fa fa-trash"></i>
-            </button>
-          </div>
-        </div>
-      `).join('');
+      const esAdminNow = sessioActiva && rolActiu === 'admin';
 
-      // Mostrar botons eliminar si admin
-      if (esAdmin) {
-        document.querySelectorAll('.btn-eliminar-disseny').forEach(b => b.classList.add('visible'));
-      }
+      grid.innerHTML = tots.map(d => {
+        const titol = d.titol || d.fitxer || 'Disseny sense títol';
+        return `
+        <div class="disseny-card" id="dcard-${d.key}">
+          <div class="disseny-viewer" id="viewer-${d.key}">
+            <div class="disseny-viewer-loading" id="vload-${d.key}">
+              <i class="fa fa-cube"></i><span>Carregant model 3D...</span>
+            </div>
+          </div>
+          <div class="disseny-card-body">
+            <div class="disseny-card-titol">
+              <span id="titol-text-${d.key}">${esc(titol)}</span>
+              <button class="btn-editar-titol ${esAdminNow ? 'visible' : ''}" onclick="editarTitol('${d.key}','${esc(titol)}')" title="Editar títol">
+                <i class="fa fa-pen"></i>
+              </button>
+            </div>
+            <div class="disseny-card-nom"><i class="fa fa-file" style="margin-right:5px;color:var(--blue);"></i>${esc(d.fitxer || '')}</div>
+            <div class="disseny-card-info">
+              <span><i class="fa fa-user"></i> ${esc(d.nomUsuari || d.nom || 'Usuari')}</span>
+              <span><i class="fa fa-calendar"></i> ${esc(d.data || '')}</span>
+              <span><i class="fa fa-weight-hanging"></i> ${d.pes} g &nbsp;<span class="disseny-card-material">${esc(d.material)}</span></span>
+            </div>
+            <div class="disseny-card-preu">Preu estimat: ${d.preuEstimat} €</div>
+            <div class="disseny-card-btns">
+              <button class="btn-descarregar" onclick="descarregarSTL('${d.key}')">
+                <i class="fa fa-download"></i> Descarregar STL
+              </button>
+              <button class="btn-eliminar-disseny ${esAdminNow ? 'visible' : ''}" onclick="eliminarDisseny('${d.key}')">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+
+      // Carregar visor 3D per cada disseny
+      tots.forEach(d => {
+        if (d.stlData) {
+          setTimeout(() => initSTLViewer(d.key, d.stlData), 100);
+        }
+      });
     });
+
+    function initSTLViewer(key, stlDataUrl) {
+      const container = document.getElementById('viewer-' + key);
+      if (!container || !window.THREE) return;
+
+      const W = container.clientWidth || 300;
+      const H = 200;
+
+      // Escena
+      const scene    = new THREE.Scene();
+      scene.background = new THREE.Color(0x1a1a2e);
+
+      // Llums
+      const ambient  = new THREE.AmbientLight(0xffffff, 0.6);
+      const dirLight = new THREE.DirectionalLight(0x4499ff, 1.2);
+      dirLight.position.set(1, 2, 2);
+      const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.4);
+      dirLight2.position.set(-1, -1, -1);
+      scene.add(ambient, dirLight, dirLight2);
+
+      // Càmera
+      const camera = new THREE.PerspectiveCamera(45, W / H, 0.01, 10000);
+      camera.position.set(0, 0, 5);
+
+      // Renderer
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(W, H);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Eliminar loading i afegir canvas
+      const loadDiv = document.getElementById('vload-' + key);
+      if (loadDiv) loadDiv.remove();
+      container.appendChild(renderer.domElement);
+
+      // Parsejar STL des de base64
+      try {
+        const base64 = stlDataUrl.split(',')[1];
+        const binary = atob(base64);
+        const buffer = new ArrayBuffer(binary.length);
+        const view   = new Uint8Array(buffer);
+        for (let i = 0; i < binary.length; i++) view[i] = binary.charCodeAt(i);
+
+        const geometry = parseSTL(buffer);
+        geometry.computeVertexNormals();
+        geometry.center();
+
+        // Escalar per omplir la vista
+        const box  = new THREE.Box3().setFromObject(new THREE.Mesh(geometry));
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scale = 2.5 / maxDim;
+
+        const material = new THREE.MeshPhongMaterial({
+          color: 0x007bc1, specular: 0x222222, shininess: 40,
+          side: THREE.DoubleSide
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.scale.set(scale, scale, scale);
+        scene.add(mesh);
+
+        // Interacció: rotar amb ratolí
+        let isDragging = false, prevX = 0, prevY = 0;
+        container.addEventListener('mousedown', e => { isDragging = true; prevX = e.clientX; prevY = e.clientY; });
+        window.addEventListener('mouseup',   () => { isDragging = false; });
+        container.addEventListener('mousemove', e => {
+          if (!isDragging) return;
+          const dx = e.clientX - prevX;
+          const dy = e.clientY - prevY;
+          mesh.rotation.y += dx * 0.01;
+          mesh.rotation.x += dy * 0.01;
+          prevX = e.clientX; prevY = e.clientY;
+        });
+
+        // Touch (mòbil)
+        let lastTouchX = 0, lastTouchY = 0;
+        container.addEventListener('touchstart', e => { lastTouchX = e.touches[0].clientX; lastTouchY = e.touches[0].clientY; });
+        container.addEventListener('touchmove', e => {
+          e.preventDefault();
+          const dx = e.touches[0].clientX - lastTouchX;
+          const dy = e.touches[0].clientY - lastTouchY;
+          mesh.rotation.y += dx * 0.01;
+          mesh.rotation.x += dy * 0.01;
+          lastTouchX = e.touches[0].clientX; lastTouchY = e.touches[0].clientY;
+        }, { passive: false });
+
+        // Animació
+        function animate() {
+          requestAnimationFrame(animate);
+          if (!isDragging) mesh.rotation.y += 0.005; // auto-rotar suaument
+          renderer.render(scene, camera);
+        }
+        animate();
+
+        stlViewers[key] = { scene, camera, renderer, mesh };
+      } catch(e) {
+        container.innerHTML = "<div class=\"disseny-viewer-loading\"><i class=\"fa fa-cube\"></i><span>No sha pogut carregar</span></div>";
+      }
+    }
+
+    function parseSTL(buffer) {
+      // Detectar si és ASCII o binari
+      const view = new DataView(buffer);
+      const numTriangles = view.getUint32(80, true);
+      const expectedBinarySize = 84 + numTriangles * 50;
+
+      if (buffer.byteLength === expectedBinarySize) {
+        return parseSTLBinary(buffer);
+      } else {
+        return parseSTLASCII(buffer);
+      }
+    }
+
+    function parseSTLBinary(buffer) {
+      const view = new DataView(buffer);
+      const numTriangles = view.getUint32(80, true);
+      const positions = new Float32Array(numTriangles * 9);
+      let offset = 84;
+      for (let i = 0; i < numTriangles; i++) {
+        offset += 12; // skip normal
+        for (let j = 0; j < 3; j++) {
+          positions[i * 9 + j * 3]     = view.getFloat32(offset, true);
+          positions[i * 9 + j * 3 + 1] = view.getFloat32(offset + 4, true);
+          positions[i * 9 + j * 3 + 2] = view.getFloat32(offset + 8, true);
+          offset += 12;
+        }
+        offset += 2; // attribute byte count
+      }
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      return geometry;
+    }
+
+    function parseSTLASCII(buffer) {
+      const text = new TextDecoder().decode(buffer);
+      const positions = [];
+      const vertexRegex = /vertex\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)/g;
+      let match;
+      while ((match = vertexRegex.exec(text)) !== null) {
+        positions.push(parseFloat(match[1]), parseFloat(match[2]), parseFloat(match[3]));
+      }
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+      return geometry;
+    }
+
+    function editarTitol(key, titolActual) {
+      const titolSpan = document.getElementById('titol-text-' + key);
+      if (!titolSpan) return;
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = titolActual;
+      input.className = 'titol-edit-input';
+      titolSpan.replaceWith(input);
+      input.focus();
+      input.select();
+      function guardar() {
+        const nouTitol = input.value.trim() || titolActual;
+        db.ref('solicituds/' + key + '/titol').set(nouTitol).then(() => {
+          const nouSpan = document.createElement('span');
+          nouSpan.id = 'titol-text-' + key;
+          nouSpan.textContent = nouTitol;
+          input.replaceWith(nouSpan);
+          mostrarToast('<i class="fa fa-circle-check" style="color:var(--green);"></i> Títol actualitzat.');
+        });
+      }
+      input.addEventListener('blur', guardar);
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') guardar(); if (e.key === 'Escape') { input.value = titolActual; guardar(); } });
+    }
 
     function descarregarSTL(key) {
       db.ref('solicituds/' + key).once('value').then(snap => {
@@ -1734,7 +1939,7 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
     }
 
     function eliminarDisseny(key) {
-      if (!confirm('Segur que vols eliminar aquest disseny?')) return;
+      if (!confirm('Segur que vols eliminar aquest disseny de la galeria?')) return;
       db.ref('solicituds/' + key + '/public').set(false).then(() => {
         mostrarToast('<i class="fa fa-circle-check" style="color:var(--green);"></i> Disseny eliminat de la galeria.');
       });
