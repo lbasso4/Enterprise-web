@@ -47,7 +47,8 @@ void lcdMessage(String line1, String line2) {
 
 void setup() {
   // Start serial communication with the computer through USB
-  // This is both for debugging messages AND for sending data to Python  Serial.begin(9600);
+  // This is both for debugging messages AND for sending data to Python  
+  Serial.begin(9600);
   Serial.println(" Rastrejador de filaments (USB Serial mode) ");
 
   //  Initialise load cell 
