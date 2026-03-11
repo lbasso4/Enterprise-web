@@ -1442,7 +1442,8 @@
     /* ══ CHATBOT IA ═══════════════════════════════════ */
     let chatObert      = false;
     let chatHistorial  = [];
-    let chatApiKey     = 'backend'; // La clau està al servidor
+    let chatApiKey     = '';
+    try { chatApiKey = localStorage.getItem('engilab_apikey') || ''; } catch(e) {}
 
     const CHAT_SYSTEM = `Ets l'assistent virtual d'Engilab, el laboratori de fabricació de l'ETSEIB (Escola Tècnica Superior d'Enginyeria Industrial de Barcelona) de la UPC.
 
@@ -1488,7 +1489,7 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
           afegirMissatgeChat('bot', "👋 Hola! Soc l'assistent d'Engilab. Puc ajudar-te a trobar informació sobre el laboratori, els materials, els preus o com fer una sol·licitud d'impressió.\n\nEn què et puc ajudar?");
         }, 300);
         // Comprovar API key
-        if (false) {
+        if (!chatApiKey) {
           document.getElementById('chat-apikey-banner').style.display = 'block';
         }
       }
@@ -1525,7 +1526,7 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
       const input = document.getElementById('chat-input');
       const text  = input.value.trim();
       if (!text) return;
-      if (false) {
+      if (!chatApiKey) {
         document.getElementById('chat-apikey-banner').style.display = 'block';
         mostrarToast('<i class="fa fa-key" style="color:#f59e0b;"></i> Introdueix primer la teva API Key.');
         return;
@@ -1563,11 +1564,16 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
 
       try {
         const response = await fetch(
-          'http://localhost:5000/chat',
+          'https://api.groq.com/openai/v1/chat/completions',
           {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + chatApiKey
+            },
             body: JSON.stringify({
+              model: 'llama-3.1-8b-instant',
+              max_tokens: 600,
               messages: [
                 { role: 'system', content: CHAT_SYSTEM + contextExtra },
                 ...chatHistorial
@@ -1579,10 +1585,10 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
         const data = await response.json();
 
         if (data.error) {
-          throw new Error(data.error || 'Error de API');
+          throw new Error(data.error.message || 'Error de API');
         }
 
-        const resposta = data.resposta;
+        const resposta = data.choices[0].message.content;
         chatHistorial.push({ role: 'assistant', content: resposta });
         typing.classList.remove('visible');
         afegirMissatgeChat('bot', resposta);
