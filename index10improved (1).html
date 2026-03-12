@@ -2698,10 +2698,10 @@ REGLES OBLIGATÒRIES DE CODI:
 
 6. ERRORS COMUNS QUE HAS D'EVITAR:
    a) MAI sobreescriguis una variable amb una funció diferent:
-      # ❌ MAL - sobreescriu la variable i perd la referència
+      # MAL - sobreescriu la variable i perd la referència
       perfil = Part.makeCircle(10)
       perfil = Part.Wire([perfil])
-      # ✅ BÉ - usa noms de variable diferents
+      # BÉ - usa noms de variable diferents
       cercle = Part.makeCircle(10)
       perfil = Part.Wire([cercle])
 
@@ -2710,9 +2710,9 @@ REGLES OBLIGATÒRIES DE CODI:
       Per fer un pètal o forma plana sòlida usa Part.makeBox().
 
    c) Part.Wire necessita ARESTES (Part.makeLine), NO Vectors directes:
-      # ❌ MAL
+      # MAL
       Part.Wire([FreeCAD.Base.Vector(0,0,0), FreeCAD.Base.Vector(10,0,0)])
-      # ✅ BÉ
+      # BÉ
       aresta = Part.makeLine(FreeCAD.Base.Vector(0,0,0), FreeCAD.Base.Vector(10,0,0))
       Part.Wire([aresta])
 
@@ -2722,11 +2722,12 @@ REGLES OBLIGATÒRIES DE CODI:
       Mai tabuladors. Mai codi del bucle sense indentar.
 
    f) En bucles, .translate() i .rotate() retornen la forma modificada:
-      # ✅ BÉ
+      # BÉ
       for i in range(n):
           forma_rotada = forma_original.rotate(FreeCAD.Base.Vector(0,0,0), FreeCAD.Base.Vector(0,0,1), angle * i)
           forma_traslladada = forma_rotada.translate(FreeCAD.Base.Vector(x, y, z))
           finalShape = finalShape.fuse(forma_traslladada)
+  g) Sempre revisa que no hagis trencat alguna de les regles del codi abans d'entregarlo, si hi ha algun error, arregla'l.
 
 7. Usa mides en mm reals i raonables per a la peça descrita.
 8. Afegeix comentaris en català explicant cada pas important.
