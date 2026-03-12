@@ -2089,7 +2089,7 @@
     /* ══ CHATBOT IA ═══════════════════════════════════ */
     let chatObert      = false;
     let chatHistorial  = [];
-    let chatApiKey = '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';
+    let chatApiKey = '';
     try {
       if (!localStorage.getItem('engilab_apikey')) {
         localStorage.setItem('engilab_apikey', chatApiKey);
@@ -2547,7 +2547,7 @@ Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de 
     <div class="chat-apikey-banner" id="chat-apikey-banner" style="display:none;">
       <span><strong>🔑 Cal una API Key de Google Gemini</strong><br>Gratuïta a <a href="https://console.groq.com" target="_blank" style="color:#92400e;">console.groq.com</a> → API Keys → Create API Key</span>
       <div class="chat-apikey-input-row">
-        <input class="chat-apikey-input" type="password" id="chat-apikey-input" value="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">
+        <input class="chat-apikey-input" type="password" id="chat-apikey-input" value="">
         <button class="chat-apikey-save" onclick="desarApiKey()">Desar</button>
       </div>
     </div>
