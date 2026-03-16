@@ -1,0 +1,2914 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+  <title>Engilab ETSEIB</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: hidden; width: 100%; }
+    :root {
+      --blue: rgb(0,123,193); --blue-dark: rgb(0,95,155);
+      --green: #16a34a; --red: #e63946;
+      --gray-bg: #f2f4f7; --gray-light: #e8eaed;
+      --text-main: #1a1a2e; --text-muted: #6b7280; --white: #ffffff;
+      --shadow-sm: 0 1px 4px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.18);
+      --radius: 10px;
+    }
+    body { font-family: 'Barlow', sans-serif; background: var(--gray-bg); color: var(--text-main); min-height: 100vh; }
+
+    /* ── NAVBAR ── */
+    .title { display: flex; align-items: center; background: var(--white); padding: 0 24px; height: 70px; box-shadow: 0 2px 12px rgba(0,0,0,0.10); position: sticky; top: 0; z-index: 100; gap: 14px; width: 100%; }
+    .logos { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .logos img { height: 44px; width: auto; }
+    .nav-divider { width: 1px; height: 32px; background: var(--gray-light); flex-shrink: 0; }
+    .title h1 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--blue); flex-grow: 1; text-align: center; cursor: pointer; white-space: nowrap; }
+    .login-btn { padding: 8px 14px; border-radius: 8px; background: transparent; border: 2px solid var(--blue); color: var(--blue); font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer; transition: background .2s, color .2s, border-color .2s; flex-shrink: 0; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+    .login-btn:hover { background: var(--blue); color: white; }
+    .login-btn.sessio-activa { border-color: var(--green); color: var(--green); }
+    .login-btn.sessio-activa:hover { background: var(--green); color: white; }
+    #statusbutton { padding: 9px 16px; border-radius: 8px; background: var(--blue); border: none; font-size: 12px; font-weight: 700; font-family: 'Barlow', sans-serif; color: white; cursor: pointer; width: 160px; flex-shrink: 0; transition: background-color .25s, transform .15s; display: flex; align-items: center; justify-content: center; gap: 7px; box-shadow: var(--shadow-sm); }
+    #statusbutton::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.9); flex-shrink: 0; animation: pulse 2s infinite; }
+    #statusbutton:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+
+    /* ── SEARCH ── */
+    .search-section { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); padding: 18px 24px; display: flex; justify-content: center; width: 100%; }
+    .search-container { display: flex; width: 100%; max-width: 580px; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-md); }
+    .search-container input { flex: 1; padding: 13px 18px; border: none; font-family: 'Barlow', sans-serif; font-size: 15px; color: var(--text-main); background: white; outline: none; }
+    .search-container button { padding: 13px 20px; background: white; border: none; color: var(--blue); font-size: 16px; cursor: pointer; transition: background .2s, color .2s; border-left: 1px solid var(--gray-light); }
+    .search-container button:hover { background: var(--blue); color: white; }
+
+    /* ── HERO ── */
+    .backimg { background-image: url('img/printer.jpg'); background-size: cover; background-position: center; height: 240px; width: 100%; position: relative; overflow: hidden; }
+    .backimg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,80,140,0.15), rgba(0,0,0,0.50)); }
+    .hero-overlay { position: absolute; bottom: 24px; left: 40px; z-index: 2; color: white; }
+    .hero-overlay h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 2rem; font-weight: 700; text-shadow: 0 2px 16px rgba(0,0,0,0.5); }
+    .hero-overlay p { font-size: 1rem; opacity: .88; margin-top: 6px; text-shadow: 0 1px 8px rgba(0,0,0,0.4); }
+
+    /* ── QUICK NAV ── */
+    .quicknav { background: var(--blue-dark); width: 100%; padding: 0 24px; display: flex; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .quicknav-inner { display: flex; gap: 0; max-width: 960px; width: 100%; overflow-x: auto; margin: 0 auto; }
+    .quicknav-inner::-webkit-scrollbar { display: none; }
+    .quicknav-btn { display: flex; align-items: center; gap: 8px; padding: 13px 20px; color: rgba(255,255,255,0.7); font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 600; border: none; background: transparent; cursor: pointer; border-bottom: 3px solid transparent; transition: color .2s, border-color .2s; white-space: nowrap; flex-shrink: 0; }
+    .quicknav-btn:hover { color: white; border-bottom-color: rgba(255,255,255,0.5); }
+    .quicknav-btn.highlight { color: #38bdf8; }
+    .quicknav-btn.highlight:hover { border-bottom-color: #38bdf8; }
+    .quicknav-btn i { font-size: 13px; }
+
+    /* ── IMPRESSORES ── */
+    .impressores-wrapper { background: var(--white); width: 100%; padding: 28px 24px; border-bottom: 1px solid var(--gray-light); }
+    .impressores-inner { max-width: 960px; margin: 0 auto; }
+    .section-title { display: inline-block; font-family: 'Barlow Condensed', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--text-main); position: relative; padding-bottom: 10px; }
+    .section-title::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 48px; height: 4px; border-radius: 2px; background: var(--blue); }
+    .section-header { text-align: center; margin-bottom: 18px; }
+    .impressores-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+    .impressora-card { background: var(--gray-bg); border-radius: 14px; padding: 20px 16px 18px; display: flex; flex-direction: column; align-items: center; gap: 10px; border: 2px solid var(--gray-light); transition: box-shadow .2s, border-color .2s, transform .2s; }
+    .impressora-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .impressora-card.disponible { border-color: var(--blue); }
+    .impressora-card.ocupada    { border-color: var(--red); }
+    .impressora-icon { font-size: 2rem; }
+    .impressora-nom { font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; font-weight: 700; text-align: center; }
+    .btn-impressora { padding: 8px 0; width: 100%; border-radius: 8px; border: none; font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background-color .25s, transform .15s; box-shadow: var(--shadow-sm); }
+    .btn-impressora::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.9); animation: pulse 2s infinite; }
+    .btn-impressora:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    .btn-impressora.disponible { background: var(--blue); }
+    .btn-impressora.ocupada    { background: var(--red); }
+
+    /* ── FORMULARI ── */
+    .formulari-wrapper { background: var(--white); width: 100%; padding: 36px 24px; border-bottom: 1px solid var(--gray-light); }
+    .formulari-inner { max-width: 700px; margin: 0 auto; }
+    .formulari-header p { color: var(--text-muted); font-size: .95rem; margin-top: 12px; line-height: 1.5; text-align: center; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+    @media (max-width: 540px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-field { display: flex; flex-direction: column; gap: 6px; }
+    .form-field.full { grid-column: 1 / -1; }
+    .form-field label { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: .8px; text-transform: uppercase; }
+    .form-field input, .form-field textarea { width: 100%; padding: 12px 14px; border: 2px solid var(--gray-light); border-radius: 10px; font-family: 'Barlow', sans-serif; font-size: 14px; outline: none; transition: border-color .2s; color: var(--text-main); background: var(--gray-bg); resize: vertical; }
+    .form-field input:focus, .form-field textarea:focus { border-color: var(--blue); background: white; }
+    .form-field textarea { min-height: 110px; }
+    .stl-upload-area { border: 2px dashed var(--gray-light); border-radius: 10px; padding: 28px 20px; text-align: center; cursor: pointer; position: relative; transition: border-color .2s, background .2s; background: var(--gray-bg); }
+    .stl-upload-area:hover, .stl-upload-area.drag-over { border-color: var(--blue); background: rgba(0,123,193,0.04); }
+    .stl-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .stl-upload-icon { font-size: 2rem; color: var(--blue); margin-bottom: 8px; }
+    .stl-upload-text { font-size: .88rem; color: var(--text-muted); line-height: 1.55; }
+    .stl-upload-text strong { color: var(--blue); }
+    .stl-fitxer-nom { margin-top: 10px; font-size: .85rem; font-weight: 600; color: var(--green); display: none; align-items: center; gap: 6px; justify-content: center; }
+    .stl-fitxer-nom.visible { display: flex; }
+    .formulari-footer-btns { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; }
+    .btn-enviar { padding: 13px 30px; background: var(--blue); color: white; border: none; border-radius: 10px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: background .2s, transform .15s; display: flex; align-items: center; gap: 8px; }
+    .btn-enviar:hover { background: var(--blue-dark); transform: translateY(-1px); }
+    .btn-reset-form { padding: 13px 20px; background: transparent; color: var(--text-muted); border: 2px solid var(--gray-light); border-radius: 10px; font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; transition: border-color .2s, color .2s; }
+    .btn-reset-form:hover { border-color: var(--red); color: var(--red); }
+    .form-success { display: none; background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.3); border-radius: 10px; padding: 16px 20px; color: var(--green); font-size: 14px; font-weight: 600; text-align: center; align-items: center; gap: 8px; justify-content: center; margin-top: 16px; }
+    .form-success.visible { display: flex; }
+
+    /* ── PANELL ADMIN — Sol·licituds ── */
+    .admin-panel-wrapper { display: none; background: #1a1a2e; width: 100%; padding: 52px 24px; }
+    .admin-panel-wrapper.visible { display: block; }
+    .admin-panel-inner { max-width: 900px; margin: 0 auto; }
+    .admin-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+    .admin-panel-header h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.6rem; font-weight: 700; color: white; display: flex; align-items: center; gap: 10px; }
+    .admin-badge { background: var(--blue); color: white; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .admin-counter { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .btn-netejar-admin { padding: 8px 16px; background: rgba(230,57,70,0.15); color: #ff6b6b; border: 1px solid rgba(230,57,70,0.3); border-radius: 8px; font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: background .2s; }
+    .btn-netejar-admin:hover { background: rgba(230,57,70,0.3); }
+    .sol-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 22px 26px; margin-bottom: 14px; animation: slideUp .3s ease; }
+    .sol-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 12px; flex-wrap: wrap; }
+    .sol-nom { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 700; color: white; }
+    .sol-email { font-size: .82rem; color: rgba(255,255,255,0.45); margin-top: 2px; }
+    .sol-data-badge { background: rgba(0,123,193,0.25); color: rgba(100,200,255,0.9); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .sol-detalls { font-size: .9rem; color: rgba(255,255,255,0.6); line-height: 1.65; margin: 10px 0 14px; border-left: 3px solid rgba(0,123,193,0.5); padding-left: 12px; }
+    .sol-accions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .sol-stl-btn { display: inline-flex; align-items: center; gap: 7px; background: rgba(22,163,74,0.15); color: #4ade80; padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid rgba(22,163,74,0.3); text-decoration: none; transition: background .2s; }
+    .sol-stl-btn:hover { background: rgba(22,163,74,0.3); }
+    .sol-eliminar-btn { background: none; border: none; color: rgba(255,100,100,0.55); cursor: pointer; font-size: 13px; font-weight: 600; transition: color .2s; padding: 7px 10px; border-radius: 6px; font-family: 'Barlow', sans-serif; display: flex; align-items: center; gap: 5px; }
+    .sol-eliminar-btn:hover { color: var(--red); background: rgba(230,57,70,0.1); }
+    .sol-tipus-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .sol-tipus-badge.stl { background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); }
+    .sol-tipus-badge.py  { background: rgba(250,204,21,0.15); color: #fbbf24; border: 1px solid rgba(250,204,21,0.3); }
+    .admin-buit { text-align: center; padding: 48px; color: rgba(255,255,255,0.25); }
+    .admin-buit i { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+
+    /* ── NOTÍCIES ── */
+    .noticies-wrapper { background: var(--gray-bg); width: 100%; padding: 52px 24px; }
+    .noticies-inner { max-width: 860px; margin: 0 auto; }
+    .noticies-top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 36px; flex-wrap: wrap; gap: 12px; }
+    .noticies-top-bar .section-title::after { left: 0; transform: none; }
+    .btn-nova-noticia { display: none; padding: 10px 18px; background: var(--blue); color: white; border: none; border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; transition: background .2s, transform .15s; align-items: center; gap: 7px; }
+    .btn-nova-noticia.visible { display: flex; }
+    .btn-nova-noticia:hover { background: var(--blue-dark); transform: translateY(-1px); }
+    .noticia { background: var(--white); padding: 22px 26px; margin-bottom: 16px; border-radius: var(--radius); border-left: 5px solid var(--blue); box-shadow: var(--shadow-sm); transition: box-shadow .2s, transform .2s, border-color .2s; display: flex; flex-direction: column; gap: 6px; position: relative; }
+    .noticia.clickable { cursor: pointer; }
+    .noticia.clickable:hover { box-shadow: var(--shadow-md); transform: translateX(5px); border-color: var(--blue-dark); }
+    .noticia.clickable:hover h3 { color: var(--blue); }
+    .noticia h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 700; transition: color .2s; }
+    .noticia-preview { color: #374151; font-size: .96rem; line-height: 1.55; }
+    .llegir-mes { display: inline-flex; align-items: center; gap: 5px; color: var(--blue); font-size: .85rem; font-weight: 600; margin-top: 4px; transition: gap .2s; }
+    .noticia.clickable:hover .llegir-mes { gap: 8px; }
+    .data { font-size: .82em; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 5px; }
+    .data::before { content: '\f073'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--blue); font-size: .85em; }
+    /* Botons admin en notícies */
+    .noticia-admin-btns { display: none; position: absolute; top: 14px; right: 14px; gap: 6px; }
+    .noticia-admin-btns.visible { display: flex; }
+    .btn-elim-noticia { background: rgba(230,57,70,0.08); border: 1px solid rgba(230,57,70,0.2); color: var(--red); padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Barlow', sans-serif; transition: background .2s; display: flex; align-items: center; gap: 4px; }
+    .btn-elim-noticia:hover { background: rgba(230,57,70,0.18); }
+
+    /* ── MODAL NOTÍCIA ── */
+    .modal-noticia { display: none; position: fixed; z-index: 998; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); padding: 24px; align-items: center; justify-content: center; }
+    .modal-noticia.actiu { display: flex; }
+    .modal-noticia-content { background: var(--white); border-radius: 16px; box-shadow: var(--shadow-lg); width: 100%; max-width: 680px; max-height: 88vh; overflow-y: auto; animation: slideUp .28s ease; position: relative; }
+    @keyframes slideUp { from{transform:translateY(24px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .modal-noticia-header { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); padding: 32px 36px 28px; color: white; position: relative; border-radius: 16px 16px 0 0; }
+    .modal-noticia-header .data-modal { font-size: .82rem; opacity: .8; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .modal-noticia-header h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 2rem; font-weight: 700; }
+    .tancar-noticia { position: absolute; top: 16px; right: 20px; background: rgba(255,255,255,0.15); border: none; color: white; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+    .tancar-noticia:hover { background: rgba(255,255,255,0.3); }
+    .modal-noticia-body { padding: 32px 36px; display: flex; flex-direction: column; gap: 18px; }
+    .modal-noticia-body p { color: #374151; font-size: 1rem; line-height: 1.75; }
+    .categoria-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,123,193,0.1); color: var(--blue); padding: 5px 12px; border-radius: 20px; font-size: .8rem; font-weight: 700; text-transform: uppercase; align-self: flex-start; }
+    .modal-noticia-footer { padding: 18px 36px; border-top: 1px solid var(--gray-light); display: flex; justify-content: flex-end; }
+    .btn-tancar-footer { padding: 10px 24px; border-radius: 8px; background: var(--gray-bg); border: 2px solid var(--gray-light); color: var(--text-muted); font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+    .btn-tancar-footer:hover { background: var(--blue); color: white; border-color: var(--blue); }
+
+    /* ── MODAL NOVA NOTÍCIA ── */
+    .modal-nova-noticia { display: none; position: fixed; z-index: 999; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 24px; }
+    .modal-nova-noticia.actiu { display: flex; }
+    .modal-nova-box { background: var(--white); border-radius: 16px; box-shadow: var(--shadow-lg); width: 100%; max-width: 620px; max-height: 90vh; overflow-y: auto; animation: slideUp .25s ease; }
+    .modal-nova-header { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); padding: 28px 32px; color: white; border-radius: 16px 16px 0 0; display: flex; align-items: center; justify-content: space-between; }
+    .modal-nova-header h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.6rem; font-weight: 700; }
+    .close-nova { background: rgba(255,255,255,0.15); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+    .close-nova:hover { background: rgba(255,255,255,0.3); }
+    .modal-nova-body { padding: 28px 32px; display: flex; flex-direction: column; gap: 16px; }
+    .nova-field { display: flex; flex-direction: column; gap: 6px; }
+    .nova-field label { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: .8px; text-transform: uppercase; }
+    .nova-field input, .nova-field textarea, .nova-field select { width: 100%; padding: 11px 14px; border: 2px solid var(--gray-light); border-radius: 8px; font-family: 'Barlow', sans-serif; font-size: 14px; outline: none; transition: border-color .2s; color: var(--text-main); background: var(--gray-bg); }
+    .nova-field input:focus, .nova-field textarea:focus, .nova-field select:focus { border-color: var(--blue); background: white; }
+    .nova-field textarea { min-height: 80px; resize: vertical; }
+    .nova-field textarea.cos { min-height: 140px; }
+    .modal-nova-footer { padding: 18px 32px; border-top: 1px solid var(--gray-light); display: flex; justify-content: flex-end; gap: 10px; }
+    .btn-desar-noticia { padding: 11px 26px; background: var(--blue); color: white; border: none; border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; transition: background .2s, transform .15s; display: flex; align-items: center; gap: 7px; }
+    .btn-desar-noticia:hover { background: var(--blue-dark); transform: translateY(-1px); }
+    .btn-cancel-nova { padding: 11px 18px; background: transparent; color: var(--text-muted); border: 2px solid var(--gray-light); border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; transition: border-color .2s, color .2s; }
+    .btn-cancel-nova:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── MODAL LOGIN ── */
+    .modal { display: none; position: fixed; z-index: 999; inset: 0; background: rgba(0,0,0,0.45); backdrop-filter: blur(3px); }
+    .modal.actiu { display: flex; align-items: center; justify-content: center; }
+    .modal-login-box { background: var(--white); border-radius: 16px; box-shadow: var(--shadow-lg); width: 380px; max-width: 92vw; overflow: hidden; animation: slideUp .25s ease; position: relative; transition: width .25s ease; }
+    .modal-login-header { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); padding: 32px 0 24px; text-align: center; position: relative; }
+    .avatar-circle { width: 70px; height: 70px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 3px solid rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 1.8rem; color: white; }
+    .modal-login-header h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem; font-weight: 700; color: white; margin-top: 12px; }
+    .close-login { position: absolute; top: 12px; right: 16px; background: rgba(255,255,255,0.15); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+    .close-login:hover { background: rgba(255,255,255,0.3); }
+    .modal-login-body { padding: 28px; display: flex; flex-direction: column; gap: 16px; }
+    .login-field { display: flex; flex-direction: column; gap: 5px; }
+    .login-field label { font-size: 11px; font-weight: 700; color: var(--text-muted); letter-spacing: .8px; text-transform: uppercase; }
+    .login-field input { padding: 11px 14px; border: 2px solid var(--gray-light); border-radius: 8px; font-family: 'Barlow', sans-serif; font-size: 14px; outline: none; transition: border-color .2s; }
+    .login-field input:focus { border-color: var(--blue); }
+    .login-field input.error { border-color: var(--red); }
+    .login-error { display: none; background: rgba(230,57,70,0.08); border: 1px solid rgba(230,57,70,0.3); border-radius: 8px; padding: 10px 14px; color: var(--red); font-size: 13px; font-weight: 600; text-align: center; }
+    .login-error.visible { display: block; }
+    .btn-login-submit { width: 100%; padding: 13px; background: var(--blue); color: white; border: none; border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 15px; cursor: pointer; transition: background .2s, transform .15s; }
+    .btn-login-submit:hover { background: var(--blue-dark); transform: translateY(-1px); }
+    .modal-login-footer-bar { padding: 14px 28px; background: var(--gray-bg); border-top: 1px solid var(--gray-light); text-align: center; }
+    .btn-logout { background: none; border: none; color: var(--red); font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; }
+    .sessio-panel { display: none; padding: 28px; text-align: center; flex-direction: column; align-items: center; gap: 14px; }
+    .sessio-panel.visible { display: flex; }
+    .check-icon { width: 60px; height: 60px; border-radius: 50%; background: rgba(22,163,74,0.1); border: 2px solid var(--green); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: var(--green); }
+    .sessio-panel p { font-size: .95rem; color: var(--text-muted); }
+
+    footer { background: var(--text-main); color: rgba(255,255,255,0.5); text-align: center; padding: 22px 24px; font-size: 13px; }
+    footer span { color: var(--blue); font-weight: 600; }
+    #intern { display: none; }
+
+
+    /* ── TABS LOGIN / REGISTRE ── */
+    .login-tabs { display: flex; border-bottom: 2px solid var(--gray-light); }
+    .login-tab { flex: 1; padding: 14px; background: none; border: none; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 14px; color: var(--text-muted); cursor: pointer; transition: color .2s; position: relative; }
+    .login-tab.actiu { color: var(--blue); }
+    .login-tab.actiu::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: var(--blue); border-radius: 2px; }
+    .login-tab:hover { color: var(--blue); }
+    .login-panel { display: none; }
+    .login-panel.actiu { display: flex; flex-direction: column; gap: 14px; }
+    .register-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .register-grid .login-field { grid-column: auto; }
+    .register-grid .login-field.full { grid-column: 1 / -1; }
+    /* Success verification banner */
+    .login-success { display: none; }
+    .login-success.visible { display: block; }
+    .verify-success-box { background: linear-gradient(135deg, rgba(22,163,74,0.08), rgba(22,163,74,0.04)); border: 1.5px solid rgba(22,163,74,0.35); border-radius: 12px; padding: 20px 18px; text-align: center; }
+    .verify-success-box .vs-icon { width: 52px; height: 52px; border-radius: 50%; background: rgba(22,163,74,0.12); border: 2px solid var(--green); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--green); margin: 0 auto 12px; }
+    .verify-success-box .vs-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; color: #16a34a; margin-bottom: 6px; }
+    .verify-success-box .vs-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .verify-success-box .vs-email { font-weight: 700; color: var(--text-main); display: block; margin-top: 4px; font-size: 13px; }
+    .verify-success-box .vs-note { margin-top: 10px; font-size: 11.5px; color: #888; background: rgba(0,0,0,0.04); border-radius: 6px; padding: 7px 10px; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+    #toast-msg { transition: opacity .4s ease; }
+    .verify-banner { display: none; background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 14px 18px; color: #92400e; font-size: 13px; font-weight: 600; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+    .verify-banner.visible { display: flex; }
+    .verify-banner i { color: #f59e0b; font-size: 1.1rem; flex-shrink: 0; }
+    .btn-reenviar { background: none; border: 1px solid rgba(245,158,11,0.4); color: #92400e; border-radius: 6px; padding: 4px 10px; font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: background .2s; }
+    .btn-reenviar:hover { background: rgba(245,158,11,0.15); }
+
+    /* ── BANNER LOGIN REQUERIT ── */
+    .login-required-banner { display: none; background: rgba(0,123,193,0.06); border: 2px dashed rgba(0,123,193,0.3); border-radius: 12px; padding: 28px 24px; text-align: center; flex-direction: column; align-items: center; gap: 12px; }
+    .login-required-banner.visible { display: flex; }
+    .login-required-banner i { font-size: 2rem; color: var(--blue); opacity: .6; }
+    .login-required-banner p { color: var(--text-muted); font-size: .95rem; line-height: 1.5; }
+    .login-required-banner strong { color: var(--text-main); }
+    .btn-login-now { padding: 10px 24px; background: var(--blue); color: white; border: none; border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; transition: background .2s, transform .15s; display: inline-flex; align-items: center; gap: 7px; }
+    .btn-login-now:hover { background: var(--blue-dark); transform: translateY(-1px); }
+    .usuari-info-form { display: none; background: rgba(22,163,74,0.06); border: 1px solid rgba(22,163,74,0.2); border-radius: 10px; padding: 12px 16px; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .usuari-info-form.visible { display: flex; }
+    .usuari-info-form i { color: var(--green); font-size: 1.1rem; }
+    .usuari-info-form span { font-size: 13px; color: var(--text-muted); }
+    .usuari-info-form strong { color: var(--text-main); }
+
+    /* ── SELECTOR MATERIAL I PES ── */
+    .material-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    @media (max-width: 540px) { .material-grid { grid-template-columns: 1fr; } }
+    .material-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .material-opt { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border: 2px solid var(--gray-light); border-radius: 10px; cursor: pointer; transition: border-color .2s, background .2s; background: var(--gray-bg); }
+    .material-opt:hover { border-color: var(--blue); background: rgba(0,123,193,0.04); }
+    .material-opt.seleccionat { border-color: var(--blue); background: rgba(0,123,193,0.08); }
+    .material-opt input[type="radio"] { display: none; }
+    .material-nom { font-weight: 700; font-size: 14px; color: var(--text-main); }
+    .material-preu { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+    .material-opt.seleccionat .material-nom { color: var(--blue); }
+    .material-opt.seleccionat .material-preu { color: var(--blue); opacity: .8; }
+    .preu-estimat-box { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); border-radius: 10px; padding: 14px 18px; display: none; align-items: center; justify-content: space-between; color: white; }
+    .preu-estimat-box.visible { display: flex; }
+    .preu-label { font-size: 13px; opacity: .85; }
+    .preu-valor { font-family: 'Barlow Condensed', sans-serif; font-size: 1.8rem; font-weight: 700; }
+
+    /* ── PANELL COMANDES USUARI ── */
+    .comandes-wrapper { display: none; background: var(--white); width: 100%; padding: 44px 24px; border-bottom: 1px solid var(--gray-light); }
+    .comandes-wrapper.visible { display: block; }
+    .comandes-inner { max-width: 860px; margin: 0 auto; }
+    .comandes-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+    .comandes-header h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.6rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+    .comandes-counter { background: var(--blue); color: white; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .comanda-card { background: var(--gray-bg); border-radius: 12px; padding: 20px 24px; margin-bottom: 14px; border-left: 4px solid var(--blue); box-shadow: var(--shadow-sm); animation: slideUp .3s ease; }
+    .comanda-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 12px; flex-wrap: wrap; }
+    .comanda-fitxer { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 7px; }
+    .comanda-fitxer i { color: var(--blue); }
+    .comanda-data-badge { background: rgba(0,123,193,0.1); color: var(--blue); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .comanda-detalls { font-size: .9rem; color: var(--text-muted); line-height: 1.6; margin: 8px 0 14px; border-left: 3px solid var(--gray-light); padding-left: 12px; }
+    .comanda-dl-btn { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,123,193,0.08); color: var(--blue); padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid rgba(0,123,193,0.2); text-decoration: none; transition: background .2s; }
+    .comanda-dl-btn:hover { background: rgba(0,123,193,0.18); }
+    .comandes-buit { text-align: center; padding: 40px; color: var(--text-muted); }
+    .comandes-buit i { font-size: 2.2rem; margin-bottom: 10px; display: block; color: var(--gray-light); }
+
+    /* Ampliar modal login per mostrar comandes */
+    .modal-login-box.ample { width: 460px; }
+
+    /* ── PANELL USUARIS REGISTRATS (admin) ── */
+    .usuaris-panel-wrapper { display: none; background: #12121f; width: 100%; padding: 40px 24px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .usuaris-panel-wrapper.visible { display: block; }
+    .usuaris-panel-inner { max-width: 900px; margin: 0 auto; }
+    .usuaris-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 20px; }
+    .usuari-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 16px 18px; display: flex; align-items: center; gap: 12px; }
+    .usuari-avatar { width: 38px; height: 38px; border-radius: 50%; background: rgba(0,123,193,0.2); border: 2px solid rgba(0,123,193,0.4); display: flex; align-items: center; justify-content: center; color: rgba(0,180,255,0.8); font-size: 1rem; flex-shrink: 0; }
+    .usuari-info { min-width: 0; }
+    .usuari-nom { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .usuari-email { font-size: .78rem; color: rgba(255,255,255,0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .usuaris-buit { text-align: center; padding: 32px; color: rgba(255,255,255,0.25); font-size: .95rem; }
+    .usuari-card { position: relative; }
+    .btn-del-usuari { position: absolute; top: 8px; right: 8px; background: none; border: none; color: rgba(255,100,100,0.4); cursor: pointer; font-size: 13px; padding: 4px 6px; border-radius: 6px; transition: color .2s, background .2s; }
+    .btn-del-usuari:hover { color: #ff6b6b; background: rgba(230,57,70,0.15); }
+
+    /* ── CHATBOT IA ── */
+    .chat-fab { position: fixed; bottom: 28px; right: 28px; z-index: 1000; width: 58px; height: 58px; border-radius: 50%; background: linear-gradient(135deg, var(--blue-dark), var(--blue)); border: none; color: white; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 20px rgba(0,123,193,0.45); display: flex; align-items: center; justify-content: center; transition: transform .2s, box-shadow .2s; }
+    .chat-fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(0,123,193,0.6); }
+    .chat-fab .chat-fab-badge { position: absolute; top: -2px; right: -2px; width: 18px; height: 18px; background: var(--red); border-radius: 50%; border: 2px solid white; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+    .chat-window { position: fixed; bottom: 100px; right: 28px; z-index: 1000; width: 370px; max-width: calc(100vw - 40px); background: white; border-radius: 18px; box-shadow: 0 8px 40px rgba(0,0,0,0.18); display: none; flex-direction: column; overflow: hidden; animation: slideUp .25s ease; max-height: 560px; }
+    .chat-window.obert { display: flex; }
+    .chat-header { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); padding: 16px 20px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .chat-header-avatar { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: white; flex-shrink: 0; }
+    .chat-header-info { flex: 1; }
+    .chat-header-info strong { display: block; color: white; font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; font-weight: 700; }
+    .chat-header-info span { font-size: 11px; color: rgba(255,255,255,0.75); display: flex; align-items: center; gap: 4px; }
+    .chat-header-info span::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #4ade80; display: inline-block; }
+    .chat-close { background: rgba(255,255,255,0.15); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s; flex-shrink: 0; }
+    .chat-close:hover { background: rgba(255,255,255,0.3); }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; background: #f8f9fb; min-height: 300px; }
+    .chat-msg { max-width: 85%; display: flex; flex-direction: column; gap: 3px; animation: slideUp .2s ease; }
+    .chat-msg.bot { align-self: flex-start; }
+    .chat-msg.user { align-self: flex-end; }
+    .chat-bubble { padding: 10px 14px; border-radius: 14px; font-size: 13.5px; line-height: 1.55; font-family: 'Barlow', sans-serif; }
+    .chat-msg.bot .chat-bubble { background: white; color: var(--text-main); border: 1px solid var(--gray-light); border-radius: 4px 14px 14px 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+    .chat-msg.user .chat-bubble { background: var(--blue); color: white; border-radius: 14px 4px 14px 14px; }
+    .chat-msg .chat-time { font-size: 10px; color: var(--text-muted); padding: 0 4px; }
+    .chat-msg.user .chat-time { text-align: right; }
+    .chat-typing { display: none; align-self: flex-start; }
+    .chat-typing.visible { display: flex; }
+    .chat-typing .chat-bubble { background: white; border: 1px solid var(--gray-light); display: flex; align-items: center; gap: 4px; padding: 12px 16px; border-radius: 4px 14px 14px 14px; }
+    .typing-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); opacity: .4; animation: typingPulse 1.2s infinite; }
+    .typing-dot:nth-child(2) { animation-delay: .2s; }
+    .typing-dot:nth-child(3) { animation-delay: .4s; }
+    @keyframes typingPulse { 0%,80%,100%{opacity:.4;transform:scale(1)} 40%{opacity:1;transform:scale(1.3)} }
+    .chat-input-area { padding: 12px 14px; border-top: 1px solid var(--gray-light); display: flex; gap: 8px; flex-shrink: 0; background: white; }
+    .chat-input { flex: 1; padding: 10px 14px; border: 2px solid var(--gray-light); border-radius: 22px; font-family: 'Barlow', sans-serif; font-size: 13.5px; outline: none; transition: border-color .2s; resize: none; overflow: hidden; max-height: 80px; line-height: 1.4; }
+    .chat-input:focus { border-color: var(--blue); }
+    .chat-send { width: 38px; height: 38px; border-radius: 50%; background: var(--blue); border: none; color: white; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .2s, transform .15s; flex-shrink: 0; align-self: flex-end; }
+    .chat-send:hover { background: var(--blue-dark); transform: scale(1.08); }
+    .chat-send:disabled { background: var(--gray-light); cursor: not-allowed; transform: none; }
+    .chat-suggestions { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px 12px; background: #f8f9fb; flex-shrink: 0; }
+    .chat-sugg-btn { padding: 5px 11px; border-radius: 20px; border: 1.5px solid rgba(0,123,193,0.3); background: rgba(0,123,193,0.05); color: var(--blue); font-family: 'Barlow', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; transition: background .2s, border-color .2s; white-space: nowrap; }
+    .chat-sugg-btn:hover { background: rgba(0,123,193,0.12); border-color: var(--blue); }
+    .chat-apikey-banner { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 12px 14px; margin: 12px; font-size: 12.5px; color: #92400e; display: flex; flex-direction: column; gap: 8px; }
+    .chat-apikey-banner strong { color: #78350f; }
+    .chat-apikey-input-row { display: flex; gap: 6px; }
+    .chat-apikey-input { flex: 1; padding: 8px 10px; border: 1.5px solid rgba(245,158,11,0.4); border-radius: 8px; font-family: 'Barlow', sans-serif; font-size: 12px; outline: none; background: white; }
+    .chat-apikey-input:focus { border-color: #f59e0b; }
+    .chat-apikey-save { padding: 8px 12px; background: #f59e0b; color: white; border: none; border-radius: 8px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer; white-space: nowrap; }
+    .chat-apikey-save:hover { background: #d97706; }
+
+    /* ══ DISSENYS PÚBLICS ══════════════════════════════ */
+    .dissenys-wrapper { background: var(--white); width: 100%; padding: 52px 24px; border-bottom: 1px solid var(--gray-light); }
+    .dissenys-inner { max-width: 1100px; margin: 0 auto; }
+    .dissenys-top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; flex-wrap: wrap; gap: 12px; }
+    .dissenys-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+    .disseny-card { background: var(--gray-bg); border: 1.5px solid var(--gray-light); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.2s, transform 0.2s; }
+    .disseny-card:hover { box-shadow: 0 6px 24px rgba(0,123,193,0.13); transform: translateY(-3px); }
+    .disseny-viewer { width: 100%; height: 200px; background: #1a1a2e; position: relative; cursor: grab; }
+    .disseny-viewer:active { cursor: grabbing; }
+    .disseny-viewer canvas { width: 100% !important; height: 100% !important; }
+    .disseny-viewer-loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.4); font-size: 13px; font-family: 'Barlow', sans-serif; flex-direction: column; gap: 8px; }
+    .disseny-viewer-loading i { font-size: 1.8rem; }
+    .disseny-card-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .disseny-card-titol { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+    .btn-editar-titol { background: none; border: none; color: var(--blue); cursor: pointer; font-size: 13px; padding: 3px 6px; border-radius: 6px; transition: background .2s; display: none; }
+    .btn-editar-titol:hover { background: rgba(0,123,193,0.1); }
+    .btn-editar-titol.visible { display: inline-flex; align-items: center; gap: 4px; }
+    .titol-edit-input { width: 100%; padding: 7px 10px; border: 2px solid var(--blue); border-radius: 8px; font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem; font-weight: 700; outline: none; }
+    .disseny-card-nom { font-size: 12px; color: var(--text-muted); word-break: break-all; }
+    .disseny-card-info { font-size: 13px; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; }
+    .disseny-card-info span { display: flex; align-items: center; gap: 6px; }
+    .disseny-card-material { display: inline-block; background: rgba(0,123,193,0.1); color: var(--blue); font-size: 11px; font-weight: 700; padding: 2px 10px; border-radius: 20px; }
+    .disseny-card-preu { font-size: 1.05rem; font-weight: 800; color: var(--blue); }
+    .disseny-card-btns { display: flex; gap: 8px; margin-top: 4px; }
+    .btn-descarregar { flex: 1; padding: 9px 14px; background: var(--blue); color: white; border: none; border-radius: 10px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
+    .btn-descarregar:hover { background: #0056a3; }
+    .btn-eliminar-disseny { padding: 9px 12px; background: rgba(230,57,70,0.08); color: var(--red); border: 1.5px solid rgba(230,57,70,0.2); border-radius: 10px; font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; transition: background 0.2s; display: none; }
+    .btn-eliminar-disseny:hover { background: rgba(230,57,70,0.18); }
+    .btn-eliminar-disseny.visible { display: flex; align-items: center; gap: 6px; }
+    .dissenys-buit { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .dissenys-buit i { font-size: 2.5rem; margin-bottom: 12px; display: block; color: var(--gray-light); }
+
+    /* ══ PROCÉS D'IMPRESSIÓ ══════════════════════════════ */
+    .proces-wrapper {
+      background: var(--white); width: 100%; padding: 32px 24px;
+      border-bottom: 1px solid var(--gray-light);
+    }
+    .proces-inner { max-width: 960px; margin: 0 auto; }
+    .proces-header { text-align: center; margin-bottom: 28px; }
+    .proces-header p { color: var(--text-muted); font-size: .95rem; margin-top: 12px; line-height: 1.6; max-width: 580px; margin-left: auto; margin-right: auto; }
+    .proces-steps {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0; position: relative;
+    }
+    .proces-steps::before {
+      content: ''; position: absolute; top: 29px; left: 10%; right: 10%; height: 2px;
+      background: linear-gradient(90deg, var(--blue), rgba(0,123,193,0.2));
+      z-index: 0;
+    }
+    @media (max-width: 640px) { .proces-steps::before { display: none; } .proces-steps { gap: 20px; } }
+    .proces-step {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      padding: 0 12px; position: relative; z-index: 1;
+    }
+    .step-num-wrap { position: relative; margin-bottom: 16px; }
+    .step-circle {
+      width: 58px; height: 58px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 18px rgba(0,123,193,0.3); flex-shrink: 0;
+      position: relative; transition: transform .2s, box-shadow .2s;
+    }
+    .proces-step:hover .step-circle { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,123,193,0.4); }
+    .step-circle i { font-size: 1.25rem; color: white; }
+    .step-num {
+      position: absolute; top: -6px; right: -6px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: white; border: 2px solid var(--blue);
+      font-size: 11px; font-weight: 800; color: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+    .step-title {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 1.05rem;
+      font-weight: 700; color: var(--text-main); margin-bottom: 8px; line-height: 1.3;
+    }
+    .step-desc { font-size: .83rem; color: var(--text-muted); line-height: 1.55; }
+    .step-arrow {
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(0,123,193,0.35); font-size: 1.1rem; padding-top: 36px;
+    }
+    @media (max-width: 640px) { .step-arrow { display: none; } }
+    .proces-nota {
+      margin-top: 40px; background: rgba(0,123,193,0.06);
+      border: 1px solid rgba(0,123,193,0.18); border-radius: 12px;
+      padding: 16px 22px; display: flex; align-items: flex-start; gap: 12px;
+      color: var(--text-muted); font-size: .88rem; line-height: 1.6;
+    }
+    .proces-nota i { color: var(--blue); font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
+
+    /* ══ CTA GENERADOR ══════════════════════════════════ */
+    .cta-generador {
+      background: linear-gradient(135deg, #0f172a, #0c2340);
+      width: 100%; padding: 36px 24px;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 20px; border-bottom: none; position: relative; overflow: hidden;
+    }
+    .cta-generador::before {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        -45deg, transparent, transparent 18px,
+        rgba(0,123,193,0.04) 18px, rgba(0,123,193,0.04) 36px
+      );
+    }
+    .cta-generador-inner {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 14px; position: relative; z-index: 1; text-align: center;
+    }
+    .cta-generador-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem; font-weight: 700; color: white; line-height: 1.3;
+    }
+    .cta-generador-text span { color: #38bdf8; }
+    .cta-generador-sub {
+      font-size: .9rem; color: rgba(255,255,255,0.5); max-width: 420px; line-height: 1.55;
+    }
+    .cta-generador-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 30px; background: linear-gradient(135deg, #007bc1, #005a94);
+      color: white; border: none; border-radius: 50px;
+      font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 15px;
+      cursor: pointer; transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 22px rgba(0,100,180,0.45); text-decoration: none;
+    }
+    .cta-generador-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,100,180,0.6); }
+    .cta-generador-btn i.arrow { animation: bounceDown 1.4s ease-in-out infinite; }
+    @keyframes bounceDown {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(5px); }
+    }
+    .cta-dots {
+      display: flex; gap: 6px; align-items: center; justify-content: center;
+      position: relative; z-index: 1;
+    }
+    .cta-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(0,123,193,0.4); animation: dotPulse 1.6s ease-in-out infinite;
+    }
+    .cta-dot:nth-child(2) { animation-delay: .2s; }
+    .cta-dot:nth-child(3) { animation-delay: .4s; }
+    .cta-dot:nth-child(4) { animation-delay: .6s; }
+    .cta-dot:nth-child(5) { animation-delay: .8s; width: 8px; height: 8px; }
+    @keyframes dotPulse {
+      0%, 100% { background: rgba(0,123,193,0.3); transform: scaleY(1); }
+      50% { background: rgba(56,189,248,0.8); transform: scaleY(1.6); }
+    }
+
+    /* ══ GENERADOR IA ════════════════════════════════════ */
+    .generador-wrapper {
+      background: linear-gradient(135deg, #0f172a 0%, #1a1a2e 60%, #0c1a35 100%);
+      width: 100%; padding: 40px 24px; border-bottom: 1px solid rgba(255,255,255,0.07);
+      position: relative; overflow: hidden;
+    }
+    .generador-wrapper::before {
+      content: ''; position: absolute; top: -80px; right: -80px; width: 340px; height: 340px;
+      border-radius: 50%; background: radial-gradient(circle, rgba(0,123,193,0.15), transparent 70%);
+      pointer-events: none;
+    }
+    .generador-wrapper::after {
+      content: ''; position: absolute; bottom: -60px; left: -60px; width: 260px; height: 260px;
+      border-radius: 50%; background: radial-gradient(circle, rgba(0,60,120,0.2), transparent 70%);
+      pointer-events: none;
+    }
+    .generador-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 1; }
+    .generador-header { text-align: center; margin-bottom: 24px; }
+    .generador-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(0,123,193,0.2); border: 1px solid rgba(0,123,193,0.4);
+      color: #7dd3fc; padding: 5px 14px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .generador-badge i { font-size: 12px; }
+    .generador-header h2 {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 2.2rem; font-weight: 700;
+      color: white; margin-bottom: 12px; line-height: 1.2;
+    }
+    .generador-header h2 span { color: #38bdf8; }
+    .generador-header p {
+      color: rgba(255,255,255,0.55); font-size: .96rem; line-height: 1.65;
+      max-width: 560px; margin: 0 auto;
+    }
+    .generador-tips {
+      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 28px;
+    }
+    .tip-chip {
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.65); padding: 6px 13px; border-radius: 20px;
+      font-size: 12px; cursor: pointer; transition: background .2s, border-color .2s, color .2s;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .tip-chip:hover {
+      background: rgba(0,123,193,0.2); border-color: rgba(0,123,193,0.5); color: #7dd3fc;
+    }
+    .generador-card {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 18px; padding: 32px; backdrop-filter: blur(8px);
+    }
+    .gen-field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+    .gen-field label {
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5);
+      letter-spacing: .9px; text-transform: uppercase; display: flex; align-items: center; gap: 7px;
+    }
+    .gen-field label i { color: #38bdf8; }
+    .gen-textarea {
+      width: 100%; min-height: 150px; padding: 16px 18px;
+      background: rgba(0,0,0,0.3); border: 1.5px solid rgba(255,255,255,0.12);
+      border-radius: 12px; font-family: 'Barlow', sans-serif; font-size: 14px;
+      color: white; outline: none; resize: vertical; transition: border-color .2s;
+      line-height: 1.65;
+    }
+    .gen-textarea::placeholder { color: rgba(255,255,255,0.28); }
+    .gen-textarea:focus { border-color: rgba(0,123,193,0.7); background: rgba(0,0,0,0.4); }
+    .gen-hints {
+      background: rgba(0,123,193,0.08); border: 1px solid rgba(0,123,193,0.2);
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 20px;
+    }
+    .gen-hints-title {
+      font-size: 11px; font-weight: 700; color: #38bdf8; letter-spacing: .8px;
+      text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+    }
+    .gen-hints ul { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .gen-hints ul li {
+      font-size: 12.5px; color: rgba(255,255,255,0.55); display: flex; align-items: flex-start; gap: 8px; line-height: 1.5;
+    }
+    .gen-hints ul li::before {
+      content: '→'; color: #38bdf8; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    }
+    .gen-btns { display: flex; gap: 12px; justify-content: flex-end; }
+    .btn-gen-reset {
+      padding: 13px 20px; background: transparent; color: rgba(255,255,255,0.45);
+      border: 1.5px solid rgba(255,255,255,0.12); border-radius: 10px;
+      font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 14px;
+      cursor: pointer; transition: border-color .2s, color .2s;
+    }
+    .btn-gen-reset:hover { border-color: rgba(230,57,70,0.5); color: #f87171; }
+    .btn-gen-ia {
+      padding: 13px 28px; background: linear-gradient(135deg, #0072b8, #005a94);
+      color: white; border: none; border-radius: 10px; font-family: 'Barlow', sans-serif;
+      font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center;
+      gap: 9px; transition: transform .15s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(0,100,180,0.35);
+    }
+    .btn-gen-ia:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(0,100,180,0.5); }
+    .btn-gen-ia:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn-gen-ia .btn-spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin .7s linear infinite; }
+    .btn-gen-ia.loading .btn-spinner { display: block; }
+    .btn-gen-ia.loading .btn-icon { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Resultat IA */
+    .gen-resultat-area { display: none; margin-top: 28px; }
+    .gen-resultat-area.visible { display: block; }
+    .gen-resultat-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
+    }
+    .gen-resultat-header span {
+      font-size: 11px; font-weight: 700; color: #4ade80;
+      letter-spacing: .8px; text-transform: uppercase; display: flex; align-items: center; gap: 6px;
+    }
+    .gen-resultat-header span i { font-size: 13px; }
+    .gen-resultat-box {
+      background: #0d1117; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px; padding: 22px 24px; color: #e6edf3;
+      font-size: 13px; line-height: 1.75; white-space: pre-wrap;
+      max-height: 420px; overflow-y: auto; font-family: 'Courier New', 'Monaco', monospace;
+    }
+    .gen-resultat-box .kw { color: #ff7b72; }
+    .gen-code-header {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+      background: #161b22; border: 1px solid rgba(255,255,255,0.1);
+      border-bottom: none; border-radius: 10px 10px 0 0; padding: 10px 16px;
+    }
+    .gen-code-header span { font-size: 12px; color: rgba(255,255,255,0.4); font-family: 'Barlow', sans-serif; }
+    .gen-code-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .gen-resultat-box { border-radius: 0 0 14px 14px; }
+    .gen-instruccions {
+      margin-top: 20px; background: rgba(22,163,74,0.08);
+      border: 1px solid rgba(22,163,74,0.25); border-radius: 12px; padding: 18px 20px;
+    }
+    .gen-instruccions-title {
+      font-size: 11px; font-weight: 700; color: #4ade80;
+      letter-spacing: .8px; text-transform: uppercase; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .gen-instruccions ol { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .gen-instruccions ol li {
+      font-size: 13px; color: rgba(255,255,255,0.65); display: flex; align-items: flex-start;
+      gap: 10px; line-height: 1.5;
+    }
+    .gen-instruccions ol li .step-n {
+      background: rgba(22,163,74,0.2); color: #4ade80; border-radius: 50%;
+      width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    }
+    .gen-instruccions ol li code {
+      background: rgba(255,255,255,0.1); color: #e6edf3; padding: 1px 6px;
+      border-radius: 4px; font-family: 'Courier New', monospace; font-size: 12px;
+    }
+    .gen-resultat-box::-webkit-scrollbar { width: 6px; }
+    .gen-resultat-box::-webkit-scrollbar-track { background: transparent; }
+    .gen-resultat-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+    .gen-resultat-btns {
+      display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; justify-content: flex-end;
+    }
+    .btn-gen-copiar {
+      padding: 10px 18px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.75); border-radius: 9px; font-family: 'Barlow', sans-serif;
+      font-weight: 600; font-size: 13px; cursor: pointer; transition: background .2s, color .2s;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .btn-gen-copiar:hover { background: rgba(255,255,255,0.12); color: white; }
+    .btn-gen-descarregar {
+      padding: 10px 20px; background: linear-gradient(135deg, #16a34a, #15803d);
+      color: white; border: none; border-radius: 9px; font-family: 'Barlow', sans-serif;
+      font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center;
+      gap: 7px; transition: transform .15s, box-shadow .2s;
+      box-shadow: 0 3px 14px rgba(22,163,74,0.3);
+    }
+    .btn-gen-descarregar:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(22,163,74,0.45); }
+    .btn-gen-enviar-form {
+      padding: 10px 20px; background: linear-gradient(135deg, #0072b8, #005a94);
+      color: white; border: none; border-radius: 9px; font-family: 'Barlow', sans-serif;
+      font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center;
+      gap: 7px; transition: transform .15s, box-shadow .2s;
+      box-shadow: 0 3px 14px rgba(0,100,180,0.3);
+    }
+    .btn-gen-enviar-form:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(0,100,180,0.45); }
+    .gen-error {
+      display: none; margin-top: 16px; background: rgba(230,57,70,0.1);
+      border: 1px solid rgba(230,57,70,0.3); border-radius: 10px; padding: 14px 18px;
+      color: #f87171; font-size: 13px; align-items: center; gap: 8px;
+    }
+    .gen-error.visible { display: flex; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <section class="title">
+    <div class="logos">
+      <img src="img/upc-positiu-p3005.png" alt="UPC">
+      <img src="img/logo etseib (còpia).png" alt="ETSEIB">
+    </div>
+    <div class="nav-divider"></div>
+    <h1>Engilab ETSEIB</h1>
+    <button class="login-btn" id="loginBtn" onclick="obrirLogin()">
+      <i class="fa fa-user"></i> Login
+    </button>
+    <button id="statusbutton" onclick="changestatus()">Sincronitzant...</button>
+  </section>
+
+  <!-- SEARCH (ocult per admin) -->
+  <section class="search-section" id="search-section">
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Cerca contingut...">
+      <button onclick="buscar2()"><i class="fa fa-search"></i></button>
+    </div>
+  </section>
+
+  <!-- HERO (ocult per admin) -->
+  <div class="backimg" id="hero-section">
+    <div class="hero-overlay">
+      <h2>Fabricació &amp; Innovació</h2>
+      <p>El laboratori d'enginyeria de l'ETSEIB</p>
+    </div>
+  </div>
+
+
+  <!-- QUICK NAV -->
+  <nav class="quicknav" id="quicknav">
+    <div class="quicknav-inner">
+      <button class="quicknav-btn" onclick="document.querySelector('.impressores-wrapper').scrollIntoView({behavior:'smooth'})">
+        <i class="fa fa-print"></i> Impressores
+      </button>
+      <button class="quicknav-btn" onclick="document.getElementById('formulari-section').scrollIntoView({behavior:'smooth'})">
+        <i class="fa fa-paper-plane"></i> Sol · licitar impressió
+      </button>
+      <button class="quicknav-btn highlight" onclick="document.getElementById('generador-section').scrollIntoView({behavior:'smooth'})">
+        <i class="fa fa-robot"></i> Sense fitxer STL? Prova la IA →
+      </button>
+      <button class="quicknav-btn" onclick="document.querySelector('.dissenys-wrapper').scrollIntoView({behavior:'smooth'})">
+        <i class="fa fa-cube"></i> Dissenys públics
+      </button>
+      <button class="quicknav-btn" onclick="document.querySelector('.noticies-wrapper').scrollIntoView({behavior:'smooth'})">
+        <i class="fa fa-newspaper"></i> Notícies
+      </button>
+    </div>
+  </nav>
+
+  <!-- PANELL ADMIN — Sol·licituds (visible NOMÉS admin, va PRIMER) -->
+  <div class="admin-panel-wrapper" id="admin-panel">
+    <div class="admin-panel-inner">
+      <div class="admin-panel-header">
+        <h2>
+          <i class="fa fa-inbox"></i> Sol · licituds rebudes
+          <span class="admin-badge">ADMIN</span>
+          <span class="admin-counter" id="admin-counter">0</span>
+        </h2>
+        <button class="btn-netejar-admin" onclick="netejarTotes()">
+          <i class="fa fa-trash" style="margin-right:5px;"></i>Eliminar totes
+        </button>
+      </div>
+      <div id="llista-solicituds">
+        <div class="admin-buit"><i class="fa fa-inbox"></i>Encara no hi ha sol · licituds.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANELL USUARIS REGISTRATS (admin) -->
+  <div class="usuaris-panel-wrapper" id="usuaris-panel">
+    <div class="usuaris-panel-inner">
+      <div class="admin-panel-header">
+        <h2>
+          <i class="fa fa-users"></i> Estudiants registrats
+          <span class="admin-badge">ADMIN</span>
+          <span class="admin-counter" id="usuaris-counter">0</span>
+        </h2>
+      </div>
+      <div class="usuaris-grid" id="llista-usuaris">
+        <div class="usuaris-buit">Encara no hi ha estudiants registrats.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPRESSORES (sempre visible) -->
+  <div class="impressores-wrapper">
+    <div class="impressores-inner">
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fa fa-cube" style="margin-right:8px; color:var(--blue);"></i>Estat de les impressores 3D
+        </h2>
+      </div>
+      <div class="impressores-grid" id="impressores-grid"></div>
+    </div>
+  </div>
+
+  <!-- COMANDES PRÈVIES (visible per usuaris amb sessió) -->
+  <div class="comandes-wrapper" id="comandes-wrapper">
+    <div class="comandes-inner">
+      <div class="comandes-header">
+        <h2><i class="fa fa-clock-rotate-left" style="color:var(--blue);"></i> Les meves sol · licituds <span class="comandes-counter" id="comandes-counter">0</span></h2>
+      </div>
+      <div id="llista-comandes">
+        <div class="comandes-buit"><i class="fa fa-box-open"></i>Encara no has fet cap sol · licitud.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORMULARI SOL·LICITUD (ocult per admin) -->
+  <div class="formulari-wrapper" id="formulari-section">
+    <div class="formulari-inner">
+      <div class="formulari-header section-header">
+        <h2 class="section-title">
+          <i class="fa fa-print" style="margin-right:8px; color:var(--blue);"></i>Sol · licitar impressió 3D
+        </h2>
+        <p>Omple el formulari per enviar la teva sol · licitud. Un cop revisada et contactarem per correu.</p>
+      </div>
+
+      <!-- Banner: cal iniciar sessió -->
+      <div class="login-required-banner visible" id="login-required-banner">
+        <i class="fa fa-lock"></i>
+        <p><strong>Has d'iniciar sessió</strong> per poder enviar una sol · licitud d'impressió.<br>Si encara no tens compte, pots registrar-te gratuïtament.</p>
+        <button class="btn-login-now" onclick="obrirLogin()">
+          <i class="fa fa-right-to-bracket"></i> Iniciar sessió / Registrar-se
+        </button>
+      </div>
+
+      <!-- Formulari real (només visible amb sessió) -->
+      <div id="form-contingut" style="display:none;">
+        <div class="usuari-info-form" id="usuari-info-form">
+          <i class="fa fa-circle-check"></i>
+          <span>Sol·licitant: <strong id="form-nom-usuari"></strong> &nbsp;·&nbsp; <span id="form-email-usuari" style="color:var(--blue);font-weight:600;"></span></span>
+        </div>
+      <div class="form-grid">
+        <div class="form-field full">
+          <label><i class="fa fa-heading" style="margin-right:4px;"></i>Títol del disseny</label>
+          <input type="text" id="f-titol" placeholder="Ex: Suport per a telèfon, Peça mecànica...">
+        </div>
+        <div class="form-field full">
+          <label><i class="fa fa-layer-group" style="margin-right:4px;"></i>Material d'impressió</label>
+          <div class="material-options" id="material-options">
+            <label class="material-opt" onclick="seleccionarMaterial('PLA',20)">
+              <input type="radio" name="material" value="PLA">
+              <span class="material-nom">PLA</span>
+              <span class="material-preu">20 €/kg</span>
+            </label>
+            <label class="material-opt" onclick="seleccionarMaterial('ABS',23)">
+              <input type="radio" name="material" value="ABS">
+              <span class="material-nom">ABS</span>
+              <span class="material-preu">23 €/kg</span>
+            </label>
+            <label class="material-opt" onclick="seleccionarMaterial('PETG',23)">
+              <input type="radio" name="material" value="PETG">
+              <span class="material-nom">PETG</span>
+              <span class="material-preu">23 €/kg</span>
+            </label>
+            <label class="material-opt" onclick="seleccionarMaterial('SLA',35)">
+              <input type="radio" name="material" value="SLA">
+              <span class="material-nom">SLA</span>
+              <span class="material-preu">35 €/kg</span>
+            </label>
+            <label class="material-opt" style="grid-column:1/-1;" onclick="seleccionarMaterial('DLP',140)">
+              <input type="radio" name="material" value="DLP">
+              <span class="material-nom">DLP</span>
+              <span class="material-preu">140 €/kg</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label><i class="fa fa-weight-hanging" style="margin-right:4px;"></i>Pes estimat (grams)</label>
+          <input type="number" id="f-pes" placeholder="Ex: 150" min="1" max="10000" oninput="calcularPreu()">
+        </div>
+        <div class="form-field">
+          <label><i class="fa fa-tag" style="margin-right:4px;"></i>Preu estimat</label>
+          <div class="preu-estimat-box" id="preu-box">
+            <span class="preu-label">Total aproximat</span>
+            <span class="preu-valor" id="preu-valor">— €</span>
+          </div>
+          <p style="font-size:11px;color:var(--text-muted);margin-top:6px;"><i class="fa fa-circle-info" style="margin-right:4px;"></i>Preu orientatiu, pot variar segons la peça.</p>
+        </div>
+
+        <div class="form-field full">
+          <label id="f-detalls-label"><i class="fa fa-comment-dots" style="margin-right:4px;"></i>Detalls de la impressió</label>
+          <textarea id="f-detalls" placeholder="Dimensions, nombre d'unitats, ús final i qualsevol detall rellevant..."></textarea>
+        </div>
+        <div class="form-field full">
+          <label><i class="fa fa-file" style="margin-right:4px;"></i>Fitxer STL <span style="font-size:10px;font-weight:400;color:var(--text-muted);margin-left:6px;background:var(--gray-light);padding:2px 8px;border-radius:10px;">Opcional si uses el Generador IA</span></label>
+          <div class="stl-upload-area" id="stl-area">
+            <input type="file" id="f-stl" accept=".stl" onchange="arxiuSeleccionat(this)">
+            <div class="stl-upload-icon"><i class="fa fa-cloud-arrow-up"></i></div>
+            <div class="stl-upload-text"><strong>Fes clic o arrossega aquí</strong> el fitxer .STL<br>Mida màxima recomanada: 50 MB</div>
+            <div class="stl-fitxer-nom" id="stl-nom-display">
+              <i class="fa fa-check-circle"></i><span id="stl-nom-text"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-success" id="form-success">
+        <i class="fa fa-circle-check"></i> Sol · licitud enviada correctament! Et contactarem aviat.
+      </div>
+      <div class="form-field full" style="margin-top:4px;">
+        <label class="publicar-label" style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:12px 16px;background:rgba(0,123,193,0.06);border:2px solid rgba(0,123,193,0.2);border-radius:12px;">
+          <input type="checkbox" id="f-publicar" style="width:18px;height:18px;accent-color:var(--blue);cursor:pointer;">
+          <span style="font-size:14px;font-weight:600;color:var(--text-main);">
+            <i class="fa fa-globe" style="color:var(--blue);margin-right:6px;"></i>
+            Vull que el meu disseny sigui visible a l'apartat <strong>Dissenys Públics</strong>
+          </span>
+        </label>
+      </div>
+      <div class="formulari-footer-btns">
+        <button class="btn-reset-form" onclick="resetFormulari()"><i class="fa fa-rotate-left" style="margin-right:6px;"></i>Netejar</button>
+        <button class="btn-enviar" onclick="enviarSolicitud()"><i class="fa fa-paper-plane"></i> Enviar sol · licitud</button>
+      </div>
+      </div> <!-- /form-contingut -->
+    </div>
+  </div>
+
+  <!-- PROCÉS D'IMPRESSIÓ 3D -->
+  <div class="proces-wrapper">
+    <div class="proces-inner">
+      <div class="proces-header section-header">
+        <h2 class="section-title">
+          <i class="fa fa-route" style="margin-right:8px; color:var(--blue);"></i>Com funciona el procés?
+        </h2>
+        <p>Des que tens una idea fins que tens la peça a les mans. Segueix aquests passos:</p>
+      </div>
+
+      <div class="proces-steps">
+
+        <div class="proces-step">
+          <div class="step-num-wrap">
+            <div class="step-circle"><i class="fa fa-lightbulb"></i></div>
+            <div class="step-num">1</div>
+          </div>
+          <div class="step-title">Tens una idea</div>
+          <div class="step-desc">Saps el que vols imprimir però no tens el fitxer 3D ni saps disseny. Cap problema!</div>
+        </div>
+
+        <div class="proces-step">
+          <div class="step-num-wrap">
+            <div class="step-circle"><i class="fa fa-robot"></i></div>
+            <div class="step-num">2</div>
+          </div>
+          <div class="step-title">Descriu la peça a la IA</div>
+          <div class="step-desc">Explica en paraules senzilles les mides, forma i material. La IA genera automàticament el codi Python per FreeCAD.</div>
+        </div>
+
+        <div class="proces-step">
+          <div class="step-num-wrap">
+            <div class="step-circle"><i class="fa fa-file-code"></i></div>
+            <div class="step-num">3</div>
+          </div>
+          <div class="step-title">Descarrega el script .py</div>
+          <div class="step-desc">Obtens un fitxer Python llest per executar a FreeCAD, amb mides exactes i material recomanat.</div>
+        </div>
+
+        <div class="proces-step">
+          <div class="step-num-wrap">
+            <div class="step-circle"><i class="fa fa-cube"></i></div>
+            <div class="step-num">4</div>
+          </div>
+          <div class="step-title">Genera el model 3D</div>
+          <div class="step-desc">Executa el script a FreeCAD i la peça apareix modelada en 3D. Exporta-la com a <strong>.stl</strong>. <br><strong>També pots posar el codi sense haver de convertir-lo en .stl !!!</strong>.</div>
+        </div>
+
+        <div class="proces-step">
+          <div class="step-num-wrap">
+            <div class="step-circle"><i class="fa fa-paper-plane"></i></div>
+            <div class="step-num">5</div>
+          </div>
+          <div class="step-title">Envia la sol · licitud</div>
+          <div class="step-desc">Puja el fitxer .stl al formulari i envia la sol · licitud al laboratori.</div>
+        </div>
+
+        <div class="proces-step">
+          <div class="step-num-wrap">
+            <div class="step-circle"><i class="fa fa-box-open"></i></div>
+            <div class="step-num">6</div>
+          </div>
+          <div class="step-title">Recollida al lab</div>
+          <div class="step-desc">T'avisem per correu quan la peça estigui impresa. Passa a recollir-la a l'Engilab!</div>
+        </div>
+
+      </div>
+
+      <div class="proces-nota">
+        <i class="fa fa-circle-info"></i>
+        <span>Si ja tens el teu propi fitxer <strong>.STL</strong>, pots saltar-te els passos 2, 3 i 4 i anar directament al <strong>formulari de sol · licitud</strong> per adjuntar-lo i enviar-lo.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA GENERADOR -->
+  <div class="cta-generador">
+    <div class="cta-generador-inner">
+      <div class="cta-generador-text">
+        No tens fitxer STL? <span>La IA el descriu per tu</span> 🤖
+      </div>
+      <div class="cta-generador-sub">
+        Explica la teva peça en paraules senzilles i generem les especificacions tècniques al moment, sense que calgui saber disseny 3D.
+      </div>
+      <button class="cta-generador-btn" onclick="document.getElementById('generador-section').scrollIntoView({behavior:'smooth'})">
+        <i class="fa fa-robot"></i>
+        Prova el Generador IA
+        <i class="fa fa-arrow-down arrow"></i>
+      </button>
+    </div>
+    <div class="cta-dots">
+      <div class="cta-dot"></div>
+      <div class="cta-dot"></div>
+      <div class="cta-dot"></div>
+      <div class="cta-dot"></div>
+      <div class="cta-dot"></div>
+    </div>
+  </div>
+
+  <!-- GENERADOR DE DISSENYS AMB IA -->
+  <div class="generador-wrapper" id="generador-section">
+    <div class="generador-inner">
+      <div class="generador-header">
+        <div class="generador-badge">
+          <i class="fa fa-robot"></i> Powered by Claude AI
+        </div>
+        <h2>No tens el fitxer STL? <span>Descriu la teva peça</span></h2>
+        <p>
+          No cal que sàpigues disseny 3D. Explica com vols que sigui la teva peça en paraules senzilles
+          i la IA generarà automàticament les especificacions tècniques per enviar com a sol · licitud.
+        </p>
+      </div>
+
+      <!-- Exemples ràpids -->
+      <div class="generador-tips">
+        <div class="tip-chip" onclick="insertarExemple('suport-movil')">
+          <i class="fa fa-mobile-screen"></i> Suport per mòbil
+        </div>
+        <div class="tip-chip" onclick="insertarExemple('caixa-cables')">
+          <i class="fa fa-plug"></i> Caixa organitzadora
+        </div>
+        <div class="tip-chip" onclick="insertarExemple('bracket-paret')">
+          <i class="fa fa-screwdriver-wrench"></i> Suport de paret
+        </div>
+        <div class="tip-chip" onclick="insertarExemple('peca-mecanica')">
+          <i class="fa fa-gear"></i> Peça mecànica
+        </div>
+        <div class="tip-chip" onclick="insertarExemple('personalitzat')">
+          <i class="fa fa-star"></i> Objecte decoratiu
+        </div>
+      </div>
+
+      <div class="generador-card">
+        <!-- Consells -->
+        <div class="gen-hints">
+          <div class="gen-hints-title"><i class="fa fa-circle-info"></i> Com descriure bé la teva peça</div>
+          <ul>
+            <li>Indica les <strong style="color:rgba(255,255,255,0.8)">dimensions</strong> aproximades (alçada, amplada, fondària en mm o cm)</li>
+            <li>Descriu la <strong style="color:rgba(255,255,255,0.8)">forma general</strong> i la seva funció (per exemple: "és una caixa rectangular per guardar cables")</li>
+            <li>Menciona si necessita <strong style="color:rgba(255,255,255,0.8)">forats, ranures, encaixos</strong> o algun detall especial</li>
+            <li>Indica el <strong style="color:rgba(255,255,255,0.8)">material preferit</strong> i si ha de ser resistent a la calor o forces</li>
+          </ul>
+        </div>
+
+        <!-- Camp de text -->
+        <div class="gen-field">
+          <label><i class="fa fa-pen-to-square"></i> Descriu la teva peça</label>
+          <textarea
+            class="gen-textarea"
+            id="gen-descripcio"
+            placeholder="Exemple: Vull un suport per a mòbil de mà per posar sobre la taula. Ha de tenir uns 10 cm d'alçada, 8 cm d'ample i 6 cm de fondària. La ranura on entra el mòbil ha de ser d'uns 2 cm d'amplada. Que sigui estable i resistit, de PLA..."
+          ></textarea>
+        </div>
+
+        <!-- Botons -->
+        <div class="gen-btns">
+          <button class="btn-gen-reset" onclick="resetGenerador()">
+            <i class="fa fa-rotate-left"></i> Netejar
+          </button>
+          <button class="btn-gen-ia" id="btn-gen-ia" onclick="generarAmbIA()">
+            <i class="fa fa-robot btn-icon"></i>
+            <div class="btn-spinner"></div>
+            Generar especificacions amb IA
+          </button>
+        </div>
+
+        <!-- Error -->
+        <div class="gen-error" id="gen-error">
+          <i class="fa fa-triangle-exclamation"></i>
+          <span id="gen-error-text">S'ha produït un error. Torna-ho a intentar.</span>
+        </div>
+
+        <!-- Resultat -->
+        <div class="gen-resultat-area" id="gen-resultat-area">
+          <div class="gen-resultat-header">
+            <span><i class="fa fa-circle-check"></i> Script Python per FreeCAD generat!</span>
+          </div>
+          <div class="gen-code-header" id="gen-code-header" style="display:none;">
+            <div class="gen-code-dot" style="background:#ff5f57;"></div>
+            <div class="gen-code-dot" style="background:#febc2e;"></div>
+            <div class="gen-code-dot" style="background:#28c840;"></div>
+            <span style="margin-left:8px;">script_freecad.py &nbsp;·&nbsp; Python</span>
+          </div>
+          <div class="gen-resultat-box" id="gen-resultat-box"></div>
+
+          <div class="gen-instruccions" id="gen-instruccions" style="display:none;">
+            <div class="gen-instruccions-title"><i class="fa fa-circle-play"></i> Com usar aquest script a FreeCAD</div>
+            <ol>
+              <li><span class="step-n">1</span><span>Descarrega el fitxer <code>.py</code> amb el botó de sota</span></li>
+              <li><span class="step-n">2</span><span>Obre <strong>FreeCAD</strong> al teu ordinador</span></li>
+              <li><span class="step-n">3</span><span>Ves a <code>Macro → Macros...</code> i selecciona el fitxer descarregat, o bé obre la <code>Consola Python</code> i enganxa el codi</span></li>
+              <li><span class="step-n">4</span><span>Executa el script — la peça apareixerà modelada en 3D automàticament</span></li>
+              <li><span class="step-n">5</span><span>Exporta-la com a <code>.stl</code> amb <code>Fitxer → Exportar</code> i puja-la al formulari de sol · licitud</span></li>
+            </ol>
+          </div>
+
+          <div class="gen-resultat-btns">
+            <button class="btn-gen-copiar" onclick="copiarResultat()">
+              <i class="fa fa-copy"></i> Copiar codi
+            </button>
+            <button class="btn-gen-descarregar" onclick="descarregarResultat()">
+              <i class="fa fa-file-arrow-down"></i> Descarregar (.py)
+            </button>
+            <button class="btn-gen-enviar-form" onclick="enviarAlFormulari()">
+              <i class="fa fa-paper-plane"></i> Afegir al formulari
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- DISSENYS PÚBLICS -->
+  <div class="dissenys-wrapper" id="dissenys-wrapper">
+    <div class="dissenys-inner">
+      <div class="dissenys-top-bar">
+        <h2 class="section-title"><i class="fa fa-cube" style="color:var(--blue);margin-right:10px;"></i>Dissenys Públics</h2>
+      </div>
+      <div class="dissenys-grid" id="dissenys-grid">
+        <div class="dissenys-buit"><i class="fa fa-cube"></i>Encara no hi ha dissenys públics.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTÍCIES -->
+  <div class="noticies-wrapper">
+    <div class="noticies-inner">
+      <div class="noticies-top-bar">
+        <h2 class="section-title">Últimes notícies</h2>
+        <button class="btn-nova-noticia" id="btn-nova-noticia" onclick="obrirModalNovaNoticia()">
+          <i class="fa fa-plus"></i> Nova notícia
+        </button>
+      </div>
+      <div id="llista-noticies"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>© 2026 <span>Engilab ETSEIB</span> · Universitat Politècnica de Catalunya</footer>
+
+  <!-- MODAL NOTÍCIA (lectura) -->
+  <div id="modal-noticia" class="modal-noticia" onclick="tancarNoticiaFons(event)">
+    <div class="modal-noticia-content">
+      <div class="modal-noticia-header">
+        <div class="data-modal"><i class="fa fa-calendar"></i> <span id="modal-data"></span></div>
+        <h2 id="modal-titol"></h2>
+        <button class="tancar-noticia" onclick="tancarNoticia()">&times;</button>
+      </div>
+      <div class="modal-noticia-body">
+        <span class="categoria-tag"><i class="fa fa-tag"></i> <span id="modal-categoria-text"></span></span>
+        <div id="modal-cos"></div>
+      </div>
+      <div class="modal-noticia-footer">
+        <button class="btn-tancar-footer" onclick="tancarNoticia()"><i class="fa fa-arrow-left" style="margin-right:6px;"></i>Tornar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL NOVA NOTÍCIA (admin) -->
+  <div id="modal-nova-noticia" class="modal-nova-noticia" onclick="tancarModalNovaNoticiaFons(event)">
+    <div class="modal-nova-box">
+      <div class="modal-nova-header">
+        <h3><i class="fa fa-newspaper" style="margin-right:8px;"></i>Nova notícia</h3>
+        <button class="close-nova" onclick="tancarModalNovaNoticia()">&times;</button>
+      </div>
+      <div class="modal-nova-body">
+        <div class="nova-field">
+          <label>Títol</label>
+          <input type="text" id="nn-titol" placeholder="Títol de la notícia">
+        </div>
+        <div class="nova-field">
+          <label>Data</label>
+          <input type="text" id="nn-data" placeholder="Ex: 9 març 2026">
+        </div>
+        <div class="nova-field">
+          <label>Categoria</label>
+          <select id="nn-categoria">
+            <option value="Equipament">Equipament</option>
+            <option value="Formació">Formació</option>
+            <option value="Esdeveniments">Esdeveniments</option>
+            <option value="Recerca">Recerca</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+        <div class="nova-field">
+          <label>Resum (preview)</label>
+          <textarea id="nn-preview" placeholder="Text breu que apareix a la llista de notícies..."></textarea>
+        </div>
+        <div class="nova-field">
+          <label>Contingut complet</label>
+          <textarea class="cos" id="nn-cos" placeholder="Text complet de la notícia (apareixerà al modal)..."></textarea>
+        </div>
+      </div>
+      <div class="modal-nova-footer">
+        <button class="btn-cancel-nova" onclick="tancarModalNovaNoticia()">Cancel·lar</button>
+        <button class="btn-desar-noticia" onclick="desarNoticia()">
+          <i class="fa fa-floppy-disk"></i> Desar notícia
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL LOGIN -->
+  <div id="modal-login" class="modal" onclick="tancarLoginFons(event)">
+    <div class="modal-login-box">
+      <div class="modal-login-header">
+        <button class="close-login" onclick="tancarLogin()">&times;</button>
+        <div class="avatar-circle"><i class="fa fa-user"></i></div>
+        <h3 id="login-header-title">Accés Engilab</h3>
+      </div>
+
+      <!-- Tabs -->
+      <div id="login-tabs-area">
+        <div class="login-tabs">
+          <button class="login-tab actiu" id="tab-login" onclick="canviarTab('login')">
+            <i class="fa fa-right-to-bracket" style="margin-right:5px;"></i>Iniciar sessió
+          </button>
+          <button class="login-tab" id="tab-registre" onclick="canviarTab('registre')">
+            <i class="fa fa-user-plus" style="margin-right:5px;"></i>Registra't
+          </button>
+        </div>
+
+        <div class="modal-login-body">
+          <!-- Panel Login -->
+          <div class="login-panel actiu" id="panel-login">
+            <div class="login-field">
+              <label>Correu electrònic</label>
+              <input type="email" id="login-email" placeholder="exemple@gmail.com" autocomplete="email">
+            </div>
+            <div class="login-field">
+              <label>Contrasenya</label>
+              <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+            </div>
+            <div class="login-error" id="login-error">
+              <i class="fa fa-circle-exclamation" style="margin-right:5px;"></i>
+              <span id="login-error-text">Correu o contrasenya incorrectes.</span>
+            </div>
+            <button class="btn-login-submit" onclick="intentarLogin()">
+              <i class="fa fa-right-to-bracket" style="margin-right:6px;"></i>Iniciar sessió
+            </button>
+          </div>
+
+          <!-- Panel Registre -->
+          <div class="login-panel" id="panel-registre">
+            <div class="register-grid">
+              <div class="login-field">
+                <label>Nom</label>
+                <input type="text" id="reg-nom" placeholder="El teu nom">
+              </div>
+              <div class="login-field">
+                <label>Cognom</label>
+                <input type="text" id="reg-cognom" placeholder="El teu cognom">
+              </div>
+              <div class="login-field full">
+                <label>Correu electrònic</label>
+                <input type="email" id="reg-email" placeholder="exemple@gmail.com">
+              </div>
+              <div class="login-field full">
+                <label>Contrasenya</label>
+                <input type="password" id="reg-pass" placeholder="Mínim 6 caràcters">
+              </div>
+              <div class="login-field full">
+                <label>Repeteix la contrasenya</label>
+                <input type="password" id="reg-pass2" placeholder="••••••••">
+              </div>
+            </div>
+            <div class="login-error" id="reg-error">
+              <i class="fa fa-circle-exclamation" style="margin-right:5px;"></i>
+              <span id="reg-error-text">Error en el registre.</span>
+            </div>
+            <div class="login-success" id="reg-success">
+              <div class="verify-success-box">
+                <div class="vs-icon"><i class="fa fa-envelope-circle-check"></i></div>
+                <div class="vs-title">Comprova el teu correu!</div>
+                <div class="vs-desc">
+                  Hem enviat un correu de verificació a:
+                  <span class="vs-email" id="reg-success-email"></span>
+                </div>
+                <div class="vs-note">
+                  <i class="fa fa-triangle-exclamation" style="color:#f59e0b;margin-right:4px;"></i>
+                  Comprova també la carpeta de <strong>correu no desitjat</strong>.<br>
+                  Un cop verificat, ja podràs iniciar sessió.
+                </div>
+              </div>
+            </div>
+            <button class="btn-login-submit" id="btn-crear-compte" onclick="intentarRegistre()">
+              <i class="fa fa-user-plus" style="margin-right:6px;"></i>Crear compte
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sessió activa -->
+      <div class="sessio-panel" id="sessio-panel">
+        <div class="check-icon"><i class="fa fa-check"></i></div>
+        <div>
+          <p><strong id="nom-usuari"></strong></p>
+          <p style="margin-top:4px;" id="sessio-subtitol">Sessió iniciada correctament.</p>
+        </div>
+        <div class="verify-banner" id="verify-banner" style="width:100%;box-sizing:border-box;margin:0 28px;width:calc(100% - 56px);">
+          <i class="fa fa-triangle-exclamation"></i>
+          <span style="flex:1;">Verifica el teu correu per activar el compte.</span>
+          <button class="btn-reenviar" onclick="reenviarVerificacio()">Reenviar</button>
+        </div>
+        <div class="modal-login-footer-bar" style="width:100%;">
+          <button class="btn-logout" onclick="tancarSessio()">
+            <i class="fa fa-right-from-bracket" style="margin-right:5px;"></i>Tancar sessió
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="intern"></div>
+
+  <!-- Three.js per visor STL 3D -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.1/firebase-auth-compat.js"></script>
+
+  <script>
+
+    /* ══ USUARIS ══════════════════════════════════════ */
+    const USUARIS = [
+      { email: "admin@engilab.com",          password: "Engi2026!",  nom: "Administrador", rol: "admin"  },
+      { email: "professor@etseib.upc.edu",   password: "Prof2026#",  nom: "Professor",     rol: "usuari" },
+      { email: "estudiant@etseib.upc.edu",   password: "Est2026@",   nom: "Estudiant",     rol: "usuari" },
+    ];
+
+    let sessioActiva    = false;
+    let rolActiu       = null;
+    let emailActiu     = null;
+    let nomUsuariActiu = null;
+
+    /* ══ FIREBASE ═════════════════════════════════════ */
+    const firebaseConfig = {
+      apiKey:            "AIzaSyDNrrjgc0TyT4dAdZiYJlNZrbia1jr8X-Q",
+      authDomain:        "engilab2026.firebaseapp.com",
+      databaseURL:       "https://engilab2026-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId:         "engilab2026",
+      storageBucket:     "engilab2026.firebasestorage.app",
+      messagingSenderId: "960568396971",
+      appId:             "1:960568396971:web:41479521862bfceefbbbee"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db   = firebase.database();
+    const auth = firebase.auth();
+    auth.languageCode = 'ca';
+
+    /* ══ LAYOUT SEGONS ROL ════════════════════════════ */
+    function aplicarLayoutRol() {
+      const esAdmin = sessioActiva && rolActiu === 'admin';
+
+      // Seccions ocultes per admin
+      document.getElementById('search-section').style.display  = esAdmin ? 'none' : '';
+      document.getElementById('hero-section').style.display    = esAdmin ? 'none' : '';
+      document.getElementById('formulari-section').style.display = esAdmin ? 'none' : '';
+
+      // Formulari: banner login o formulari real segons sessió
+      const teSessioNoAdmin = sessioActiva && !esAdmin;
+      const banner   = document.getElementById('login-required-banner');
+      const formCont = document.getElementById('form-contingut');
+      if (banner && formCont) {
+        banner.classList.toggle('visible', !sessioActiva && !esAdmin);
+        formCont.style.display = teSessioNoAdmin ? 'block' : 'none';
+        // Mostrar nom i email de l'usuari identificat
+        if (teSessioNoAdmin) {
+          const infoBox = document.getElementById('usuari-info-form');
+          document.getElementById('form-nom-usuari').textContent = nomUsuariActiu || '';
+          document.getElementById('form-email-usuari').textContent = emailActiu || '';
+          if (infoBox) infoBox.classList.add('visible');
+        }
+      }
+
+      // Panell admin (sol·licituds)
+      document.getElementById('admin-panel').classList.toggle('visible', esAdmin);
+
+      // Panell usuaris registrats
+      document.getElementById('usuaris-panel').classList.toggle('visible', esAdmin);
+      if (esAdmin) renderUsuaris();
+
+      // Comandes de l'usuari (estudiant amb sessió)
+      const esEstudiant = sessioActiva && rolActiu !== 'admin';
+      document.getElementById('comandes-wrapper').classList.toggle('visible', esEstudiant);
+      if (esEstudiant) renderComandes();
+
+      // Botó nova notícia
+      document.getElementById('btn-nova-noticia').classList.toggle('visible', esAdmin);
+
+      // Botons admin a les notícies
+      document.querySelectorAll('.noticia-admin-btns').forEach(el => {
+        el.classList.toggle('visible', esAdmin);
+      });
+
+      // Permisos impressores i estat
+      actualitzarBotons();
+
+      // Reordenar seccions: admin panel va primer
+      if (esAdmin) {
+        const adminPanel = document.getElementById('admin-panel');
+        const impressoresWrapper = document.querySelector('.impressores-wrapper');
+        // Ja té l'ordre correcte al HTML (admin-panel → impressores → formulari → noticies)
+      }
+    }
+
+    /* ══ BOTONS ESTAT (permisos) ══════════════════════ */
+    function actualitzarBotons() {
+      const esAdmin = sessioActiva && rolActiu === 'admin';
+      const sb = document.getElementById('statusbutton');
+      sb.style.opacity = esAdmin ? '1' : '0.55';
+      sb.style.cursor  = esAdmin ? 'pointer' : 'not-allowed';
+      sb.title         = esAdmin ? '' : 'Necessites ser administrador';
+
+      document.querySelectorAll('.btn-impressora').forEach(btn => {
+        btn.style.opacity = esAdmin ? '1' : '0.55';
+        btn.style.cursor  = esAdmin ? 'pointer' : 'not-allowed';
+        btn.title         = esAdmin ? '' : 'Necessites ser administrador';
+      });
+    }
+
+    /* ══ ENGILAB OBERT/TANCAT ═════════════════════════ */
+    const boton     = document.getElementById('statusbutton');
+    const statusRef = db.ref('statuslab');
+    statusRef.on('value', snap => {
+      const estat = snap.val();
+      boton.textContent = estat === 'open' ? 'EngiLab OBERT' : 'EngiLab TANCAT';
+      boton.style.backgroundColor = estat === 'open' ? 'rgb(0,123,193)' : '#e63946';
+    });
+    function changestatus() {
+      if (!sessioActiva || rolActiu !== 'admin') { mostrarToast('<i class="fa fa-lock" style="color:var(--red);"></i> Necessites ser administrador.'); return; }
+      statusRef.set(boton.textContent.trim() === 'EngiLab OBERT' ? 'closed' : 'open');
+    }
+
+    /* ══ IMPRESSORES ══════════════════════════════════ */
+    const IMPRESSORES = [
+      {id:'imp1',nom:'Impressora 1'},{id:'imp2',nom:'Impressora 2'},{id:'imp3',nom:'Impressora 3'},
+      {id:'imp4',nom:'Impressora 4'},{id:'imp5',nom:'Impressora 5'},
+    ];
+    const grid = document.getElementById('impressores-grid');
+    IMPRESSORES.forEach(imp => {
+      const card = document.createElement('div');
+      card.className = 'impressora-card'; card.id = 'card-' + imp.id;
+      card.innerHTML = `<div class="impressora-icon">🖨️</div><div class="impressora-nom">${imp.nom}</div>
+        <button class="btn-impressora disponible" id="btn-${imp.id}" onclick="canviarImpressora('${imp.id}')">DISPONIBLE</button>`;
+      grid.appendChild(card);
+    });
+    IMPRESSORES.forEach(imp => {
+      db.ref('impressores/' + imp.id).on('value', snap => {
+        const estat = snap.val() || 'disponible';
+        const btn  = document.getElementById('btn-' + imp.id);
+        const card = document.getElementById('card-' + imp.id);
+        if (estat === 'ocupada') { btn.textContent = 'OCUPADA'; btn.className = 'btn-impressora ocupada'; card.className = 'impressora-card ocupada'; }
+        else { btn.textContent = 'DISPONIBLE'; btn.className = 'btn-impressora disponible'; card.className = 'impressora-card disponible'; }
+        actualitzarBotons();
+      });
+    });
+    function canviarImpressora(id) {
+      if (!sessioActiva || rolActiu !== 'admin') { mostrarToast('<i class="fa fa-lock" style="color:var(--red);"></i> Necessites ser administrador.'); return; }
+      const btn = document.getElementById('btn-' + id);
+      db.ref('impressores/' + id).set(btn.textContent.trim() === 'DISPONIBLE' ? 'ocupada' : 'disponible');
+    }
+
+    /* ══ SOL·LICITUDS ═════════════════════════════════ */
+    db.ref('solicituds').on('value', () => { if (rolActiu === 'admin') renderSolicituds(); });
+
+    function renderSolicituds() {
+      const llista = document.getElementById('llista-solicituds');
+      db.ref('solicituds').orderByChild('timestamp').once('value', snap => {
+        const dades = snap.val();
+        if (!dades) {
+          llista.innerHTML = '<div class="admin-buit"><i class="fa fa-inbox"></i>Encara no hi ha sol · licituds.</div>';
+          document.getElementById('admin-counter').textContent = '0';
+          return;
+        }
+        const keys = Object.keys(dades).reverse();
+        document.getElementById('admin-counter').textContent = keys.length;
+        llista.innerHTML = keys.map(key => {
+          const s = dades[key];
+          const materialInfo = s.material ? `${s.material}${s.pes ? ' · ' + s.pes + ' g' : ''}` : '';
+          const preuInfo = s.preuEstimat ? s.preuEstimat + ' €' : '';
+          const nomMostrar   = s.nomUsuari  || s.nom   || '—';
+          const emailMostrar = s.emailUsuari || s.email || '—';
+          const esPython = s.fitxer && s.fitxer.endsWith('.py');
+          const esSTL    = s.fitxer && s.fitxer.toLowerCase().endsWith('.stl');
+          const tipusBadge = esPython
+            ? `<span class="sol-tipus-badge py"><i class="fa fa-code"></i> Python · IA</span>`
+            : esSTL
+              ? `<span class="sol-tipus-badge stl"><i class="fa fa-cube"></i> STL</span>`
+              : '';
+          return `<div class="sol-card" id="sol-${key}">
+            <div class="sol-card-top">
+              <div>
+                <div class="sol-nom"><i class="fa fa-user" style="margin-right:6px;opacity:.5;"></i>${esc(nomMostrar)}</div>
+                <div class="sol-email">${esc(emailMostrar)}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                ${tipusBadge}
+                <span class="sol-data-badge"><i class="fa fa-calendar" style="margin-right:5px;"></i>${esc(s.data)}</span>
+              </div>
+            </div>
+            ${materialInfo ? `<div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+              <span style="background:rgba(0,123,193,0.2);color:rgba(100,200,255,0.9);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;"><i class="fa fa-layer-group" style="margin-right:4px;"></i>${esc(materialInfo)}</span>
+              ${preuInfo ? `<span style="background:rgba(22,163,74,0.2);color:#4ade80;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;"><i class="fa fa-tag" style="margin-right:4px;"></i>${preuInfo}</span>` : ''}
+            </div>` : ''}
+            <div class="sol-detalls">${esc(s.detalls)}</div>
+            <div class="sol-accions">
+              ${s.fitxer ? `<a class="sol-stl-btn" onclick="descarregarSTL('${key}')" href="#">
+                <i class="fa fa-download"></i> ${esc(s.fitxer)}
+              </a>` : ''}
+              <button class="sol-eliminar-btn" onclick="eliminarSolicitud('${key}')">
+                <i class="fa fa-trash"></i> Eliminar
+              </button>
+            </div>
+          </div>`;
+        }).join('');
+      });
+    }
+    function descarregarSTL(key) {
+      db.ref('solicituds/' + key).once('value', snap => {
+        const s = snap.val(); if (!s || !s.stlData) return;
+        const a = document.createElement('a'); a.href = s.stlData; a.download = s.fitxer; a.click();
+      });
+    }
+    function eliminarSolicitud(key) { db.ref('solicituds/' + key).remove().then(renderSolicituds); }
+    function netejarTotes() {
+      if (!confirm('Segur que vols eliminar totes les sol · licituds?')) return;
+      db.ref('solicituds').remove().then(renderSolicituds);
+    }
+
+    /* ══ FORMULARI SOL·LICITUD ════════════════════════ */
+    let arxiuSTL = null;
+    function arxiuSeleccionat(input) {
+      const f = input.files[0]; if (!f) return;
+      arxiuSTL = f;
+      document.getElementById('stl-nom-text').textContent = f.name + ' (' + (f.size/1024/1024).toFixed(2) + ' MB)';
+      document.getElementById('stl-nom-display').classList.add('visible');
+    }
+    // STL drag & drop — safe init
+    function initStlDrop() {
+      const stlArea = document.getElementById('stl-area');
+      if (!stlArea) return;
+      stlArea.addEventListener('dragover',  e => { e.preventDefault(); stlArea.classList.add('drag-over'); });
+      stlArea.addEventListener('dragleave', () => stlArea.classList.remove('drag-over'));
+      stlArea.addEventListener('drop', e => {
+        e.preventDefault(); stlArea.classList.remove('drag-over');
+        const f = e.dataTransfer.files[0];
+        if (f && f.name.endsWith('.stl')) {
+          arxiuSTL = f;
+          document.getElementById('stl-nom-text').textContent = f.name + ' (' + (f.size/1024/1024).toFixed(2) + ' MB)';
+          document.getElementById('stl-nom-display').classList.add('visible');
+        }
+      });
+    }
+    initStlDrop();
+    // Material seleccionat
+    let materialActiu = null;
+    let preuPerKg     = 0;
+
+    function seleccionarMaterial(nom, preu) {
+      materialActiu = nom; preuPerKg = preu;
+      document.querySelectorAll('.material-opt').forEach(el => el.classList.remove('seleccionat'));
+      const opts = document.querySelectorAll('.material-opt');
+      opts.forEach(el => { if (el.querySelector('input').value === nom) el.classList.add('seleccionat'); });
+      calcularPreu();
+    }
+
+    function calcularPreu() {
+      const pes = parseFloat(document.getElementById('f-pes').value);
+      const box = document.getElementById('preu-box');
+      if (!materialActiu || !pes || pes <= 0) { box.classList.remove('visible'); return; }
+      const preu = ((pes / 1000) * preuPerKg).toFixed(2);
+      document.getElementById('preu-valor').textContent = preu + ' €';
+      box.classList.add('visible');
+    }
+
+    function enviarSolicitud() {
+      const nom     = nomUsuariActiu || '';
+      const email   = emailActiu || '';
+      const titolDisseny = document.getElementById('f-titol').value.trim();
+      const detalls = document.getElementById('f-detalls').value.trim();
+      const pes     = parseFloat(document.getElementById('f-pes').value);
+      if (!titolDisseny) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Afegeix un títol al disseny.'); return; }
+      if (!detalls) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Omple tots els camps obligatoris.'); return; }
+      if (!materialActiu) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Selecciona un material.'); return; }
+      if (!pes || pes <= 0) { mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Introdueix el pes estimat.'); return; }
+      const preuEstimat = ((pes / 1000) * preuPerKg).toFixed(2);
+      const publicar = document.getElementById('f-publicar').checked;
+      const teLabelCodi = document.getElementById('f-detalls-label').dataset.mode === 'codi';
+
+      function desarSolicitud(fitxerNom, stlData) {
+        const dataAvui = new Date().toLocaleDateString('ca-ES', {day:'2-digit',month:'long',year:'numeric'});
+        const ts = Date.now();
+        const sol = { nom, email, titol: titolDisseny, detalls, material: materialActiu, pes, preuEstimat,
+          fitxer: fitxerNom || null, stlData: stlData || null,
+          teCodi: teLabelCodi,
+          nomUsuari: nomUsuariActiu || nom, emailUsuari: emailActiu || email,
+          public: publicar,
+          data: dataAvui, timestamp: ts };
+        db.ref('solicituds').push(sol).then(ref => {
+          // Si és públic, copiar les dades rellevants al node 'dissenys'
+          if (publicar) {
+            const dissenyPublic = {
+              titol: titolDisseny,
+              fitxer: fitxerNom || null,
+              stlData: stlData || null,
+              material: materialActiu,
+              pes: pes,
+              preuEstimat: preuEstimat,
+              nomUsuari: nomUsuariActiu || nom,
+              data: dataAvui,
+              timestamp: ts,
+              solicitudKey: ref.key   // referència creuada opcional
+            };
+            db.ref('dissenys').push(dissenyPublic);
+          }
+          document.getElementById('form-success').classList.add('visible');
+          resetFormulari();
+          setTimeout(() => document.getElementById('form-success').classList.remove('visible'), 5000);
+        }).catch(() => mostrarToast('<i class="fa fa-circle-xmark" style="color:var(--red);"></i> Error en enviar.'));
+      }
+
+      if (arxiuSTL) {
+        const reader = new FileReader();
+        reader.onload = e => desarSolicitud(arxiuSTL.name, e.target.result);
+        reader.readAsDataURL(arxiuSTL);
+      } else if (teLabelCodi && detalls.trim().startsWith('#')) {
+        // Codi Python generat per la IA: guardar com a fitxer .py
+        const blob = new Blob([detalls], { type: 'text/x-python;charset=utf-8' });
+        const reader = new FileReader();
+        reader.onload = e => desarSolicitud('disseny_freecad.py', e.target.result);
+        reader.readAsDataURL(blob);
+      } else {
+        desarSolicitud(null, null);
+      }
+    }
+
+    function resetFormulari() {
+      ['f-titol','f-detalls','f-pes'].forEach(id => document.getElementById(id).value = '');
+      const label = document.getElementById('f-detalls-label');
+      if (label) {
+        label.innerHTML = '<i class="fa fa-comment-dots" style="margin-right:4px;"></i>Detalls de la impressió';
+        label.dataset.mode = '';
+      }
+      document.getElementById('f-detalls').placeholder = "Dimensions, nombre d'unitats, ús final i qualsevol detall rellevant...";
+      document.getElementById('f-stl').value = '';
+      arxiuSTL = null; materialActiu = null; preuPerKg = 0;
+      document.getElementById('stl-nom-display').classList.remove('visible');
+      document.getElementById('f-publicar').checked = false;
+      document.getElementById('preu-box').classList.remove('visible');
+      document.querySelectorAll('.material-opt').forEach(el => el.classList.remove('seleccionat'));
+    }
+
+    /* ══ NOTÍCIES ═════════════════════════════════════ */
+    // Notícies inicials (fixes, s'hi afegiran les de Firebase)
+    let todesNoticies = [];
+
+    // Totes les notícies venen de Firebase (cap hardcodejada)
+    db.ref('noticies').on('value', snap => {
+      const dades = snap.val() || {};
+      todesNoticies = Object.entries(dades)
+        .map(([key, v]) => ({ key, ...v }))
+        .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      renderNoticies();
+    });
+
+    function renderNoticies() {
+      const esAdmin = sessioActiva && rolActiu === 'admin';
+      const llista  = document.getElementById('llista-noticies');
+      if (todesNoticies.length === 0) {
+        llista.innerHTML = `<p style="text-align:center;color:var(--text-muted);padding:32px;">${esAdmin ? "Encara no hi ha notícies. Crea'n una amb el botó de dalt." : "Encara no hi ha notícies."}</p>`;
+        return;
+      }
+      llista.innerHTML = todesNoticies.map((n, i) => {
+        return `
+          <div class="noticia ${!esAdmin ? 'clickable' : ''}" ${!esAdmin ? `onclick="obrirNoticia(${i})"` : ''}>
+            ${esAdmin ? `<div class="noticia-admin-btns visible">
+              <button class="btn-elim-noticia" onclick="eliminarNoticia('${n.key}')"><i class="fa fa-trash"></i> Eliminar</button>
+            </div>` : ''}
+            <h3>${esc(n.titol)}</h3>
+            <p class="data">${esc(n.data)}</p>
+            <p class="noticia-preview">${esc(n.preview)}</p>
+            ${!esAdmin ? '<span class="llegir-mes"><i class="fa fa-arrow-right"></i> Llegir més</span>' : ''}
+          </div>`;
+      }).join('');
+    }
+
+    function obrirNoticia(index) {
+      const n = todesNoticies[index];
+      document.getElementById('modal-titol').textContent          = n.titol;
+      document.getElementById('modal-data').textContent           = n.data;
+      document.getElementById('modal-categoria-text').textContent = n.categoria;
+      document.getElementById('modal-cos').innerHTML              = n.cos;
+      document.getElementById('modal-noticia').classList.add('actiu');
+      document.body.style.overflow = 'hidden';
+    }
+    function tancarNoticia() {
+      document.getElementById('modal-noticia').classList.remove('actiu');
+      document.body.style.overflow = '';
+    }
+    function tancarNoticiaFons(e) { if (e.target === document.getElementById('modal-noticia')) tancarNoticia(); }
+
+    /* ── Modal nova notícia ── */
+    function obrirModalNovaNoticia() {
+      document.getElementById('modal-nova-noticia').classList.add('actiu');
+      document.body.style.overflow = 'hidden';
+    }
+    function tancarModalNovaNoticia() {
+      document.getElementById('modal-nova-noticia').classList.remove('actiu');
+      document.body.style.overflow = '';
+      ['nn-titol','nn-data','nn-preview','nn-cos'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('nn-categoria').selectedIndex = 0;
+    }
+    function tancarModalNovaNoticiaFons(e) { if (e.target === document.getElementById('modal-nova-noticia')) tancarModalNovaNoticia(); }
+
+    function desarNoticia() {
+      const titol   = document.getElementById('nn-titol').value.trim();
+      const data    = document.getElementById('nn-data').value.trim();
+      const categ   = document.getElementById('nn-categoria').value;
+      const preview = document.getElementById('nn-preview').value.trim();
+      const cos     = document.getElementById('nn-cos').value.trim();
+      if (!titol || !data || !preview || !cos) {
+        mostrarToast('<i class="fa fa-triangle-exclamation" style="color:#f59e0b;"></i> Omple tots els camps de la notícia.');
+        return;
+      }
+      const nova = { titol, data, categoria: categ, preview, cos: `<p>${cos.replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>')}</p>`, timestamp: Date.now() };
+      db.ref('noticies').push(nova).then(() => {
+        tancarModalNovaNoticia();
+        mostrarToast('<i class="fa fa-circle-check" style="color:var(--green);"></i> Notícia publicada correctament.');
+      });
+    }
+
+    function eliminarNoticia(key) {
+      if (!confirm('Eliminar aquesta notícia?')) return;
+      db.ref('noticies/' + key).remove();
+    }
+
+    /* ══ USUARIS REGISTRATS (vista admin) ═══════════ */
+    db.ref('usuaris').on('value', () => { if (rolActiu === 'admin') renderUsuaris(); });
+
+    function renderUsuaris() {
+      const grid = document.getElementById('llista-usuaris');
+      db.ref('usuaris').orderByChild('timestamp').once('value', snap => {
+        const dades = snap.val();
+        if (!dades) {
+          document.getElementById('usuaris-counter').textContent = '0';
+          grid.innerHTML = '<div class="usuaris-buit">Encara no hi ha estudiants registrats.</div>';
+          return;
+        }
+        const llista = Object.entries(dades)
+          .map(([key, v]) => ({ key, ...v }))
+          .sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
+        document.getElementById('usuaris-counter').textContent = llista.length;
+        grid.innerHTML = llista.map(u => `
+          <div class="usuari-card" id="ucard-${u.key}">
+            <button class="btn-del-usuari" onclick="eliminarUsuari('${u.key}','${esc(u.email)}')" title="Eliminar compte">
+              <i class="fa fa-trash"></i>
+            </button>
+            <div class="usuari-avatar"><i class="fa fa-user-graduate"></i></div>
+            <div class="usuari-info">
+              <div class="usuari-nom">${esc(u.nom)} ${esc(u.cognom)}</div>
+              <div class="usuari-email">${esc(u.email)}</div>
+            </div>
+          </div>`).join('');
+      });
+    }
+
+    function eliminarUsuari(key, email) {
+      if (!confirm('Segur que vols eliminar el compte de ' + email + '?\nAixò eliminarà les seves dades però no podrà iniciar sessió.')) return;
+      db.ref('usuaris/' + key).remove()
+        .then(() => {
+          mostrarToast('<i class="fa fa-circle-check" style="color:var(--green);"></i> Compte de ' + email + ' eliminat.');
+          renderUsuaris();
+        })
+        .catch(() => mostrarToast('<i class="fa fa-circle-xmark" style="color:var(--red);"></i> Error en eliminar el compte.'));
+    }
+
+    /* ══ LOGIN ════════════════════════════════════════ */
+    let tabActiu = 'login';
+
+    function canviarTab(tab) {
+      tabActiu = tab;
+      document.getElementById('tab-login').classList.toggle('actiu', tab === 'login');
+      document.getElementById('tab-registre').classList.toggle('actiu', tab === 'registre');
+      document.getElementById('panel-login').classList.toggle('actiu', tab === 'login');
+      document.getElementById('panel-registre').classList.toggle('actiu', tab === 'registre');
+      // Redimensionar modal
+      const box = document.querySelector('.modal-login-box');
+      if (box) box.style.width = tab === 'registre' ? '480px' : '380px';
+      // Netejar errors
+      document.getElementById('login-error').classList.remove('visible');
+      document.getElementById('reg-error').classList.remove('visible');
+      document.getElementById('reg-success').classList.remove('visible');
+      const btnCrear = document.getElementById('btn-crear-compte');
+      if (btnCrear) btnCrear.style.display = '';
+    }
+
+    function obrirLogin() {
+      document.getElementById('modal-login').classList.add('actiu');
+      document.body.style.overflow = 'hidden';
+      actualitzarModalLogin();
+    }
+    function tancarLogin() {
+      document.getElementById('modal-login').classList.remove('actiu');
+      document.body.style.overflow = '';
+      document.getElementById('login-email').value  = '';
+      document.getElementById('login-pass').value   = '';
+      document.getElementById('login-error').classList.remove('visible');
+      ['login-email','login-pass'].forEach(id => document.getElementById(id).classList.remove('error'));
+      // Reset registre
+      ['reg-nom','reg-cognom','reg-email','reg-pass','reg-pass2'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('reg-error').classList.remove('visible');
+      document.getElementById('reg-success').classList.remove('visible');
+      canviarTab('login');
+    }
+    function tancarLoginFons(e) { if (e.target === document.getElementById('modal-login')) tancarLogin(); }
+
+    function actualitzarModalLogin() {
+      const tabsArea    = document.getElementById('login-tabs-area');
+      const sessioPanel = document.getElementById('sessio-panel');
+      const loginBtn    = document.getElementById('loginBtn');
+      if (sessioActiva) {
+        tabsArea.style.display = 'none';
+        sessioPanel.classList.add('visible');
+        const etiqueta = rolActiu === 'admin'
+          ? '<span style="background:var(--blue);color:white;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;margin-left:6px;">ADMIN</span>' : '';
+        loginBtn.innerHTML = '<i class="fa fa-circle-check"></i> Sessió activa' + etiqueta;
+        loginBtn.classList.add('sessio-activa');
+      } else {
+        tabsArea.style.display = 'block';
+        sessioPanel.classList.remove('visible');
+        loginBtn.innerHTML = '<i class="fa fa-user"></i> Login';
+        loginBtn.classList.remove('sessio-activa');
+      }
+      aplicarLayoutRol();
+    }
+
+    function intentarLogin() {
+      const email   = document.getElementById('login-email').value.trim().toLowerCase();
+      const pass    = document.getElementById('login-pass').value;
+      const errorEl = document.getElementById('login-error');
+      const errText = document.getElementById('login-error-text');
+
+      // 1. Usuaris fixes (admin, professor) — no passen per Firebase Auth
+      const usuariFixed = USUARIS.find(u => (u.email.toLowerCase() === email || u.email === email) && u.password === pass);
+      if (usuariFixed) {
+        iniciarSessio(usuariFixed.nom, usuariFixed.rol, usuariFixed.email, true);
+        return;
+      }
+
+      // 2. Estudiants — Firebase Authentication
+      const submitBtn = document.querySelector('#panel-login .btn-login-submit');
+      submitBtn.textContent = 'Entrant...'; submitBtn.disabled = true;
+
+      auth.signInWithEmailAndPassword(email, pass)
+        .then(cred => {
+          const user = cred.user;
+          if (!user.emailVerified) {
+            auth.signOut();
+            errText.textContent = 'Verifica el teu correu. Comprova la safata d\'entrada i fes clic a l\'enlla\u00e7.';
+            errorEl.classList.add('visible');
+            sacsejar();
+            return;
+          }
+          // Obtenir nom i cognom de Firebase Database
+          db.ref('usuaris').orderByChild('email').equalTo(email).once('value', snap => {
+            const dades = snap.val();
+            const nomComplet = dades ? Object.values(dades)[0].nom + ' ' + Object.values(dades)[0].cognom : email;
+            errorEl.classList.remove('visible');
+            ['login-email','login-pass'].forEach(id => document.getElementById(id).classList.remove('error'));
+            iniciarSessio(nomComplet, 'usuari', email, true);
+          });
+        })
+        .catch(err => {
+          let msg = 'Correu o contrasenya incorrectes.';
+          if (err.code === 'auth/user-not-found')    msg = 'Correu no registrat. Crea un compte primer.';
+          if (err.code === 'auth/wrong-password')     msg = 'Contrasenya incorrecta.';
+          if (err.code === 'auth/too-many-requests')  msg = 'Massa intents. Espera uns minuts.';
+          if (err.code === 'auth/invalid-email')      msg = 'Format de correu no vàlid.';
+          errText.textContent = msg;
+          errorEl.classList.add('visible');
+          ['login-email','login-pass'].forEach(id => document.getElementById(id).classList.add('error'));
+          sacsejar();
+        })
+        .finally(() => {
+          submitBtn.innerHTML = '<i class="fa fa-right-to-bracket" style="margin-right:6px;"></i>Iniciar sessió';
+          submitBtn.disabled = false;
+        });
+    }
+
+    function iniciarSessio(nomComplet, rol, email, tancar = false) {
+      sessioActiva = true; rolActiu = rol; emailActiu = email; nomUsuariActiu = nomComplet;
+      document.getElementById('nom-usuari').textContent = nomComplet + ' (' + email + ')';
+      if (tancar) { actualitzarModalLogin(); tancarLogin(); }
+      else { actualitzarModalLogin(); }
+      if (rol === 'admin') renderSolicituds();
+    }
+
+    function sacsejar() {
+      const box = document.querySelector('.modal-login-box');
+      box.style.animation = 'none'; box.offsetHeight; box.style.animation = 'shake .35s ease';
+    }
+
+    function intentarRegistre() {
+      const nom    = document.getElementById('reg-nom').value.trim();
+      const cognom = document.getElementById('reg-cognom').value.trim();
+      const email  = document.getElementById('reg-email').value.trim().toLowerCase();
+      const pass   = document.getElementById('reg-pass').value;
+      const pass2  = document.getElementById('reg-pass2').value;
+      const errEl  = document.getElementById('reg-error');
+      const errTxt = document.getElementById('reg-error-text');
+      const okEl   = document.getElementById('reg-success');
+
+      // Validacions locals
+      if (!nom || !cognom || !email || !pass || !pass2) {
+        errTxt.textContent = 'Omple tots els camps.'; errEl.classList.add('visible'); okEl.classList.remove('visible'); return;
+      }
+      if (pass.length < 6) {
+        errTxt.textContent = 'La contrasenya ha de tenir mínim 6 caràcters.'; errEl.classList.add('visible'); okEl.classList.remove('visible'); return;
+      }
+      if (pass !== pass2) {
+        errTxt.textContent = 'Les contrasenyes no coincideixen.'; errEl.classList.add('visible'); okEl.classList.remove('visible'); return;
+      }
+      if (!email.endsWith('@upc.edu') && !email.endsWith('.upc.edu')) {
+        errTxt.textContent = 'Només es permeten correus institucionals (@upc.edu). Aquest correu no està autoritzat.'; errEl.classList.add('visible'); okEl.classList.remove('visible'); return;
+      }
+      if (USUARIS.some(u => u.email.toLowerCase() === email)) {
+        errTxt.textContent = 'Aquest correu ja està en ús.'; errEl.classList.add('visible'); okEl.classList.remove('visible'); return;
+      }
+
+      const regBtn = document.querySelector('#panel-registre .btn-login-submit');
+      regBtn.textContent = 'Creant compte...'; regBtn.disabled = true;
+
+      // Crear usuari a Firebase Authentication
+      auth.createUserWithEmailAndPassword(email, pass)
+        .then(cred => {
+          // Enviar correu de verificació
+          return cred.user.sendEmailVerification().then(() => {
+            // Guardar nom i cognom a la Database
+            return db.ref('usuaris').push({
+              nom, cognom, email,
+              uid: cred.user.uid,
+              rol: 'usuari',
+              timestamp: Date.now()
+            });
+          });
+        })
+        .then(() => {
+          errEl.classList.remove('visible');
+          document.getElementById('reg-success-email').textContent = email;
+          okEl.classList.add('visible');
+          const btnCrear = document.getElementById('btn-crear-compte');
+          if (btnCrear) btnCrear.style.display = 'none';
+          ['reg-nom','reg-cognom','reg-email','reg-pass','reg-pass2'].forEach(id => document.getElementById(id).value = '');
+          setTimeout(() => { okEl.classList.remove('visible'); canviarTab('login'); }, 8000);
+        })
+        .catch(err => {
+          let msg = 'Error en crear el compte.';
+          if (err.code === 'auth/email-already-in-use') msg = 'Aquest correu ja té un compte. Inicia sessió.';
+          if (err.code === 'auth/invalid-email')         msg = 'Format de correu no vàlid.';
+          if (err.code === 'auth/weak-password')         msg = 'La contrasenya és massa feble (mínim 6 caràcters).';
+          errTxt.textContent = msg; errEl.classList.add('visible'); okEl.classList.remove('visible');
+        })
+        .finally(() => {
+          regBtn.innerHTML = '<i class="fa fa-user-plus" style="margin-right:6px;"></i>Crear compte';
+          regBtn.disabled = false;
+        });
+    }
+
+    function reenviarVerificacio() {
+      const user = auth.currentUser;
+      if (user) user.sendEmailVerification().then(() => mostrarToast('<i class="fa fa-envelope" style="color:var(--blue);"></i> Correu de verificació reenviat.'));
+    }
+
+    function tancarSessio() {
+      auth.signOut().catch(() => {});
+      sessioActiva = false; rolActiu = null; emailActiu = null; nomUsuariActiu = null;
+      tancarLogin();
+      actualitzarModalLogin();
+      document.getElementById('comandes-wrapper').classList.remove('visible');
+      document.getElementById('llista-comandes').innerHTML = '<div class="comandes-buit"><i class="fa fa-box-open"></i>Encara no has fet cap sol · licitud.</div>';
+    }
+
+    /* ══ COMANDES DE L'USUARI ════════════════════════ */
+    function renderComandes() {
+      if (!emailActiu) return;
+      const llista = document.getElementById('llista-comandes');
+      db.ref('solicituds').orderByChild('email').equalTo(emailActiu).once('value', snap => {
+        const dades = snap.val();
+        if (!dades) {
+          document.getElementById('comandes-counter').textContent = '0';
+          llista.innerHTML = '<div class="comandes-buit"><i class="fa fa-box-open"></i>Encara no has fet cap sol · licitud.</div>';
+          return;
+        }
+        const comandes = Object.entries(dades)
+          .map(([key, v]) => ({ key, ...v }))
+          .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        document.getElementById('comandes-counter').textContent = comandes.length;
+        llista.innerHTML = comandes.map(c => {
+          const preuText = c.preuEstimat ? c.preuEstimat + ' €' : '—';
+          const materialText = c.material ? c.material + (c.pes ? ' · ' + c.pes + ' g' : '') : '';
+          return `<div class="comanda-card">
+            <div class="comanda-card-top">
+              <div class="comanda-fitxer"><i class="fa fa-file"></i>${esc(c.fitxer)}</div>
+              <span class="comanda-data-badge"><i class="fa fa-calendar" style="margin-right:5px;"></i>${esc(c.data)}</span>
+            </div>
+            ${materialText ? `<div style="display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap;">
+              <span style="background:rgba(0,123,193,0.08);color:var(--blue);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;"><i class="fa fa-layer-group" style="margin-right:5px;"></i>${esc(materialText)}</span>
+              <span style="background:rgba(22,163,74,0.08);color:var(--green);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;"><i class="fa fa-tag" style="margin-right:5px;"></i>Preu estimat: <strong>${preuText}</strong></span>
+            </div>` : ''}
+            <div class="comanda-detalls">${esc(c.detalls)}</div>
+            <a class="comanda-dl-btn" onclick="descarregarSTLComanda('${c.key}')" href="#">
+              <i class="fa fa-download"></i> Descarregar STL
+            </a>
+          </div>`;
+        }).join('');
+      });
+    }
+
+    function descarregarSTLComanda(key) {
+      db.ref('solicituds/' + key).once('value', snap => {
+        const s = snap.val(); if (!s || !s.stlData) return;
+        const a = document.createElement('a'); a.href = s.stlData; a.download = s.fitxer; a.click();
+      });
+    }
+
+    // Quan s'envia una sol·licitud nova, refresca les comandes de l'usuari
+    db.ref('solicituds').on('value', () => {
+      if (sessioActiva && rolActiu !== 'admin' && emailActiu) renderComandes();
+    });
+
+    /* ══ HELPERS ══════════════════════════════════════ */
+    function mostrarToast(html) {
+      let t = document.getElementById('toast-msg');
+      if (!t) {
+        t = document.createElement('div'); t.id = 'toast-msg';
+        t.style.cssText = `position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:white;padding:12px 22px;border-radius:10px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:9999;display:flex;align-items:center;gap:8px;transition:opacity .4s ease;`;
+        document.body.appendChild(t);
+      }
+      t.innerHTML = html; t.style.opacity = '1';
+      clearTimeout(t._timer); t._timer = setTimeout(() => { t.style.opacity = '0'; }, 3500);
+    }
+
+    function esc(str) {
+      if (!str) return '';
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { tancarNoticia(); tancarLogin(); tancarModalNovaNoticia(); }
+      if (e.key === 'Enter' && document.getElementById('modal-login').classList.contains('actiu')) intentarLogin();
+    });
+
+    // Inicialitza: si Firebase no té notícies, afegeix les dues d'exemple
+    db.ref('noticies').once('value', snap => {
+      if (!snap.val()) {
+        db.ref('noticies').push({ titol: "Nova impressora 3D a Engilab", data: "20 febrer 2026", categoria: "Equipament",
+          preview: "Hem incorporat una nova impressora 3D industrial per a projectes d'alta precisió.",
+          cos: "<p>Hem incorporat una nova impressora 3D industrial al laboratori Engilab. Capaç de treballar amb PLA, PETG, TPU i filaments de fibra de carboni.</p><p>Àrea d'impressió de 300×300×400 mm i resolució de 0,05 mm. Es requerirà formació prèvia obligatòria per poder-la utilitzar de manera autònoma.</p>",
+          timestamp: Date.now() + 2
+        });
+        db.ref('noticies').push({ titol: "Taller de disseny CAD", data: "10 febrer 2026", categoria: "Formació",
+          preview: "S'ha realitzat un taller pràctic sobre modelatge CAD per a estudiants de l'ETSEIB.",
+          cos: "<p>El passat 10 de febrer es va dur a terme un taller sobre CAD amb la participació de més de 30 alumnes. Es van treballar SolidWorks i Fusion 360 amb especial èmfasi en simulació d'esforços.</p><p>El proper taller és el 15 de març. Les places estan obertes a tots els estudiants.</p>",
+          timestamp: Date.now() + 1
+        });
+      }
+    });
+
+    aplicarLayoutRol();
+    renderNoticies();
+
+    /* ══ CHATBOT IA ═══════════════════════════════════ */
+    let chatObert      = false;
+    let chatHistorial  = [];
+    let chatApiKey = '';
+    // Llegir la key de Groq des de Firebase
+    db.ref('config/groq_key').once('value', snap => {
+      const key = snap.val();
+      if (key && key.startsWith('gsk_')) {
+        chatApiKey = key;
+      }
+    });
+
+    const CHAT_SYSTEM = `Ets l'assistent virtual d'Engilab, el laboratori de fabricació de l'ETSEIB (Escola Tècnica Superior d'Enginyeria Industrial de Barcelona) de la UPC.
+
+UBICACIÓ: Av. Diagonal, 647, Planta 0, Pavelló G, Les Corts, 08028 Barcelona (ETSEIB).
+
+El teu nom és "Assistent Engilab". Ets amable, concís i ajudes els estudiants i professors a:
+- Entendre com funciona el laboratori
+- Sol·licitar impressions 3D
+- Conèixer els materials disponibles i els seus preus
+- Navegar per la web
+
+MATERIALS I PREUS:
+- PLA: 20 €/kg (material estàndard, fàcil d'imprimir)
+- ABS: 23 €/kg (més resistent a la calor)
+- PETG: 23 €/kg (flexible i resistent)
+- SLA: 35 €/kg (alta precisió, resina)
+- DLP: 140 €/kg (màxima resolució, resina fotopolimeritzable)
+
+COM SOL·LICITAR UNA IMPRESSIÓ:
+1. Cal iniciar sessió (registre amb correu @upc.edu)
+2. Anar a la secció "Sol · licitar impressió 3D"
+3. Seleccionar material, indicar pes estimat en grams, afegir detalls i pujar el fitxer STL
+4. Enviar la sol·licitud i l'equip del lab us contactarà
+
+REGISTRE:
+- Només es pot registrar amb correu institucional @upc.edu
+- Cal verificar el correu electrònic abans d'iniciar sessió
+- Administradors i professors tenen comptes especials
+
+IMPRESSORES 3D:
+- Disposem de 5 impressores 3D (Impressora 1 a 5)
+- L'estat (disponible/ocupada) es veu en temps real a la pàgina
+
+Respon sempre en català, de forma breu i clara. Si et pregunten per l'estat de les impressores, digues que el pots consultar a la secció "Estat de les impressores 3D" de la web, i afegeix la informació que t'he donat.`;
+
+    function toggleChat() {
+      chatObert = !chatObert;
+      const win = document.getElementById('chat-window');
+      win.classList.toggle('obert', chatObert);
+      if (chatObert) {
+      }
+      if (chatObert && chatHistorial.length === 0) {
+        // Missatge de benvinguda
+        setTimeout(() => {
+          afegirMissatgeChat('bot', "👋 Hola! Soc l'assistent d'Engilab. Puc ajudar-te a trobar informació sobre el laboratori, els materials, els preus o com fer una sol · licitud d'impressió.\n\nEn què et puc ajudar?");
+        }, 300);
+      }
+    }
+
+    function desarApiKey() {
+      const key = document.getElementById('chat-apikey-input').value.trim();
+      if (!key.startsWith('gsk_')) {
+        mostrarToast('<i class="fa fa-circle-xmark" style="color:var(--red);"></i> La clau ha de començar per gsk_...');
+        return;
+      }
+      chatApiKey = key;
+      try { localStorage.setItem('engilab_apikey', key); } catch(e) {}
+      document.getElementById('chat-apikey-banner').style.display = 'none';
+      mostrarToast('<i class="fa fa-circle-check" style="color:var(--green);"></i> API Key desada correctament!');
+    }
+
+    function afegirMissatgeChat(rol, text) {
+      const msgs = document.getElementById('chat-messages');
+      const ara  = new Date().toLocaleTimeString('ca-ES', {hour:'2-digit', minute:'2-digit'});
+      const div  = document.createElement('div');
+      div.className = 'chat-msg ' + rol;
+      // Convertir salts de línia i negretes bàsiques
+      const textHtml = esc(text)
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+      div.innerHTML = `<div class="chat-bubble">${textHtml}</div><span class="chat-time">${ara}</span>`;
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+      return div;
+    }
+
+    async function enviarMissatgeChat() {
+      const input = document.getElementById('chat-input');
+      const text  = input.value.trim();
+      if (!text) return;
+      if (false) {
+        document.getElementById('chat-apikey-banner').style.display = 'block';
+        mostrarToast('<i class="fa fa-key" style="color:#f59e0b;"></i> Introdueix primer la teva API Key.');
+        return;
+      }
+
+      input.value = '';
+      autoResizeChat(input);
+      document.getElementById('chat-send-btn').disabled = true;
+      document.getElementById('chat-suggestions').style.display = 'none';
+
+      // Afegir missatge de l'usuari
+      afegirMissatgeChat('user', text);
+      chatHistorial.push({ role: 'user', content: text });
+
+      // Mostrar typing
+      const typing = document.getElementById('chat-typing');
+      typing.classList.add('visible');
+      document.getElementById('chat-messages').scrollTop = 99999;
+
+      // Afegir context en temps real de les impressores
+      let contextExtra = '';
+      try {
+        const snap = await db.ref('impressores').once('value');
+        const impData = snap.val() || {};
+        const estats = Object.entries(impData).map(([id, estat]) => {
+          const num = id.replace('imp','');
+          return `Impressora ${num}: ${estat === 'ocupada' ? 'OCUPADA' : 'DISPONIBLE'}`;
+        });
+        if (estats.length) contextExtra = '\n\nESTAT ACTUAL IMPRESSORES (en temps real):\n' + estats.join('\n');
+
+        const snapLab = await db.ref('statuslab').once('value');
+        const estatLab = snapLab.val();
+        contextExtra += '\nESTAT LABORATORI: ' + (estatLab === 'open' ? 'OBERT' : 'TANCAT');
+      } catch(e) {}
+
+      try {
+        const response = await fetch(
+          'https://api.groq.com/openai/v1/chat/completions',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + chatApiKey
+            },
+            body: JSON.stringify({
+              model: 'llama-3.1-8b-instant',
+              max_tokens: 600,
+              messages: [
+                { role: 'system', content: CHAT_SYSTEM + contextExtra },
+                ...chatHistorial
+              ]
+            })
+          }
+        );
+
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error.message || 'Error de API');
+        }
+
+        const resposta = data.choices[0].message.content;
+        chatHistorial.push({ role: 'assistant', content: resposta });
+        typing.classList.remove('visible');
+        afegirMissatgeChat('bot', resposta);
+
+      } catch(err) {
+        typing.classList.remove('visible');
+        let msg = 'Ho sento, hi ha hagut un error. Torna-ho a provar.';
+        if (err.message && (err.message.includes('401') || err.message.includes('403'))) msg = 'API Key incorrecta. Comprova la clau de Google AI Studio.';
+        if (err.message && err.message.includes('429')) msg = 'Massa peticions. Espera uns segons.';
+        afegirMissatgeChat('bot', '⚠️ ' + msg);
+      }
+
+      document.getElementById('chat-send-btn').disabled = false;
+    }
+
+    function enviarSuggestion(text) {
+      document.getElementById('chat-input').value = text;
+      enviarMissatgeChat();
+    }
+
+    function chatKeyDown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviarMissatgeChat(); }
+    }
+
+    function autoResizeChat(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+    }
+
+
+    function buscar2() {
+      const q = document.getElementById('searchInput').value;
+      if (q.trim()) console.log('Cercant:', q);
+    }
+
+
+    /* ══ DISSENYS PÚBLICS ═════════════════════════════ */
+    const stlViewers = {}; // guarda escenes Three.js per key
+
+    db.ref('dissenys').on('value', snapDis => {
+      const grid = document.getElementById('dissenys-grid');
+      if (!grid) return;
+      const tots = [];
+      snapDis.forEach(child => {
+        tots.push({ key: child.key, ...child.val() });
+      });
+      tots.sort((a, b) => b.timestamp - a.timestamp);
+
+      if (tots.length === 0) {
+        grid.innerHTML = '<div class="dissenys-buit"><i class="fa fa-cube"></i>Encara no hi ha dissenys públics.</div>';
+        return;
+      }
+
+      const esAdminNow = sessioActiva && rolActiu === 'admin';
+
+      grid.innerHTML = tots.map(d => {
+        const titol = d.titol || d.fitxer || 'Disseny sense títol';
+        return `
+        <div class="disseny-card" id="dcard-${d.key}">
+          <div class="disseny-viewer" id="viewer-${d.key}">
+            <div class="disseny-viewer-loading" id="vload-${d.key}">
+              <i class="fa fa-cube"></i><span>Carregant model 3D...</span>
+            </div>
+          </div>
+          <div class="disseny-card-body">
+            <div class="disseny-card-titol">
+              <span id="titol-text-${d.key}">${esc(titol)}</span>
+              <button class="btn-editar-titol ${esAdminNow ? 'visible' : ''}" onclick="editarTitol('${d.key}','${esc(titol)}')" title="Editar títol">
+                <i class="fa fa-pen"></i>
+              </button>
+            </div>
+            <div class="disseny-card-nom"><i class="fa fa-file" style="margin-right:5px;color:var(--blue);"></i>${esc(d.fitxer || '')}</div>
+            <div class="disseny-card-info">
+              <span><i class="fa fa-weight-hanging"></i> ${d.pes} g &nbsp;<span class="disseny-card-material">${esc(d.material)}</span></span>
+            </div>
+            <div class="disseny-card-preu">Preu estimat: ${d.preuEstimat} €</div>
+            <div class="disseny-card-btns">
+              <button class="btn-descarregar" onclick="descarregarSTL('${d.key}')">
+                <i class="fa fa-download"></i> Descarregar STL
+              </button>
+              <button class="btn-eliminar-disseny ${esAdminNow ? 'visible' : ''}" onclick="eliminarDisseny('${d.key}')">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+
+      // Carregar visor 3D per cada disseny
+      tots.forEach(d => {
+        if (d.stlData) {
+          setTimeout(() => initSTLViewer(d.key, d.stlData), 100);
+        }
+      });
+    });
+
+    function initSTLViewer(key, stlDataUrl) {
+      const container = document.getElementById('viewer-' + key);
+      if (!container || !window.THREE) return;
+
+      const W = container.clientWidth || 300;
+      const H = 200;
+
+      // Escena
+      const scene    = new THREE.Scene();
+      scene.background = new THREE.Color(0x1a1a2e);
+
+      // Llums
+      const ambient  = new THREE.AmbientLight(0xffffff, 0.6);
+      const dirLight = new THREE.DirectionalLight(0x4499ff, 1.2);
+      dirLight.position.set(1, 2, 2);
+      const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.4);
+      dirLight2.position.set(-1, -1, -1);
+      scene.add(ambient, dirLight, dirLight2);
+
+      // Càmera
+      const camera = new THREE.PerspectiveCamera(45, W / H, 0.01, 10000);
+      camera.position.set(0, 0, 5);
+
+      // Renderer
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(W, H);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Eliminar loading i afegir canvas
+      const loadDiv = document.getElementById('vload-' + key);
+      if (loadDiv) loadDiv.remove();
+      container.appendChild(renderer.domElement);
+
+      // Parsejar STL des de base64
+      try {
+        const base64 = stlDataUrl.split(',')[1];
+        const binary = atob(base64);
+        const buffer = new ArrayBuffer(binary.length);
+        const view   = new Uint8Array(buffer);
+        for (let i = 0; i < binary.length; i++) view[i] = binary.charCodeAt(i);
+
+        const geometry = parseSTL(buffer);
+        geometry.computeVertexNormals();
+        geometry.center();
+
+        // Escalar per omplir la vista
+        const box  = new THREE.Box3().setFromObject(new THREE.Mesh(geometry));
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scale = 2.5 / maxDim;
+
+        const material = new THREE.MeshPhongMaterial({
+          color: 0x007bc1, specular: 0x222222, shininess: 40,
+          side: THREE.DoubleSide
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.scale.set(scale, scale, scale);
+        scene.add(mesh);
+
+        // Interacció: rotar amb ratolí
+        let isDragging = false, prevX = 0, prevY = 0;
+        container.addEventListener('mousedown', e => { isDragging = true; prevX = e.clientX; prevY = e.clientY; });
+        window.addEventListener('mouseup',   () => { isDragging = false; });
+        container.addEventListener('mousemove', e => {
+          if (!isDragging) return;
+          const dx = e.clientX - prevX;
+          const dy = e.clientY - prevY;
+          mesh.rotation.y += dx * 0.01;
+          mesh.rotation.x += dy * 0.01;
+          prevX = e.clientX; prevY = e.clientY;
+        });
+
+        // Touch (mòbil)
+        let lastTouchX = 0, lastTouchY = 0;
+        container.addEventListener('touchstart', e => { lastTouchX = e.touches[0].clientX; lastTouchY = e.touches[0].clientY; });
+        container.addEventListener('touchmove', e => {
+          e.preventDefault();
+          const dx = e.touches[0].clientX - lastTouchX;
+          const dy = e.touches[0].clientY - lastTouchY;
+          mesh.rotation.y += dx * 0.01;
+          mesh.rotation.x += dy * 0.01;
+          lastTouchX = e.touches[0].clientX; lastTouchY = e.touches[0].clientY;
+        }, { passive: false });
+
+        // Animació
+        function animate() {
+          requestAnimationFrame(animate);
+          if (!isDragging) mesh.rotation.y += 0.005; // auto-rotar suaument
+          renderer.render(scene, camera);
+        }
+        animate();
+
+        stlViewers[key] = { scene, camera, renderer, mesh };
+      } catch(e) {
+        container.innerHTML = "<div class=\"disseny-viewer-loading\"><i class=\"fa fa-cube\"></i><span>No sha pogut carregar</span></div>";
+      }
+    }
+
+    function parseSTL(buffer) {
+      // Detectar si és ASCII o binari
+      const view = new DataView(buffer);
+      const numTriangles = view.getUint32(80, true);
+      const expectedBinarySize = 84 + numTriangles * 50;
+
+      if (buffer.byteLength === expectedBinarySize) {
+        return parseSTLBinary(buffer);
+      } else {
+        return parseSTLASCII(buffer);
+      }
+    }
+
+    function parseSTLBinary(buffer) {
+      const view = new DataView(buffer);
+      const numTriangles = view.getUint32(80, true);
+      const positions = new Float32Array(numTriangles * 9);
+      let offset = 84;
+      for (let i = 0; i < numTriangles; i++) {
+        offset += 12; // skip normal
+        for (let j = 0; j < 3; j++) {
+          positions[i * 9 + j * 3]     = view.getFloat32(offset, true);
+          positions[i * 9 + j * 3 + 1] = view.getFloat32(offset + 4, true);
+          positions[i * 9 + j * 3 + 2] = view.getFloat32(offset + 8, true);
+          offset += 12;
+        }
+        offset += 2; // attribute byte count
+      }
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      return geometry;
+    }
+
+    function parseSTLASCII(buffer) {
+      const text = new TextDecoder().decode(buffer);
+      const positions = [];
+      const vertexRegex = /vertex\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)\s+([\d.eE+\-]+)/g;
+      let match;
+      while ((match = vertexRegex.exec(text)) !== null) {
+        positions.push(parseFloat(match[1]), parseFloat(match[2]), parseFloat(match[3]));
+      }
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+      return geometry;
+    }
+
+    function editarTitol(key, titolActual) {
+      const titolSpan = document.getElementById('titol-text-' + key);
+      if (!titolSpan) return;
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = titolActual;
+      input.className = 'titol-edit-input';
+      titolSpan.replaceWith(input);
+      input.focus();
+      input.select();
+      function guardar() {
+        const nouTitol = input.value.trim() || titolActual;
+        db.ref('dissenys/' + key + '/titol').set(nouTitol).then(() => {
+          const nouSpan = document.createElement('span');
+          nouSpan.id = 'titol-text-' + key;
+          nouSpan.textContent = nouTitol;
+          input.replaceWith(nouSpan);
+          mostrarToast('<i class="fa fa-circle-check" style="color:var(--green);"></i> Títol actualitzat.');
+        });
+      }
+      input.addEventListener('blur', guardar);
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') guardar(); if (e.key === 'Escape') { input.value = titolActual; guardar(); } });
+    }
+
+    function descarregarSTL(key) {
+      db.ref('dissenys/' + key).once('value').then(snap => {
+        const d = snap.val();
+        if (!d || !d.stlData) { mostrarToast('<i class="fa fa-circle-xmark" style="color:var(--red);"></i> Fitxer no disponible.'); return; }
+        const a = document.createElement('a');
+        a.href = d.stlData;
+        a.download = d.fitxer || 'disseny.stl';
+        a.click();
+      });
+    }
+
+    function eliminarDisseny(key) {
+      if (!confirm('Segur que vols eliminar aquest disseny de la galeria?')) return;
+      db.ref('dissenys/' + key).remove().then(() => {
+        mostrarToast('<i class="fa fa-circle-check" style="color:var(--green);"></i> Disseny eliminat de la galeria.');
+      });
+    }
+
+  </script>
+
+  <!-- CHATBOT IA -->
+  <button class="chat-fab" onclick="toggleChat()" id="chat-fab" title="Assistent Engilab IA">
+    <i class="fa fa-robot"></i>
+    <span class="chat-fab-badge">IA</span>
+  </button>
+
+  <div class="chat-window" id="chat-window">
+    <div class="chat-header">
+      <div class="chat-header-avatar"><i class="fa fa-robot"></i></div>
+      <div class="chat-header-info">
+        <strong>Assistent Engilab</strong>
+        <span>En línia · IA</span>
+      </div>
+      <button class="chat-close" onclick="toggleChat()">&times;</button>
+    </div>
+
+    <!-- Banner API Key (si no en té) -->
+    <div class="chat-apikey-banner" id="chat-apikey-banner" style="display:none;">
+      <span><strong>🔑 Cal una API Key de Google Gemini</strong><br>Gratuïta a <a href="https://console.groq.com" target="_blank" style="color:#92400e;">console.groq.com</a> → API Keys → Create API Key</span>
+      <div class="chat-apikey-input-row">
+        <input class="chat-apikey-input" type="password" id="chat-apikey-input" value="">
+        <button class="chat-apikey-save" onclick="desarApiKey()">Desar</button>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chat-messages">
+      <!-- missatges dinàmics -->
+    </div>
+
+    <div class="chat-typing" id="chat-typing">
+      <div class="chat-bubble">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+    </div>
+
+    <div class="chat-suggestions" id="chat-suggestions">
+      <button class="chat-sugg-btn" onclick="enviarSuggestion('Com puc fer una sol·licitud?')">📋 Sol · licitar impressió</button>
+      <button class="chat-sugg-btn" onclick="enviarSuggestion('Quins materials teniu?')">🧱 Materials</button>
+      <button class="chat-sugg-btn" onclick="enviarSuggestion(&quot;Quin és l'estat de les impressores?&quot;)">🖨️ Estat impressores</button>
+      <button class="chat-sugg-btn" onclick="enviarSuggestion('Quins preus teniu?')">💰 Preus</button>
+    </div>
+
+    <div class="chat-input-area">
+      <textarea class="chat-input" id="chat-input" placeholder="Escriu la teva pregunta..." rows="1"
+        onkeydown="chatKeyDown(event)" oninput="autoResizeChat(this)"></textarea>
+      <button class="chat-send" id="chat-send-btn" onclick="enviarMissatgeChat()">
+        <i class="fa fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- JS GENERADOR IA -->
+  <script>
+    // ═══════════════════════════════════════════════════
+    //  GENERADOR DE DISSENYS AMB CLAUDE AI
+    // ═══════════════════════════════════════════════════
+
+    const EXEMPLES = {
+      'suport-movil': 'Vull un suport per a mòbil per posar sobre la taula. Ha de tenir uns 10 cm d\'alçada, 8 cm d\'ample i 6 cm de fondària. La ranura on entra el mòbil ha de ser d\'uns 9-10 mm d\'amplada i 2 cm de profunditat. Que tingui una base plana i estable per no caure. Material PLA, qualsevol color.',
+      'caixa-cables': 'Necessito una caixa rectangular per organitzar cables i carregadors sobre la taula. Dimensions aproximades: 20 cm de llarg, 12 cm d\'ample i 8 cm d\'alçada. Ha de tenir un forat rodó d\'uns 4 cm de diàmetre a cada costat llarg per passar els cables. Tapadora desmuntable a la part superior. Material PLA o PETG.',
+      'bracket-paret': 'Vull un bracket per fixar una petita caixa de 15x10x5 cm a la paret. Ha de tenir dos forats per cargols de 4 mm per fixar a la paret i una plataforma plana on descansarà la caixa. Resistència moderada, material PLA negre.',
+      'peca-mecanica': 'Necessito una peça d\'unió en forma de L (angle recte) per connectar dos tubs de 20 mm de diàmetre. Cada extrem ha de tenir un encaix cilíndric de 22 mm de diàmetre interior i 3 cm de fondària. Ha de ser resistent, preferiblement PETG o ABS.',
+      'personalitzat': 'Vull un porta-fotos decoratiu per a una foto de 10x15 cm. Ha de tenir un marc d\'uns 2 cm d\'amplada i un petit peu posterior per recolzar-lo sobre la taula en posició vertical. Estil minimalista. Material PLA, color a escollir.'
+    };
+
+    let ultimResultat = '';
+
+    function insertarExemple(clau) {
+      const txt = EXEMPLES[clau];
+      if (txt) {
+        document.getElementById('gen-descripcio').value = txt;
+        document.getElementById('gen-descripcio').focus();
+        ocultarResultat();
+      }
+    }
+
+    function ocultarResultat() {
+      document.getElementById('gen-resultat-area').classList.remove('visible');
+      document.getElementById('gen-error').classList.remove('visible');
+    }
+
+    function resetGenerador() {
+      document.getElementById('gen-descripcio').value = '';
+      ocultarResultat();
+      ultimResultat = '';
+    }
+
+    // Ocultar error automàticament quan l'usuari escriu
+    document.getElementById('gen-descripcio').addEventListener('input', function() {
+      document.getElementById('gen-error').classList.remove('visible');
+    });
+
+    async function generarAmbIA() {
+      const descripcio = document.getElementById('gen-descripcio').value.trim();
+      if (!descripcio) {
+        document.getElementById('gen-error-text').textContent = 'Si us plau, descriu primer com vols la teva peça.';
+        document.getElementById('gen-error').classList.add('visible');
+        return;
+      }
+      if (descripcio.length < 20) {
+        document.getElementById('gen-error-text').textContent = 'La descripció és massa curta. Afegeix més detalls sobre la peça.';
+        document.getElementById('gen-error').classList.add('visible');
+        return;
+      }
+
+      const btn = document.getElementById('btn-gen-ia');
+      btn.disabled = true;
+      btn.classList.add('loading');
+      document.getElementById('gen-error').classList.remove('visible');
+      ocultarResultat();
+
+      const prompt = `Generate a complete FreeCAD Python script for this 3D piece description: ${descripcio}\n\nCRITICAL: Your response must contain ONLY Python code. No explanations, no markdown, no text before or after. First line must be a Python comment starting with #. Use FreeCAD Part workbench API only. Start with: import FreeCAD / import Part / doc = FreeCAD.newDocument('Engilab') End with: obj = doc.addObject('Part::Feature','Peca') / obj.Shape = finalShape / doc.recompute() Include a comment block at the top: # Peca: [name] / # Material recomanat: [PLA|ABS|PETG] / # Pes estimat: [X]g Use real mm numbers based on the description. Make reasonable assumptions for missing dimensions. Add short Catalan comments explaining each step.`;
+
+      try {
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + chatApiKey
+          },
+          body: JSON.stringify({
+            model: 'llama-3.3-70b-versatile',
+            max_tokens: 2000,
+            messages: [
+              { role: 'system', content: `Ets un expert en FreeCAD i Python especialitzat en modelatge 3D per a impressió en un laboratori universitari. Generes codi compatible amb FreeCAD 0.20 i versions posteriors.
+
+LA TEVA ÚNICA FUNCIÓ és generar scripts Python 100% vàlids per a FreeCAD.
+Mai generis res que no sigui codi Python pur i executable.
+
+--- BLOC OBLIGATORI D'INICI (copia exactament) ---
+# Peca: [nom descriptiu de la peca]
+# Material recomanat: [PLA|ABS|PETG|SLA|NYLON]
+# Pes estimat: [X]g
+# Dimensions aproximades: [X]mm x [Y]mm x [Z]mm
+
+import FreeCAD
+import Part
+import math
+doc = FreeCAD.newDocument('Engilab')
+
+--- BLOC OBLIGATORI DE FINAL (copia exactament) ---
+obj = doc.addObject('Part::Feature','Peca')
+obj.Shape = finalShape
+doc.recompute()
+
+--- FUNCIONS VALIDES DE FREECAD ---
+
+FORMES BASIQUES:
+Part.makeBox(longitud, amplada, altura)
+Part.makeCylinder(radi, altura)                    (creix cap a +Z)
+Part.makeSphere(radi)
+Part.makeCone(radi1, radi2, altura)                (radi2=0 fa un con pur)
+Part.makeTorus(radi1, radi2)                       (radi1=exterior, radi2=tub)
+Part.makeHelix(pas, altura, radi)                  (util per rosques)
+
+OPERACIONS BOOLEANES:
+resultat = forma1.fuse(forma2)                     (unio)
+resultat = forma1.cut(forma2)                      (diferencia)
+resultat = forma1.common(forma2)                   (interseccio)
+
+TRANSFORMACIONS:
+CRITIC: Totes retornen UNA NOVA FORMA. Assigna-les sempre a una variable nova.
+forma2 = forma1.translated(FreeCAD.Base.Vector(x, y, z))
+forma2 = forma1.rotated(FreeCAD.Base.Vector(cx,cy,cz), FreeCAD.Base.Vector(ax,ay,az), graus)
+forma2 = forma1.mirrored(FreeCAD.Base.Vector(px,py,pz), FreeCAD.Base.Vector(nx,ny,nz))
+
+GEOMETRIA 2D A SOLID:
+aresta = Part.makeLine(FreeCAD.Base.Vector(x1,y1,z1), FreeCAD.Base.Vector(x2,y2,z2))
+wire   = Part.Wire([aresta1, aresta2, aresta3])    (les arestes han d'estar connectades)
+solid  = wire.extrude(FreeCAD.Base.Vector(0, 0, altura))
+cercle = Part.makeCircle(radi)                     (retorna una aresta, no un solid)
+disc   = Part.Wire([cercle]).extrude(FreeCAD.Base.Vector(0,0,gruix))
+poligon = Part.makePolygon([V1, V2, V3, V1])       (repetir primer punt per tancar)
+
+OPERACIONS AVANCADES:
+solid = Part.makeLoft([wire1, wire2], True, False)
+solid = Part.makeRevolution(wire, FreeCAD.Base.Vector(0,0,0), FreeCAD.Base.Vector(0,0,1), 360)
+
+--- ERRORS CRITICS QUE MAI HAS DE COMETRE ---
+
+ERROR 1 - Funcions inexistents o metodes incorrectes:
+   Part.makePlane()  -> NO EXISTEIX
+   Part.makeWire()   -> usa Part.Wire([arestes])
+   .scale()          -> NO la facis servir mai
+   .translate()      -> usa .translated()
+   .rotate()         -> usa .rotated()
+   .mirror()         -> usa .mirrored()
+
+ERROR 2 - Sobreescriure variables:
+   MAL: perfil = Part.makeCircle(10)
+        perfil = Part.Wire([perfil])       <- perds la referencia original
+   BE:  cercle_aresta = Part.makeCircle(10)
+        perfil_wire   = Part.Wire([cercle_aresta])
+
+ERROR 3 - Extrudir una linia esperant un solid:
+   linia = Part.makeLine(V1, V2)
+   solid = linia.extrude(...)             <- genera SUPERFICIE, no solid
+   Per formes planes solides usa makeBox() o un Wire tancat.
+
+ERROR 4 - Passar Vectors a Part.Wire directament:
+   MAL: Part.Wire([FreeCAD.Base.Vector(0,0,0), FreeCAD.Base.Vector(10,0,0)])
+   BE:  a = Part.makeLine(FreeCAD.Base.Vector(0,0,0), FreeCAD.Base.Vector(10,0,0))
+        Part.Wire([a])
+
+ERROR 5 - Parentesis desbalancejats:
+   Compta TOTS els parentesis oberts i tancats abans d'entregar el codi.
+
+ERROR 6 - Indentacio incorrecta:
+   Usa SEMPRE 4 espais. Mai tabuladors.
+   Tot el codi dins d'un for/while/if ha d'estar indentat.
+
+ERROR 7 - No inicialitzar finalShape abans d'un bucle:
+   MAL: for i in range(6):
+            finalShape = finalShape.fuse(pala)   <- finalShape no existeix encara
+   BE:  finalShape = base
+        for i in range(6):
+            pala_i = pala.rotated(...)
+            finalShape = finalShape.fuse(pala_i)
+
+ERROR 8 - Mutar la forma base dins d'un bucle:
+   MAL: for i in range(6):
+            pala = pala.rotated(...)             <- modifica la variable original
+   BE:  for i in range(6):
+            pala_i = pala_base.rotated(FreeCAD.Base.Vector(0,0,0), FreeCAD.Base.Vector(0,0,1), 60*i)
+            finalShape = finalShape.fuse(pala_i)
+
+--- PATRONS CORRECTES DE REFERENCIA ---
+
+PATRO A - Element central + N elements radials:
+   base = Part.makeCylinder(radi_base, altura_base)
+   element = Part.makeBox(llarg, ample, alt)
+   element = element.translated(FreeCAD.Base.Vector(offset_radial, -ample/2, 0))
+   finalShape = base
+   for i in range(N):
+       el_i = element.rotated(FreeCAD.Base.Vector(0,0,0), FreeCAD.Base.Vector(0,0,1), (360/N)*i)
+       finalShape = finalShape.fuse(el_i)
+
+PATRO B - Cos amb forat passant:
+   cos_extern = Part.makeCylinder(radi_extern, altura)
+   forat      = Part.makeCylinder(radi_intern, altura)
+   finalShape = cos_extern.cut(forat)
+
+PATRO C - Perfil extrudit (ex. L, T, U):
+   V = FreeCAD.Base.Vector
+   a1 = Part.makeLine(V(0,0,0),   V(20,0,0))
+   a2 = Part.makeLine(V(20,0,0),  V(20,10,0))
+   a3 = Part.makeLine(V(20,10,0), V(0,10,0))
+   a4 = Part.makeLine(V(0,10,0),  V(0,0,0))
+   perfil = Part.Wire([a1, a2, a3, a4])
+   finalShape = perfil.extrude(FreeCAD.Base.Vector(0, 0, 50))
+
+PATRO D - Objecte amb encaix/tall:
+   cos_principal = Part.makeBox(50, 50, 30)
+   encaix        = Part.makeBox(10, 10, 10).translated(FreeCAD.Base.Vector(20, 20, 20))
+   finalShape    = cos_principal.cut(encaix)
+
+--- LLISTA DE VERIFICACIO OBLIGATORIA ---
+Executa-la en aquest ordre abans d'entregar:
+1. El codi comenca amb el bloc d'inici exacte?
+2. El codi acaba amb el bloc final exacte?
+3. Tots els parentesis estan balancejats?
+4. He usat .translated() i .rotated() (NO .translate() ni .rotate())?
+5. Cap variable es sobreescriu amb un tipus diferent?
+6. finalShape esta inicialitzat ABANS de qualsevol bucle?
+7. Dins dels bucles, roto la forma BASE (no l'acumulada)?
+8. Tota la indentacio es de 4 espais (cap tabulador)?
+9. Totes les funcions usades estan a la llista de funcions valides?
+10. El codi es executable tal com esta, sense cap modificacio?
+
+--- FORMAT DE RESPOSTA ---
+- Respon UNICAMENT amb codi Python pur.
+- Cap text fora del codi. Cap markdown. Cap \`\`\`python.
+- La primera linia es sempre un comentari (# Peca: ...)
+- Els comentaris al codi son en catala.
+- Usa mides en mm reals i coherents amb la peca descrita.
+- Si la descripcio es ambigua, fes suposicions raonables i documenta-les en comentaris.` },
+              { role: 'user', content: prompt }
+            ]
+          })
+        });
+
+        if (!response.ok) throw new Error('Error a la resposta de la API');
+
+        const data = await response.json();
+        if (data.error) throw new Error(data.error.message);
+        const text = data.choices && data.choices[0] && data.choices[0].message
+          ? data.choices[0].message.content
+          : 'No s\'ha pogut obtenir una resposta vàlida.';
+
+        // Strip accidental backtick fences if any
+        let finalCode = text.trim();
+        finalCode = finalCode.replace(/^```python\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/, '').trim();
+        // Validate it looks like Python code
+        const looksLikePython = finalCode.includes('import') || finalCode.startsWith('#') || finalCode.includes('FreeCAD') || finalCode.includes('Part.');
+        if (!looksLikePython) {
+          throw new Error('La IA no ha generat codi Python vàlid. Torna-ho a intentar amb una descripció més detallada de la peça.');
+        }
+        ultimResultat = finalCode;
+        // Render code block with header
+        const codeHeader = document.getElementById('gen-code-header');
+        if (codeHeader) codeHeader.style.display = 'flex';
+        document.getElementById('gen-resultat-box').textContent = finalCode;
+        document.getElementById('gen-instruccions').style.display = 'block';
+        document.getElementById('gen-resultat-area').classList.add('visible');
+
+        // Scroll suau cap al resultat
+        setTimeout(() => {
+          document.getElementById('gen-resultat-area').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+
+      } catch (err) {
+        console.error('Error generador IA:', err);
+        document.getElementById('gen-error-text').textContent = err.message || 'No s\'ha pogut connectar amb la IA. Comprova la connexió i torna-ho a intentar.';
+        document.getElementById('gen-error').classList.add('visible');
+      } finally {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+      }
+    }
+
+    function copiarResultat() {
+      if (!ultimResultat) return;
+      navigator.clipboard.writeText(ultimResultat).then(() => {
+        mostrarToast('<i class="fa fa-circle-check" style="color:var(--green);"></i> Text copiat al porta-retalls!');
+      }).catch(() => {
+        mostrarToast('<i class="fa fa-triangle-exclamation" style="color:orange;"></i> No s\'ha pogut copiar automàticament.');
+      });
+    }
+
+    function descarregarResultat() {
+      if (!ultimResultat) return;
+      const blob = new Blob([ultimResultat], { type: 'text/x-python;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'disseny_freecad.py';
+      a.click();
+      URL.revokeObjectURL(url);
+      mostrarToast('<i class="fa fa-circle-check" style="color:var(--green);"></i> Document descarregat!');
+    }
+
+    function enviarAlFormulari() {
+      if (!ultimResultat) return;
+      const campDetalls = document.getElementById('f-detalls');
+      const label = document.getElementById('f-detalls-label');
+      if (!campDetalls) return;
+      campDetalls.value = ultimResultat;
+      campDetalls.placeholder = '# Codi Python generat per la IA...';
+      if (label) {
+        label.innerHTML = '<i class="fa fa-file-code" style="margin-right:4px;color:var(--blue);"></i>Codi Python per FreeCAD <span style="font-size:10px;font-weight:400;background:rgba(0,123,193,0.12);color:var(--blue);padding:2px 8px;border-radius:10px;margin-left:6px;">Generat per IA</span>';
+        label.dataset.mode = 'codi';
+      }
+      const formulari = document.getElementById('formulari-section');
+      if (formulari) {
+        formulari.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => {
+          campDetalls.focus();
+          campDetalls.style.borderColor = 'var(--blue)';
+          setTimeout(() => { campDetalls.style.borderColor = ''; }, 2000);
+        }, 600);
+      }
+      mostrarToast('<i class="fa fa-circle-check" style="color:var(--green);"></i> Codi Python afegit al formulari!');
+    }
+  </script>
+
+  <script src="script_search2.js"></script>
+</body>
+</html>
